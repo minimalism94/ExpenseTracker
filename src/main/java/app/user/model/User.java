@@ -1,6 +1,8 @@
 package app.user.model;
 
+import app.budget.model.Budget;
 import app.subscription.model.Subscription;
+import app.transactions.model.Transaction;
 import app.wallet.model.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,25 +43,17 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Country country;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Wallet> wallets;
 
-    private boolean isActive;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 
-    @Column(nullable = false)
-    private LocalDateTime createdOn;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Subscription> subscriptions;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedOn;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Budget> budgets;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
-    @OrderBy("createdOn DESC")
-    private List<Subscription> subscriptions = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
-    @OrderBy("createdOn ASC")
-    private List<Wallet> wallets = new ArrayList<>();
 }

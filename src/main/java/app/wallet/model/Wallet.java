@@ -1,41 +1,29 @@
 package app.wallet.model;
 
+import app.transactions.model.Transaction;
 import app.user.model.User;
 import jakarta.persistence.*;
+
 import lombok.*;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Currency;
-import java.util.UUID;
+import java.util.List;
 
-@Builder
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Wallet {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String name;
+    private BigDecimal balance;
+    private String currency;
 
     @ManyToOne
-    private User owner;
+    private User user;
 
-    @Column(nullable = false)
-    private WalletStatus status;
-
-    @Column(nullable = false)
-    private BigDecimal balance;
-
-    @Column(nullable = false)
-    private Currency currency;
-
-    @Column(nullable = false)
-    private LocalDateTime createdOn;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedOn;
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 }

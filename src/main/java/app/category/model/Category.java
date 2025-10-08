@@ -1,36 +1,27 @@
 package app.category.model;
 
 
-import app.subscription.model.SubscriptionStatus;
+import app.budget.model.Budget;
+import app.transactions.model.Transaction;
 import app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.UUID;
-
-@Builder
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-    public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Category {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne
-    private User owner;
-    @Column(nullable = false)
-    private BigDecimal amount;
-    @Column(nullable = false)
-    private LocalDate date;
-    @Column(nullable = true)
-    private String note;
+    private String name;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ExpenseCategory category;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Budget> budgets;
 }

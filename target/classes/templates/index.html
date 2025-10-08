@@ -1,139 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Finance Dashboard</title>
-    <link rel="stylesheet" href="./../static/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartExpense - Home</title>
+    <link rel="stylesheet" href="/css/styleIndex.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="dashboard">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <h2 class="logo">Personal Finance</h2>
-        <nav class="menu">
-            <a href="#" class="active">Dashboard</a>
-            <a href="#">Transactions</a>
-            <a href="#">Budgets</a>
-            <a href="#">Settings</a>
-        </nav>
-    </aside>
+<div class="background">
+    <div class="particles"></div>
+    <div class="login-container">
+        <img src="/images/logo.png" alt="SmartExpense Logo" class="logo-img" />
+        <div class="logo-text">SmartExpense</div>
+        <div class="login-form">
+            <h2 class="pulse">Welcome</h2>
+            <p>Track expenses, manage budgets, and stay on top of your finances.</p>
+            <div class="links">
+                <a th:href="@{/login}" class="btn">Login</a>
+                <a th:href="@{/register}" class="btn">Registration</a>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Header -->
-        <header class="header">
-            <div class="user-info">
-                <div class="avatar"></div>
-                <div>
-                    <p class="greeting">Good Morning, Lawal</p>
-                    <p class="username">Lawal Babatunde</p>
-                </div>
             </div>
-            <div class="header-actions">
-                <button class="circle-btn">⚙️</button>
-                <button class="circle-btn">🔔</button>
-            </div>
-        </header>
-
-        <!-- Summary Cards -->
-        <section class="cards">
-            <div class="card">
-                <h3>Income</h3>
-                <p class="amount">$20,130.30</p>
-                <span class="change positive">+30%</span>
-                <button class="link-btn">Add Income</button>
-            </div>
-            <div class="card">
-                <h3>Expenses</h3>
-                <p class="amount">$7,540.20</p>
-                <span class="change negative">-10%</span>
-                <button class="link-btn">Add Expense</button>
-            </div>
-            <div class="card">
-                <h3>Current Balance</h3>
-                <p class="amount">$40,100.75</p>
-                <button class="link-btn">View Detailed Report</button>
-            </div>
-        </section>
-
-        <!-- Middle Section -->
-        <section class="middle">
-            <div class="chart card">
-                <h3>Spending Categories</h3>
-                <div class="pie-placeholder">[Pie Chart]</div>
-                <ul class="legend">
-                    <li><span class="dot food"></span> Food</li>
-                    <li><span class="dot rent"></span> Rent</li>
-                    <li><span class="dot entertainment"></span> Entertainment</li>
-                </ul>
-            </div>
-
-            <div class="upcoming card">
-                <h3>Upcoming Payments</h3>
-                <ul class="payments">
-                    <li>
-                        <span>Figjam Membership</span>
-                        <span class="date">Today</span>
-                        <span class="type">Professional</span>
-                        <span class="amount">$200</span>
-                    </li>
-                    <li>
-                        <span>Figma Upgrade</span>
-                        <span class="date">Jan 25</span>
-                        <span class="type">Professional</span>
-                        <span class="amount">$150</span>
-                    </li>
-                    <li>
-                        <span>Movies</span>
-                        <span class="date">Jan 27</span>
-                        <span class="type">Entertainment</span>
-                        <span class="amount">$100</span>
-                    </li>
-                    <li>
-                        <span>Loom Subscription</span>
-                        <span class="date">Jan 28</span>
-                        <span class="type">Loom Business</span>
-                        <span class="amount">$300</span>
-                    </li>
-                </ul>
-                <button class="view-all">View All</button>
-            </div>
-        </section>
-
-        <!-- Transactions -->
-        <section class="transactions card">
-            <h3>Transactions</h3>
-            <table>
-                <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>Date/Time</th>
-                    <th>Amount</th>
-                    <th>Card/Cash</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Food</td>
-                    <td>01/10/2025 - 12:40PM</td>
-                    <td>$150</td>
-                    <td>Card ****5111</td>
-                    <td class="status completed">Completed</td>
-                </tr>
-                <tr>
-                    <td>Rent</td>
-                    <td>01/12/2025 - 02:40PM</td>
-                    <td>$100</td>
-                    <td>Bank Transfer</td>
-                    <td class="status pending">Pending</td>
-                </tr>
-                </tbody>
-            </table>
-            <a href="#" class="all-transactions">All Transactions</a>
-        </section>
-    </main>
+        </div>
+    </div>
 </div>
 </body>
 </html>
