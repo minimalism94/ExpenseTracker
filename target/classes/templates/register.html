@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartExpense - Registration</title>
+    <link rel="stylesheet" href="/css/styleRegister.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="background">
+    <div class="particles"></div>
+    <div class="login-container">
+        <img src="/images/logo.png" alt="SmartExpense Logo" class="logo-img" />
+        <div class="logo-text">SmartExpense</div>
+        <h2 class="pulse">Registration</h2>
+        <form action="/register" method="POST">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" placeholder="Username" required />
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" placeholder="Email" required />
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="Password" required />
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

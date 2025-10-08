@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartExpense - Login</title>
+    <link rel="stylesheet" href="/css/styleLogin.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* Червен текст за грешка */
+        .error {
+            color: #ff4d4f; /* ярко червен */
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Стилен линк за регистрация */
+        .register {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #ffffff;
+        }
+
+        .register span {
+            margin-right: 5px;
+            color: #cccccc; /* по-светъл текст за "Don't have an account?" */
+        }
+
+        .register a {
+            color: #1e90ff; /* ярко синьо */
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .register a:hover {
+            color: #00bfff; /* по-светло синьо при hover */
+            text-shadow: 0 0 5px rgba(0,191,255,0.7);
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <div class="particles"></div>
+    <div class="login-container">
+        <img src="/images/logo.png" alt="SmartExpense Logo" class="logo-img" />
+        <div class="logo-text">SmartExpense</div>
+        <h2 class="pulse">Login</h2>
+
+        <!-- Показване на грешка при неуспешен логин -->
+        <div th:if="${param.error}" class="error">
+            Invalid username or password.
+        </div>
+        <div th:if="${param.logout}" class="message">
+            You have been logged out.
+        </div>
+
+        <!-- Login форма за Spring Security -->
+        <form th:action="@{/login}" method="post">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" placeholder="Username" required />
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required />
+            </div>
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="forgot">
+            <a th:href="@{/forgot-password}">Forgot password?</a>
+        </div>
+        <div class="register">
+            <span>Don't have an account?</span>
+            <a th:href="@{/register}">Register</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
