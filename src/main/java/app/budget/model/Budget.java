@@ -1,6 +1,6 @@
 package app.budget.model;
 
-import app.category.model.Category;
+
 import app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,8 +25,7 @@ public class Budget {
     @ManyToOne
     private User user;
 
-    @ManyToOne
-    private Category category;
+
 
     // Getters and setters
 }

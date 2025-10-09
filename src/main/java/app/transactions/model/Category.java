@@ -1,6 +1,9 @@
-package app.category.model;
+package app.transactions.model;
 
-public enum ExpenseCategory {
+import lombok.ToString;
+
+
+public enum Category {
     HOUSING,          // Жилище (наем, ипотека, сметки)
     FOOD,             // Храна и напитки
     TRANSPORT,        // Транспорт
@@ -16,4 +19,9 @@ public enum ExpenseCategory {
     GIFTS,            // Подаръци и благотворителност
     HOME,             // Дом и ремонти
     OTHER             // Други/непредвидени
+
+
 }
+
+
+

@@ -1,0 +1,191 @@
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background-color: #121212;
+    color: #f5f5f5;
+    display: flex;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* ==== SIDEBAR ==== */
+.sidebar {
+    background-color: #2b2b2f;
+    width: 250px;
+    height: 100vh;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+}
+
+/* Navigation Links */
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.sidebar nav a {
+    text-decoration: none;
+    color: #e0e0e0;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+}
+
+/* Hover Effect — става зелено при минаване */
+.sidebar nav a:hover {
+    background-color: #4CCD6A;
+    color: #ffffff;
+}
+
+/* Active Link (current page) */
+.sidebar nav a.active {
+    background-color: #4CCD6A;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* ==== MAIN CONTENT ==== */
+.content {
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    background-color: #1a1a1f;
+}
+
+h1 {
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+/* ==== BUTTONS ==== */
+.buttons {
+    margin: 1rem 0;
+}
+
+.btn {
+    background-color: #2e2e35;
+    color: #f0f0f0;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-weight: 500;
+}
+
+/* Hover — бутоните също стават зелени */
+.btn:hover {
+    background-color: #4CCD6A;
+    color: #fff;
+}
+
+.btn.active,
+.btn.save {
+    padding: 0.6rem 1.4rem;
+    margin-right: 0.5rem;
+    background-color: #4CCD6A;
+    color: #fff;
+}
+.btn.trans {
+    padding: 1rem 2.4rem;               /* по-голям вътрешен отстъп */
+    font-size: 1.3rem;                  /* по-голям текст */
+    background-color: #72747c;          /* неутрален тъмен фон */
+    color: #fff;                        /* бял текст */
+    border: none;
+    border-radius: 10px;                /* леко заобляне */
+    margin: 2rem auto;                  /* центриране */
+    display: block;                     /* за да работи margin: auto */
+    text-align: center;
+    box-shadow: 0 0 12px rgba(133, 133, 133, 0.4); /* мека сянка */
+    transition: all 0.3s ease;
+    
+}
+
+
+/* ==== FORM ==== */
+.transaction-form {
+    background-color: #2a2a2f;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+select,
+input {
+    flex: 1;
+    background-color: #1b1b20;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 0.7rem;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+select:focus,
+input:focus {
+    border-color: #4CCD6A;
+}
+
+/* ==== TABLE ==== */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #ddd;
+    font-size: 0.95rem;
+}
+
+.transactions-table th {
+    text-align: left;
+    color: #aaa;
+    padding: 0.8rem 0.6rem;
+    border-bottom: 1px solid #333;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.05rem;
+}
+
+.transactions-table td {
+    padding: 0.8rem 0.6rem;
+    border-bottom: 1px solid #333;
+}
+
+.badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge.income {
+    background-color: #4CCD6A;
+    color: #fff;
+}
+
+.badge.expense {
+    background-color: #d34545;
+    color: #fff;
+}

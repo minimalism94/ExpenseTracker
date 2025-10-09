@@ -13,9 +13,9 @@
         <h2 class="logo">Personal Finance</h2>
         <nav class="menu">
             <a href="#" class="active">Dashboard</a>
-            <a href="#">Transactions</a>
-            <a href="#">Budgets</a>
-            <a href="#">Settings</a>
+            <a  th:href="@{/transactions}">Transactions</a>
+            <a  th:href="@{/budgets}">Budgets</a>
+            <a  th:href="@{/editProfile}">Edit Profile</a>
         </nav>
     </aside>
 
@@ -41,14 +41,19 @@
             <div class="card">
                 <h3>Income</h3>
                 <p class="amount">$20,130.30</p>
-                <span class="change positive">+30%</span>
-                <button class="link-btn">Add Income</button>
+<!--                <span class="change positive">+30%</span>-->
+                <button type="submit" class="link-btn">Add Income</button>
+
             </div>
             <div class="card">
                 <h3>Expenses</h3>
                 <p class="amount">$7,540.20</p>
-                <span class="change negative">-10%</span>
-                <button class="link-btn">Add Expense</button>
+<!--                <span class="change negative">-10%</span>-->
+                <form th:action="@{/transactions}" method="get">
+                    <button type="submit" class="link-btn">Add Expense</button>
+                </form>
+
+
             </div>
             <div class="card">
                 <h3>Current Balance</h3>

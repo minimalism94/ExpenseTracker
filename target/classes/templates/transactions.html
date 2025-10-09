@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Personal Finance</title>
+  <link rel="stylesheet" href="/css/transactions.css">
+</head>
+<body>
+<div class="container">
+  <aside class="sidebar">
+    <h2>Personal Finance</h2>
+    <nav>
+      <a th:classappend="${page == 'dashboard' ? 'active' : ''}" th:href="@{/dashboard}">Dashboard</a>
+      <a class="btn active" th:href="@{/transactions}">Transactions</a>
+      <a th:classappend="${page == 'budgets' ? 'active' : ''}" th:href="@{/budgets}">Budgets</a>
+      <a th:classappend="${page == 'settings' ? 'active' : ''}" th:href="@{/settings}">Settings</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <h1 style="text-align: center;">Transaction</h1>
+
+    <div class="buttons">
+      <p class="btn trans">Add Income or Expense</p>
+    </div>
+
+    <form th:action="@{/transactions/save}" th:object="${transaction}" method="post">
+      <div class="form-group">
+        <!-- Тип (INCOME / EXPENSE) -->
+        <select th:field="*{type}" required>
+          <option value="" disabled selected>Choose Type</option>
+          <option value="INCOME">Income</option>
+          <option value="EXPENSE">Expense</option>
+        </select>
+
+        <!-- Категория -->
+        <select th:field="*{categoryType}" required>
+          <option value="" disabled selected>Choose Category</option>
+          <option th:each="cat : ${categories}"
+                  th:value="${cat.name()}"
+                  th:text="${#strings.capitalize(cat.name())}">
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <input type="date" th:field="*{date}" required>
+        <input type="text" th:field="*{description}" placeholder="Description">
+      </div>
+
+      <div class="form-group">
+        <input type="number" th:field="*{amount}" placeholder="Amount" step="0.01" required>
+        <!-- Ако искаш да добавиш избор на портфейл: -->
+        <!--
+        <select th:field="*{walletId}">
+            <option th:each="w : ${wallets}" th:value="${w.id}" th:text="${w.name}"></option>
+        </select>
+        -->
+        <button type="submit" class="btn save">Save</button>
+      </div>
+    </form>
+
+    <table class="transactions-table">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="t : ${transactions}">
+        <td th:text="${t.date}">2025-10-08</td>
+        <td>
+                        <span th:text="${t.type}"
+                              th:classappend="${t.type == 'INCOME'} ? 'badge income' : 'badge expense'"></span>
+        </td>
+        <td th:text="${t.categoryType}">Salary</td>
+        <td th:text="${t.amount}">$2000</td>
+        <td th:text="${t.description}">October paycheck</td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body>
+</html>

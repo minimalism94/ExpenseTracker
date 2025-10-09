@@ -18,6 +18,8 @@ public class Wallet {
     private Long id;
 
     private String name;
+    private BigDecimal income;
+    private BigDecimal expense;
     private BigDecimal balance;
     private String currency;
 
