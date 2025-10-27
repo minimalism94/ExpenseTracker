@@ -1,0 +1,285 @@
+:root {
+    --bg: #242328;
+    --sidebar-bg: #2f2e33;
+    --card-bg: #323136;
+    --muted: #777;
+    --accent-green: #4fc068;
+    --accent-teal: #117e81;
+    --text-light: #e6e6e6;
+    --radius: 12px;
+}
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #3b82f6; /* синьо кръгче, ако няма снимка */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text-light);
+}
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    background: var(--sidebar-bg);
+    padding: 2rem 1rem;
+    width: 240px;
+}
+
+.logo {
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+}
+
+.menu a {
+    display: block;
+    padding: 0.8rem;
+    border-radius: var(--radius);
+    color: var(--text-light);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+}
+
+.menu a.active,
+.menu a:hover {
+    background: var(--accent-green);
+    color: #fff;
+}
+
+/* Main */
+.main-content {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-teal);
+    border-radius: 50%;
+}
+
+.greeting {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.username {
+    font-weight: bold;
+}
+
+.header-actions .circle-btn {
+    background: var(--card-bg);
+    border: none;
+    color: var(--text-light);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+/* Cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: var(--radius);
+}
+
+.amount {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+}
+
+.change {
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+.change.positive {
+    color: var(--accent-green);
+}
+
+.change.negative {
+    color: #ff4d4d;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: var(--accent-green);
+    cursor: pointer;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Ефект при hover */
+.link-btn:hover {
+    color: #38d67f; /* по-ярък зелен */
+    transform: scale(1.05); /* лек zoom */
+}
+
+/* Добавяне на underline ефект с анимация */
+.link-btn::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: var(--accent-green);
+    transition: width 0.3s ease;
+}
+
+.link-btn:hover::after {
+    width: 100%;
+}
+
+/* Middle section */
+.middle {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 1rem;
+}
+
+.pie-placeholder {
+    background: #444;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.legend {
+    margin-top: 1rem;
+    list-style: none;
+}
+
+.legend li {
+    margin: 0.3rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.food { background: var(--accent-green); }
+.rent { background: var(--accent-teal); }
+.entertainment { background: #fff; }
+
+/* Payments */
+.payments {
+    list-style: none;
+    margin: 1rem 0;
+}
+
+.payments li {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    margin-bottom: 0.5rem;
+}
+
+.view-all {
+    background: var(--accent-green);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: #fff;
+}
+
+/* Transactions */
+.transactions table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.transactions th,
+.transactions td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+
+.status.completed {
+    color: var(--accent-green);
+}
+
+.status.pending {
+    color: #ffb84d;
+}
+
+.all-transactions {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--accent-green);
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .middle {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        display: none;
+    }
+}

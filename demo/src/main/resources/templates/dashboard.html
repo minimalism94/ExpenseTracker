@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">Personal Finance</h2>
+            <nav class="menu">
+                <a href="#" class="active">Dashboard</a>
+                <a  th:href="@{/transactions}">Transactions</a>
+                <a  th:href="@{/payments}">Subscriptions</a>
+                <a  th:href="@{/editProfile}">Edit Profile</a>
+                <a  th:href="@{/}">Log out</a>
+            </nav>
+        </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="user-info">
+                <div class="avatar">
+                    <img th:if="${user.profilePicture != null}"
+                         th:src="${user.profilePicture}"
+                         alt="User Avatar" />
+                    <img th:if="${user.profilePicture == null}"
+                         src="https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png"
+                         alt="Default Avatar" />
+                </div>
+
+                <div>
+                    <p class="greeting">Welcome</p>
+                    <p class="username"  th:text="${user.username}"> Lawal Babatunde</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="circle-btn">⚙️</button>
+                <button class="circle-btn">🔔</button>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <section class="cards">
+            <div class="card">
+                <h3>Income</h3>
+                <p class="amount" th:text="${wallet.getIncome()}">$20,130.30</p>
+<!--                <span class="change positive">+30%</span>-->
+                <button type="submit" class="link-btn">Add Income</button>
+
+            </div>
+            <div class="card">
+                <h3>Expenses</h3>
+                <p class="amount" th:text="${wallet.getExpense()}">$7,540.20</p>
+<!--                <span class="change negative">-10%</span>-->
+                <form th:action="@{/transactions}" method="get">
+                    <button type="submit" class="link-btn">Add Expense</button>
+                </form>
+
+
+            </div>
+            <div class="card">
+                <h3>Current Balance</h3>
+                <p class="amount" th:text="${wallet.getBalance()}">$40,100.75</p>
+                <button class="link-btn">View Detailed Report</button>
+            </div>
+        </section>
+
+        <!-- Middle Section -->
+        <section class="middle">
+            <div class="chart card">
+                <h3>Spending Categories</h3>
+                <div class="pie-placeholder">[Pie Chart]</div>
+                <ul class="legend">
+                    <li><span class="dot food"></span> Food</li>
+                    <li><span class="dot rent"></span> Rent</li>
+                    <li><span class="dot entertainment"></span> Entertainment</li>
+                </ul>
+            </div>
+
+            <div class="upcoming card">
+                <h3>Subscriptions Upcoming Payments</h3>
+                <ul class="payments">
+                    <li th:each="sub : ${subscription}">
+                        <span th:text="${sub.name}">Subscription Name</span>
+                        <span class="date" th:text="${#temporals.format(sub.expiryOn, 'dd MMM')}">Date</span>
+                        <span class="type" th:text="${sub.type}">Type</span>
+                        <span class="amount" th:text="'$' + ${sub.price}">Amount</span>
+                    </li>
+                </ul>
+                <a th:href="@{/payments}" class="view-all">View All</a>
+                <a th:href="@{/payments/add}" class="view-all">Add</a>
+            </div>
+        </section>
+
+        <!-- Transactions -->
+        <section class="transactions card">
+            <h3>Transactions</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Date/Time</th>
+                    <th>Amount</th>
+                    <th>Income/Expense</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction : ${transactions}">
+                    <td th:text="${transaction.category}">Category</td>
+                    <td th:text="${#temporals.format(transaction.date, 'dd/MM/yyyy - hh:mma')}">Date</td>
+                    <td th:text="${transaction.amount}">Amount</td>
+                    <td th:text="${transaction.type}">Card/Cash</td>
+                    <td th:text="${transaction.description}">Card/Cash</td>
+                    <td class="status completed">Completed</td>
+                </tr>
+                </tbody>
+            </table>
+            <a th:href="@{/transactions}" class="all-transactions">All Transactions</a>
+        </section>
+    </main>
+</div>
+</body>
+</html>
