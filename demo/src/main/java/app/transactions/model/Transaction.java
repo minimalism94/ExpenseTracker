@@ -13,6 +13,7 @@
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    @ToString(exclude = "transactions")
     public class Transaction {
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)

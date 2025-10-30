@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = "wallet")
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

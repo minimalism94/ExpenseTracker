@@ -1,6 +1,7 @@
 package app.transactions.service;
 
 import app.exception.CustomException;
+import app.transactions.model.Category;
 import app.transactions.model.Transaction;
 import app.transactions.model.Type;
 import app.transactions.repository.TransactionRepository;
@@ -11,20 +12,33 @@ import app.wallet.repository.WalletRepository;
 import app.web.dto.TransactionDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.RoundingMode;
+import java.util.LinkedHashMap;
+
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+
 public class TransactionService {
 
 
     private final TransactionRepository transactionRepository;
     private final WalletRepository walletRepository;
+
+
+    @Autowired
+    public TransactionService(TransactionRepository transactionRepository, WalletRepository walletRepository) {
+        this.transactionRepository = transactionRepository;
+        this.walletRepository = walletRepository;
+    }
 
     public Transaction saveTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
@@ -63,6 +77,36 @@ public class TransactionService {
 
         transactionRepository.save(transaction);
         walletRepository.save(wallet);
+    }
+
+    public Map<Category, BigDecimal> getTopCategories(UUID walletId) {
+        List<Object[]> results = transactionRepository.findTopCategoriesByWallet(walletId);
+
+        return results.stream()
+                .limit(3)
+                .collect(Collectors.toMap(
+                        row -> (Category) row[0],
+                        row -> (BigDecimal) row[1],
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
+
+    }
+
+    public Map<String, Integer> calculateCategoryPercents(Map<Category, BigDecimal> categoryTotals) {
+        BigDecimal total = categoryTotals.values().stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return categoryTotals.entrySet().stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey().name().toLowerCase(),
+                        e -> e.getValue()
+                                .multiply(BigDecimal.valueOf(100))
+                                .divide(total, 0, RoundingMode.HALF_UP)
+                                .intValue(),
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
     }
 
 

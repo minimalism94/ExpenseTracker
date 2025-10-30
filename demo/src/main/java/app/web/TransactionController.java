@@ -44,9 +44,7 @@ public class TransactionController {
         return modelAndView;
     }
     @PostMapping("/transactions/add")
-    public ModelAndView createTransaction(@Valid @ModelAttribute("transaction") TransactionDto dto,
-                                          BindingResult bindingResult,
-                                          @AuthenticationPrincipal UserData userData) {
+    public ModelAndView createTransaction(@Valid @ModelAttribute("transaction") TransactionDto dto, BindingResult bindingResult, @AuthenticationPrincipal UserData userData) {
 
         ModelAndView modelAndView = new ModelAndView("transactions");
         modelAndView.addObject("types", Type.values());
@@ -54,17 +52,17 @@ public class TransactionController {
 
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("error", "Please correct the form errors.");
-            modelAndView.addObject("transaction", dto); // върни попълнената форма
+            modelAndView.addObject("transaction", dto); // Връща попъллнената форма
             return modelAndView;
         }
 
         try {
             transactionService.processTransaction(dto, userData.getUserId());
             modelAndView.addObject("success", "Transaction saved successfully!");
-            modelAndView.addObject("transaction", new TransactionDto()); // празна форма след успех
+            modelAndView.addObject("transaction", new TransactionDto()); // Ако мине връща празната форма
         } catch (IllegalArgumentException e) {
             modelAndView.addObject("error", e.getMessage());
-            modelAndView.addObject("transaction", dto); // върни попълнената форма при грешка
+            modelAndView.addObject("transaction", dto); //При грешка връща пулната форма
         }
 
         return modelAndView;
