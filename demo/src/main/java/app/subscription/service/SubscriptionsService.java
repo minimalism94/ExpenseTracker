@@ -8,6 +8,8 @@ import app.subscription.repository.SubscriptionsRepository;
 import app.user.model.User;
 import app.user.repository.UserRepository;
 import app.user.service.UserService;
+import app.wallet.model.Wallet;
+import app.wallet.repository.WalletRepository;
 import app.web.dto.EditSubscriptionDto;
 import app.web.dto.SubscriptionDto;
 import jakarta.validation.Valid;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,11 +27,13 @@ public class SubscriptionsService {
 
     private final SubscriptionsRepository subscriptionsRepository;
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
 
     @Autowired
-    public SubscriptionsService(SubscriptionsRepository subscriptionsRepository, UserRepository userRepository) {
+    public SubscriptionsService(SubscriptionsRepository subscriptionsRepository, UserRepository userRepository, WalletRepository walletRepository) {
         this.subscriptionsRepository = subscriptionsRepository;
         this.userRepository = userRepository;
+        this.walletRepository = walletRepository;
     }
 
     public void createDefaultSubscription(User user) {
@@ -69,5 +74,25 @@ public class SubscriptionsService {
                 .orElseThrow(() -> new CustomException("Subscription not found"));
 
         subscriptionsRepository.delete(subscription);
+    }
+
+    public void paySubscription(UUID subscriptionId, UUID userId) {
+        Subscription subscription = subscriptionsRepository.findById(subscriptionId)
+                .orElseThrow(() -> new IllegalArgumentException("Subscription not found"));
+
+        Wallet wallet = subscription.getUser().getWallet();
+        if (wallet == null || wallet.getUser() == null || !wallet.getUser().getId().equals(userId)) {
+            throw new CustomException("You are not authorized to pay this subscription");
+        }
+        BigDecimal amount = subscription.getPrice();
+
+        if (wallet.getBalance().compareTo(amount) >= 0) {
+        wallet.setBalance(wallet.getBalance().subtract(amount));
+        wallet.setExpense(wallet.getExpense().add(amount));} else {
+            throw new CustomException("Insufficient balance for this subscription.");
+        }
+        walletRepository.save(wallet);
+        subscriptionsRepository.delete(subscription);
+
     }
 }

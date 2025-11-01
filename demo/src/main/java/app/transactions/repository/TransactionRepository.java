@@ -1,6 +1,7 @@
 package app.transactions.repository;
 
 import app.transactions.model.Transaction;
+import app.web.dto.TopCategories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,15 +14,18 @@ import java.util.UUID;
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
     @Query("""
-    SELECT t.category, SUM(t.amount)
+    SELECT new app.web.dto.TopCategories(t.category, SUM(t.amount), 0)
     FROM Transaction t
-    WHERE t.wallet.id = :walletId
+    WHERE t.wallet.id = :walletId AND t.type = app.transactions.model.Type.EXPENSE
     GROUP BY t.category
     ORDER BY SUM(t.amount) DESC
 """)
-    List<Object[]> findTopCategoriesByWallet(@Param("walletId") UUID walletId);
+    List<TopCategories> topCategories(@Param("walletId") UUID walletId);
 
 
 
     List<Transaction> findByWalletId(UUID walletId);
+
+
 }
+

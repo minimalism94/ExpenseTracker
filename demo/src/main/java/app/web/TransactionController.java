@@ -8,18 +8,23 @@ import app.transactions.model.Transaction;
 import app.transactions.model.Type;
 import app.transactions.service.TransactionService;
 import app.user.service.UserService;
+import app.wallet.model.Wallet;
 import app.web.dto.TransactionDto;
 import jakarta.validation.Valid;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class TransactionController {
@@ -66,6 +71,11 @@ public class TransactionController {
         }
 
         return modelAndView;
+    }
+    @PostMapping("/transactions/delete/{id}")
+    public ModelAndView deleteTransaction(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {
+        transactionService.deleteTransaction(id, userData.getUserId());
+        return new ModelAndView("redirect:/dashboard");
     }
 
 

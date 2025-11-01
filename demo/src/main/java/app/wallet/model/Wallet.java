@@ -10,12 +10,12 @@ import java.util.Currency;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@ToString(exclude = "wallet")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,6 +34,6 @@ public class Wallet {
     @OneToOne
     private User user;
 
-    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "wallet", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Transaction> transactions;
 }

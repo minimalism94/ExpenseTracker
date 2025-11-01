@@ -10,111 +10,7 @@ body {
     height: 100vh;
 }
 
-.sidebar {
-    width: 220px;
-    background-color: #111;
-    padding: 20px;
-}
-
-.logo {
-    color: #00ff88;
-    font-size: 24px;
-    margin-bottom: 30px;
-}
-
-.menu a {
-    display: block;
-    color: #fff;
-    text-decoration: none;
-    margin: 15px 0;
-    font-size: 16px;
-    padding: 8px 12px;
-    border-radius: 6px;
-}
-
-.menu a.active {
-    background-color: #00ff88;
-    color: #000;
-}
-
-.main {
-    flex: 1;
-    background-color: #1a1a1a;
-    padding: -28px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.main h1 {
-    font-size: 32px;
-    margin-bottom: 20px;
-}
-
-.form-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.form-card {
-    background-color: #222;
-    padding: 30px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 500px;
-}
-
-.form-card h2 {
-    margin-bottom: 20px;
-    font-size: 20px;
-    color: #ccc;
-    text-align: center;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: #ddd;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    background-color: #333;
-    color: #fff;
-    font-size: 14px;
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: #888;
-}
-
-.save-btn {
-    background-color: #00ff88;
-    color: #000;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-.save-btn:hover {
-    background-color: #00cc6e;
-}
+/* Sidebar */
 .sidebar {
     width: 220px;
     background-color: #1f1f1f;
@@ -126,7 +22,7 @@ textarea::placeholder {
 .logo {
     font-size: 1.5rem;
     margin-bottom: 2rem;
-    color: #22c55e;
+    color: #00ff88;
 }
 
 .menu a {
@@ -143,13 +39,165 @@ textarea::placeholder {
 }
 
 .menu a:hover {
-    background-color: #4CCD6A;
-    color: #fff;
+    background-color: #00ff88;
+    color: #000;
 }
 
 .menu a.active {
-    background-color: #4CCD6A;
-    color: #fff;
+    background-color: #00ff88;
+    color: #000;
     font-weight: 600;
 }
 
+/* Main Content */
+.main {
+    flex: 1;
+    background-color: #1a1a1a;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.main h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #00ff88;
+}
+
+/* Layout for form and table side-by-side */
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.form-card,
+.transaction-list {
+    background-color: #222;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+
+
+    .form-card h2,
+    .transaction-list h2 {
+        text-align: center;
+        color: #00ff88;
+        margin-bottom: 20px;
+    }
+
+    /* Form Styles */
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #ddd;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        background-color: #333;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #888;
+    }
+
+    .save-btn {
+        background-color: #00ff88;
+        color: #000;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    .save-btn:hover {
+        background-color: #00cc6e;
+    }
+
+    /* Table */
+
+    .transaction-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #444;
+        color: #eee;
+    }
+
+    .transaction-table th {
+        background-color: #333;
+        color: #00ff88;
+        font-weight: 600;
+    }
+
+    .transaction-table tr:hover {
+        background-color: #2a2a2a;
+    }
+
+    .delete-btn {
+        background-color: #e74c3c;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .delete-btn:hover {
+        background-color: #c0392b;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .form-wrapper {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-card,
+        .transaction-list {
+            max-width: 600px;
+        }
+    }
+    .error-box {
+        background-color: transparent;
+        color: #b30000;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+}

@@ -70,6 +70,7 @@ h1 {
     background-color: #1f1f1f;
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
 }
 
 .payments-table th,
@@ -115,4 +116,23 @@ h1 {
 .btn.delete:hover {
     background-color: #d34545;
     color: #fff;
+}
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-danger:active {
+    background-color: #bd2130;
+    transform: scale(0.98);
 }

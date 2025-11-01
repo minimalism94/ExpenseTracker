@@ -9,7 +9,9 @@ import app.user.model.User;
 import app.user.service.UserService;
 import app.wallet.model.Wallet;
 import app.wallet.repository.WalletRepository;
+import app.web.dto.TopCategories;
 import app.web.dto.TransactionDto;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.RoundingMode;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,35 +78,56 @@ public class TransactionService {
         walletRepository.save(wallet);
     }
 
-    public Map<Category, BigDecimal> getTopCategories(UUID walletId) {
-        List<Object[]> results = transactionRepository.findTopCategoriesByWallet(walletId);
 
-        return results.stream()
+    public List<TopCategories> getTopCategories(UUID walletId) {
+        List<TopCategories> rawTop = transactionRepository.topCategories(walletId);
+
+
+        List<TopCategories> top3 = rawTop.stream()
                 .limit(3)
-                .collect(Collectors.toMap(
-                        row -> (Category) row[0],
-                        row -> (BigDecimal) row[1],
-                        (a, b) -> a,
-                        LinkedHashMap::new
-                ));
+                .collect(Collectors.toList());
 
+        BigDecimal total = calculateTotalAmount(top3);
+
+        calculatePercents(top3, total);
+
+        return top3;
     }
 
-    public Map<String, Integer> calculateCategoryPercents(Map<Category, BigDecimal> categoryTotals) {
-        BigDecimal total = categoryTotals.values().stream()
+    private BigDecimal calculateTotalAmount(List<TopCategories> categories) {
+        return categories.stream()
+                .map(TopCategories::getTotalAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return categoryTotals.entrySet().stream()
-                .collect(Collectors.toMap(
-                        e -> e.getKey().name().toLowerCase(),
-                        e -> e.getValue()
-                                .multiply(BigDecimal.valueOf(100))
-                                .divide(total, 0, RoundingMode.HALF_UP)
-                                .intValue(),
-                        (a, b) -> a,
-                        LinkedHashMap::new
-                ));
     }
+
+    private void calculatePercents(List<TopCategories> categories, BigDecimal total) {
+        for (TopCategories dto : categories) {
+            int percent = total.compareTo(BigDecimal.ZERO) > 0
+                    ? dto.getTotalAmount()
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(total, 0, RoundingMode.HALF_UP)
+                    .intValue()
+                    : 0;
+            dto.setPercent(percent);
+        }
+
+    }
+
+    @Transactional
+    public void deleteTransaction(UUID transactionId, UUID userId) {
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+
+        Wallet wallet = transaction.getWallet();
+        if (wallet == null || wallet.getUser() == null || !wallet.getUser().getId().equals(userId)) {
+            throw new SecurityException("You are not authorized to delete this transaction");
+        }
+
+        wallet.getTransactions().remove(transaction);
+        walletRepository.save(wallet);
+    }
+
+
 
 
 

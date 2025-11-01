@@ -9,6 +9,7 @@ import app.user.model.User;
 import app.user.service.UserService;
 import app.wallet.model.Wallet;
 import app.wallet.service.WalletService;
+import app.web.dto.TopCategories;
 import org.springframework.boot.Banner;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class DashboardController {
@@ -37,8 +39,15 @@ public class DashboardController {
     public ModelAndView getHomePage (@AuthenticationPrincipal UserData userData) {
         User user = userService.getById(userData.getUserId());
         Wallet wallet = user.getWallet();
-        Map<Category, BigDecimal> topCategories = transactionService.getTopCategories(wallet.getId());
-        Map<String, Integer> percents = transactionService.calculateCategoryPercents(topCategories);
+
+        List<TopCategories> topCategories = transactionService.getTopCategories(wallet.getId());
+        List<String> categoryNames = topCategories.stream()
+                .map(c -> c.getCategory().getName())
+                .toList();
+
+        List<Integer> categoryPercents = topCategories.stream()
+                .map(TopCategories::getPercent)
+                .toList();
         //TODO Make them order by Asc by date
         List<Subscription> subscription = user.getSubscriptions();
         List <Transaction>  allTransaction= wallet.getTransactions();
@@ -48,8 +57,9 @@ public class DashboardController {
         modelAndView.addObject("wallet", wallet);
         modelAndView.addObject("subscription", subscription);
         modelAndView.addObject("transactions", allTransaction);
-        modelAndView.addObject("topCategories", topCategories);
-        modelAndView.addObject("percents", percents);
+        modelAndView.addObject("topCategories",  transactionService.getTopCategories(wallet.getId()));
+        modelAndView.addObject("categoryNames", categoryNames);
+        modelAndView.addObject("categoryPercents", categoryPercents);
 
         return modelAndView;
     }

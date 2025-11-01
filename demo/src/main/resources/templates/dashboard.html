@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Finance Dashboard</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>
 </head>
 <body>
 <div class="dashboard">
@@ -75,26 +78,40 @@
         <section class="middle">
             <div class="chart card">
                 <h3>Spending Categories</h3>
-                <div class="pie-placeholder">[Pie Chart]</div>
+                <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
                 <ul class="legend">
-                    <li><span class="dot food"></span> Food</li>
-                    <li><span class="dot rent"></span> Rent</li>
-                    <li><span class="dot entertainment"></span> Entertainment</li>
+
                 </ul>
             </div>
             <div class="upcoming card">
-                <h3>Subscriptions Upcoming Payments</h3>
+<!--                <h3>Upcoming Payments</h3>-->
+
+                <!-- Header Row -->
+                <div class="payments-header">
+                    <span>Subscription</span>
+                    <span>Date</span>
+                    <span>Type</span>
+                    <span>Amount</span>
+                    <span>Action</span>
+                </div>
+
                 <ul class="payments">
                     <li th:each="sub : ${subscription}">
-                        <span th:text="${sub.name}">Subscription Name</span>
+                        <span class="name" th:text="${sub.name}">Subscription Name</span>
                         <span class="date" th:text="${#temporals.format(sub.expiryOn, 'dd MMM')}">Date</span>
                         <span class="type" th:text="${sub.type}">Type</span>
-                        <span class="amount" th:text="'$' + ${sub.price}">Amount</span>
+                        <span class="amount" th:text="'BGN ' + ${sub.price}">Amount</span>
+                        <form th:action="@{'/payments/pay/' + ${sub.id}}" method="post">
+                            <button type="submit" class="btn btn-success">Pay</button>
+                        </form>
                     </li>
                 </ul>
+
                 <a th:href="@{/payments}" class="view-all">View All</a>
                 <a th:href="@{/payments/add}" class="view-all">Add</a>
             </div>
+
+
         </section>
 
         <!-- Transactions -->
@@ -112,13 +129,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="transaction : ${transactions}">
+                <tr th:each="transaction, iterStat : ${transactions}" th:if="${iterStat.index} < 3">
                     <td th:text="${transaction.category}">Category</td>
                     <td th:text="${#temporals.format(transaction.date, 'dd/MM/yyyy - hh:mma')}">Date</td>
                     <td th:text="${transaction.amount}">Amount</td>
                     <td th:text="${transaction.type}">Card/Cash</td>
                     <td th:text="${transaction.description}">Card/Cash</td>
                     <td class="status completed">Completed</td>
+                    <td>
+                        <form th:action="@{'/transactions/delete/' + ${transaction.id}}" method="post">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -126,5 +148,47 @@
         </section>
     </main>
 </div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var xValues = [[${categoryNames}]];
+    var yValues = [[${categoryPercents}]];
+    var barColors = [
+        "#bd2a36",
+        "#50c069",
+        "#2d6ec5"
+    ];
+
+    const ctx = document.getElementById("myChart").getContext("2d");
+    new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: "Spending Categories"
+            },
+            legend: {
+                position: "bottom"
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ": " + context.value + "%";
+                    }
+                }
+            }
+        }
+    });
+    /*]]>*/
+</script>
+
+
 </body>
 </html>

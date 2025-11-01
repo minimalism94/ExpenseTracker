@@ -134,7 +134,7 @@ body {
 }
 
 .amount {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin: 0.5rem 0;
 }
 
@@ -228,12 +228,49 @@ body {
 .payments {
     list-style: none;
     margin: 1rem 0;
+    padding: 0;
+}
+
+.payments-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    align-items: center;
+    font-weight: 600;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #ddd;
 }
 
 .payments li {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+.payments span {
+    text-align: left;
+}
+
+.payments .amount {
+    text-align: right;
+    font-weight: 400;
+}
+
+.payments form {
+    display: inline;
+    margin: 0;
+}
+
+.payments .btn-success {
+    background: var(--accent-green);
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius);
+    color: #fff;
+    cursor: pointer;
 }
 
 .view-all {
@@ -243,36 +280,40 @@ body {
     border-radius: var(--radius);
     cursor: pointer;
     color: #fff;
+    text-decoration: none;
+    margin-right: 0.5rem;
 }
+
 
 /* Transactions */
-.transactions table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
+    .transactions table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
 
-.transactions th,
-.transactions td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid #444;
-}
+    .transactions th,
+    .transactions td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #444;
+    }
 
-.status.completed {
-    color: var(--accent-green);
-}
+    .status.completed {
+        color: var(--accent-green);
+    }
 
-.status.pending {
-    color: #ffb84d;
-}
+    .status.pending {
+        color: #ffb84d;
+    }
 
-.all-transactions {
-    display: inline-block;
-    margin-top: 1rem;
-    color: var(--accent-green);
-    text-decoration: none;
-}
+    .all-transactions {
+        display: inline-block;
+        margin-top: 1rem;
+        color: var(--accent-green);
+        text-decoration: none;
+    }
+
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -282,4 +323,23 @@ body {
     .sidebar {
         display: none;
     }
+}
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-danger:active {
+    background-color: #bd2130;
+    transform: scale(0.98);
 }

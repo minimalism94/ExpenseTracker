@@ -15,7 +15,11 @@ public enum Category {
     FAMILY,           // Деца и семейство
     GIFTS,            // Подаръци и благотворителност
     HOME,             // Дом и ремонти
-    OTHER;           // Други/непредвидени
+    OTHER;// Други/непредвидени
+
+    public String getName() {
+        return name();
+    }
 
 
 }

@@ -56,8 +56,7 @@ public class User {
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private Wallet wallet;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Transaction> transactions;
+
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

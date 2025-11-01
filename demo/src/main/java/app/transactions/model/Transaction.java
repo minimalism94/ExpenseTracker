@@ -8,12 +8,12 @@
     import java.time.LocalDateTime;
     import java.util.UUID;
 
-    @Entity
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Builder
-    @ToString(exclude = "transactions")
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Entity
     public class Transaction {
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,9 +32,7 @@
         private String description;
 
 
-        @ManyToOne
-        private User user;
-// Трябва ли тук да имам релация само с user или и С WALLET
+
         @ManyToOne
         private Wallet wallet;
 
