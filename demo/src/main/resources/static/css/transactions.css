@@ -38,11 +38,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.menu a:hover {
-    background-color: #00ff88;
-    color: #000;
-}
-
+.menu a:hover,
 .menu a.active {
     background-color: #00ff88;
     color: #000;
@@ -66,7 +62,7 @@ body {
     color: #00ff88;
 }
 
-/* Layout for form and table side-by-side */
+/* Layout for form and table */
 .form-wrapper {
     display: flex;
     justify-content: center;
@@ -76,128 +72,128 @@ body {
     flex-wrap: wrap;
 }
 
+/* Cards */
 .form-card,
 .transaction-list {
     background-color: #222;
     padding: 30px;
     border-radius: 12px;
-    width: 100%;
-    max-width: 480px;
+    flex: 1 1 400px;   /* всяка кутия заема минимум 400px */
+    max-width: 500px;  /* и максимум 500px */
     box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
 
+.form-card h2,
+.transaction-list h2 {
+    text-align: center;
+    color: #00ff88;
+    margin-bottom: 20px;
+}
 
-    .form-card h2,
-    .transaction-list h2 {
-        text-align: center;
-        color: #00ff88;
-        margin-bottom: 20px;
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #ddd;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #888;
+}
+
+.save-btn {
+    background-color: #00ff88;
+    color: #000;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.save-btn:hover {
+    background-color: #00cc6e;
+}
+
+/* Table */
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transaction-table th,
+.transaction-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    color: #eee;
+}
+
+.transaction-table th {
+    background-color: #333;
+    color: #00ff88;
+    font-weight: 600;
+}
+
+.transaction-table tr:hover {
+    background-color: #2a2a2a;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Error box */
+.error-box {
+    background-color: transparent;
+    color: #b30000;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .form-wrapper {
+        flex-direction: column;
+        align-items: center;
     }
 
-    /* Form Styles */
-
-    .form-group {
-        margin-bottom: 20px;
+    .form-card,
+    .transaction-list {
+        max-width: 600px;
     }
-
-    label {
-        display: block;
-        margin-bottom: 6px;
-        font-weight: 500;
-        color: #ddd;
-    }
-
-    input,
-    select,
-    textarea {
-        width: 100%;
-        padding: 10px;
-        border-radius: 6px;
-        border: none;
-        background-color: #333;
-        color: #fff;
-        font-size: 14px;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-        color: #888;
-    }
-
-    .save-btn {
-        background-color: #00ff88;
-        color: #000;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        font-size: 16px;
-        cursor: pointer;
-        width: 100%;
-        transition: background-color 0.3s ease;
-    }
-
-    .save-btn:hover {
-        background-color: #00cc6e;
-    }
-
-    /* Table */
-
-    .transaction-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .transaction-table th,
-    .transaction-table td {
-        padding: 12px 16px;
-        text-align: left;
-        border-bottom: 1px solid #444;
-        color: #eee;
-    }
-
-    .transaction-table th {
-        background-color: #333;
-        color: #00ff88;
-        font-weight: 600;
-    }
-
-    .transaction-table tr:hover {
-        background-color: #2a2a2a;
-    }
-
-    .delete-btn {
-        background-color: #e74c3c;
-        color: #fff;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .delete-btn:hover {
-        background-color: #c0392b;
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-        .form-wrapper {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form-card,
-        .transaction-list {
-            max-width: 600px;
-        }
-    }
-    .error-box {
-        background-color: transparent;
-        color: #b30000;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        font-weight: bold;
-    }
-
 }

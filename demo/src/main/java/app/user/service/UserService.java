@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -91,4 +92,29 @@ public class UserService implements UserDetailsService {
 
         return user.get();
     }
-}
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void setRole(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException("User not found"));
+        if (user.getRole() == Role.ADMIN) {
+            user.setRole(Role.USER);
+        } else {
+            user.setRole(Role.ADMIN);
+        }
+        userRepository.save(user);
+    }
+
+    public void delete(UUID id) {
+        userRepository.deleteById(id);
+    }
+
+    public void setActive(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException("User not found"));
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
+    }
+

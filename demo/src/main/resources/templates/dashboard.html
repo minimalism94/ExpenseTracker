@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +19,7 @@
                 <a  th:href="@{/transactions}">Transactions</a>
                 <a  th:href="@{/payments}">Subscriptions</a>
                 <a  th:href="@{/editProfile}">Edit Profile</a>
+                <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Admin Panel</a>
                 <a  th:href="@{/}">Log out</a>
             </nav>
         </aside>
@@ -52,14 +53,15 @@
         <section class="cards">
             <div class="card">
                 <h3>Income</h3>
-                <p class="amount" th:text="${wallet.getIncome()}">$20,130.30</p>
+
+                <p class="amount" th:text="'BGN ' + ${wallet.getIncome()}">$20,130.30</p>
 <!--                <span class="change positive">+30%</span>-->
                 <button type="submit" class="link-btn">Add Income</button>
 
             </div>
             <div class="card">
                 <h3>Expenses</h3>
-                <p class="amount" th:text="${wallet.getExpense()}">$7,540.20</p>
+                <p class="amount" th:text="'BGN ' + ${wallet.getExpense()}">$7,540.20</p>
 <!--                <span class="change negative">-10%</span>-->
                 <form th:action="@{/transactions}" method="get">
                     <button type="submit" class="link-btn">Add Expense</button>
@@ -69,7 +71,7 @@
             </div>
             <div class="card">
                 <h3>Current Balance</h3>
-                <p class="amount" th:text="${wallet.getBalance()}">$40,100.75</p>
+                <p class="amount" th:text="'BGN ' + ${wallet.getBalance()}">$40,100.75</p>
                 <button class="link-btn">View Detailed Report</button>
             </div>
         </section>
@@ -116,7 +118,7 @@
 
         <!-- Transactions -->
         <section class="transactions card">
-            <h3>Transactions</h3>
+            <h3>Last Transactions</h3>
             <table>
                 <thead>
                 <tr>
@@ -132,7 +134,7 @@
                 <tr th:each="transaction, iterStat : ${transactions}" th:if="${iterStat.index} < 3">
                     <td th:text="${transaction.category}">Category</td>
                     <td th:text="${#temporals.format(transaction.date, 'dd/MM/yyyy - hh:mma')}">Date</td>
-                    <td th:text="${transaction.amount}">Amount</td>
+                    <td th:text="'BGN ' + ${transaction.amount}">Amount</td>
                     <td th:text="${transaction.type}">Card/Cash</td>
                     <td th:text="${transaction.description}">Card/Cash</td>
                     <td class="status completed">Completed</td>

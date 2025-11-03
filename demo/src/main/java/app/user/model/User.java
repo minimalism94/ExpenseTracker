@@ -53,13 +53,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Country country = Country.BULGARIA;
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Wallet wallet;
 
 
 
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Subscription> subscriptions;
 
 }

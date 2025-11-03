@@ -40,11 +40,12 @@ public class TransactionController {
     @GetMapping("/transactions")
         public ModelAndView showTransaction(@AuthenticationPrincipal UserData userData) {
         User currentUser=  userService.getById(userData.getUserId());
-
+        List<Transaction>allTransaction = currentUser.getWallet().getTransactions();
         ModelAndView modelAndView = new ModelAndView("transactions");
         modelAndView.addObject("transaction", new TransactionDto());
         modelAndView.addObject("types", Type.values());
         modelAndView.addObject("categories", Category.values());
+        modelAndView.addObject("allTransactions", allTransaction);
 
         return modelAndView;
     }
