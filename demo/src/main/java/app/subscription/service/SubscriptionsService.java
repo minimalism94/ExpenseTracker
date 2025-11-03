@@ -12,6 +12,7 @@ import app.wallet.model.Wallet;
 import app.wallet.repository.WalletRepository;
 import app.web.dto.EditSubscriptionDto;
 import app.web.dto.SubscriptionDto;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,9 +77,11 @@ public class SubscriptionsService {
         subscriptionsRepository.delete(subscription);
     }
 
+    @Transactional
     public void paySubscription(UUID subscriptionId, UUID userId) {
         Subscription subscription = subscriptionsRepository.findById(subscriptionId)
                 .orElseThrow(() -> new IllegalArgumentException("Subscription not found"));
+        User user = subscription.getUser();
 
         Wallet wallet = subscription.getUser().getWallet();
         if (wallet == null || wallet.getUser() == null || !wallet.getUser().getId().equals(userId)) {
@@ -92,7 +95,9 @@ public class SubscriptionsService {
             throw new CustomException("Insufficient balance for this subscription.");
         }
         walletRepository.save(wallet);
-        subscriptionsRepository.delete(subscription);
+        //TODO по изчистен вариант
+        user.getSubscriptions().remove(subscription);
+        subscription.setUser(null);
 
     }
 }

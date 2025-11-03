@@ -14,7 +14,7 @@
             <a href="#">Dashboard</a>
             <a  th:href="@{/transactions}">Transactions</a>
             <a  th:href="@{/payments}">Subscriptions</a>
-            <a  th:href="@{/editProfile}">Edit Profile</a>
+            <a  th:href="@{/profile}">Edit Profile</a>
             <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')" class="active">Admin Panel</a>
             <a  th:href="@{/}">Log out</a>
         </nav>

@@ -36,7 +36,4 @@ public class Subscription {
     @ManyToOne
     private User user;
 
-
-
-    // Getters and setters
 }

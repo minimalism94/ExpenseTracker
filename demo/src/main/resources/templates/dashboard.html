@@ -18,7 +18,7 @@
                 <a href="#" class="active">Dashboard</a>
                 <a  th:href="@{/transactions}">Transactions</a>
                 <a  th:href="@{/payments}">Subscriptions</a>
-                <a  th:href="@{/editProfile}">Edit Profile</a>
+                <a  th:href="@{/profile}">Edit Profile</a>
                 <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Admin Panel</a>
                 <a  th:href="@{/}">Log out</a>
             </nav>
@@ -42,6 +42,7 @@
                     <p class="greeting">Welcome</p>
                     <p class="username"  th:text="${user.username}"> Lawal Babatunde</p>
                 </div>
+                <h2 class="page-title">Expense Tracker – your financial adviser</h2>
             </div>
             <div class="header-actions">
                 <button class="circle-btn">⚙️</button>

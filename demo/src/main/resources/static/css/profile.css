@@ -1,0 +1,154 @@
+/* Нулиране и глобални настройки */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* премахва глобалния скрол */
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #0f0f0f;
+    color: #fff;
+}
+
+/* Контейнерът държи sidebar и main едно до друго */
+.container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #1f1f1f;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #00ff88;
+}
+
+.menu a {
+    color: #ccc;
+    text-decoration: none;
+    margin: 0.6rem 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.menu a:hover,
+.menu a.active {
+    background-color: #00ff88;
+    color: #000;
+    font-weight: 600;
+}
+
+/* Main */
+.main {
+    flex: 1;
+    background-color: #1a1a1a;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0; /* предотвратява хоризонтален скрол */
+    overflow-y: auto; /* ако съдържанието е по-дълго, скрол само вътре */
+}
+
+.main h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #00ff88;
+}
+
+/* Form Card */
+.profile-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.form-card {
+    background: #222;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+    text-align: center;
+}
+
+/* Профилна снимка */
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px auto;
+    border: 3px solid #00ff88;
+}
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Полета */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #ddd;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+}
+
+input:focus, select:focus {
+    outline: 2px solid #00ff88;
+}
+
+/* Бутон */
+.save-btn {
+    background-color: #00ff88;
+    color: #000;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.save-btn:hover {
+    background-color: #00cc6e;
+    transform: translateY(-2px);
+}

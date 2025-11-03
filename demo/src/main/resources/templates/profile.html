@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SmartExpense</h2>
+        <nav class="menu">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/transactions}">Transactions</a>
+            <a th:href="@{/payments}">Subscriptions</a>
+            <a th:href="@{/profile}" class="active">Edit Profile</a>
+            <a th:href="@{/logout}">Log out</a>
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <h1>Edit Profile</h1>
+        <div class="profile-wrapper">
+            <div class="form-card">
+                <!-- Профилна снимка -->
+                <div class="avatar">
+                    <img th:if="${userEditRequest.profilePicture != null}"
+                         th:src="${userEditRequest.profilePicture}"
+                         alt="User Avatar"/>
+                    <img th:if="${userEditRequest.profilePicture == null}"
+                         src="https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png"
+                         alt="Default Avatar"/>
+                </div>
+
+                <!-- Форма -->
+                <form th:action="@{/profile}" th:object="${userEditRequest}" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input id="username" type="text" th:field="*{username}" readonly/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input id="firstName" type="text" th:field="*{firstName}"/>
+                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" type="text" th:field="*{lastName}"/>
+                        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" th:field="*{email}"/>
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profilePicture">Profile Picture URL</label>
+                        <input id="profilePicture" type="text" th:field="*{profilePicture}"/>
+                        <div th:if="${#fields.hasErrors('profilePicture')}" th:errors="*{profilePicture}" class="error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <select id="country" th:field="*{country}">
+                            <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="error"></div>
+                    </div>
+
+                    <button type="submit" class="save-btn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -13,6 +13,7 @@ import app.user.repository.UserRepository;
 import app.wallet.service.WalletService;
 import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
+import app.web.dto.UserEditRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Slf4j
 @Service
@@ -116,5 +119,23 @@ public class UserService implements UserDetailsService {
         user.setActive(!user.isActive());
         userRepository.save(user);
     }
+
+
+        public void editUserDetails(UUID id, UserEditRequest dto) {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new CustomException("User not found with id [%s]".formatted(id)));
+
+
+            user.setUsername(dto.getUsername());
+            user.setFirstName(dto.getFirstName());
+            user.setLastName(dto.getLastName());
+            user.setEmail(dto.getEmail());
+            user.setProfilePicture(dto.getProfilePicture());
+            user.setCountry(dto.getCountry());
+            user.setUpdatedOn(LocalDateTime.now());
+
+            userRepository.save(user);
+        }
     }
+
 
