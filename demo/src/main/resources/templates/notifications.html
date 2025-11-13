@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartExpense Notifications</title>
+    <link rel="stylesheet" href="/css/notification.css" />
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <h2>SmartExpense</h2>
+        <nav>
+            <ul>
+                <li class="active">Dashboard</li>
+                <li class="active-green">Transactions</li>
+                <li>Subscriptions</li>
+                <li>Edit Profile</li>
+                <li>Log out</li>
+            </ul>
+        </nav>
+        <footer>© 2023 Smart Expense</footer>
+    </aside>
+
+    <main class="main-content">
+        <section class="dashboard">
+            <h3>Notification Dashboard</h3>
+            <strong>Notification type:</strong>
+            <p th:text="${userNotifications.getType()}"> General</p>
+            <strong>Source:</strong>
+            <p th:text="${userNotifications.getContactInfo()}">user@useremail.com</p>
+            <p><strong>Non-failed notifications:</strong> 16</p>
+            <p><strong>Failed notifications:</strong> 3</p>
+            <div class="state-buttons">
+                <p>Notification state </p>
+                <button class="enabled" th:if="${userNotifications.isNotificationEnabled()}" >ENABLED</button>
+                <button class="disabled"th:unless="${userNotifications.isNotificationEnabled()}">DISABLED</button>
+            </div>
+            <h4>Change State:</h4>
+            <button th:if="${userNotifications.isNotificationEnabled()}">Disable Notifications</button>
+            <button class="green"th:unless="${userNotifications.isNotificationEnabled()}">Enable Notifications</button>
+            <h4>General Actions:</h4>
+            <button>Clear History</button>
+            <button>Retry Failed</button>
+            <p class="note">Any action that you take will affect the notification mechanism for your account!</p>
+        </section>
+
+        <section class="history">
+            <h3>Notification History</h3>
+            <p>Your last 5 notifications from us:</p>
+            <table>
+                <thead>
+                <tr>
+                    <th>SUBJECT</th>
+                    <th>DATE</th>
+                    <th>STATUS</th>
+                    <th>TYPE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="email : ${lastNotifications}">
+                    <td th:text="${email.subject}" >Renewal for plans</td>
+                    <td th:text="${#temporals.format(email.createdOn, 'dd,MMM,yyyy')}">19 Jan 2024</td>
+                    <td class="success"th:if="${email.status == 'SUCCEEDED'}">SUCCEEDED</td>
+                    <td class="failed"th:if="${email.status == 'FAILED'}">FAILED</td>
+                    <td th:text="${email.type}">EMAIL</td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="note">Every record in the table is equal to 1 notification of a certain type.</p>
+        </section>
+    </main>
+</div>
+</body>
+</html>
