@@ -34,7 +34,7 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
-    private Wallet getById(UUID walletId) {
+    public Wallet getById(UUID walletId) {
         return walletRepository.findById(walletId)
                 .orElseThrow(() -> new RuntimeException("Wallet by id [%s] was not found".formatted(walletId)));
     }

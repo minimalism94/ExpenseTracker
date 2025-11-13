@@ -3,6 +3,7 @@ package app.user.service;
 import app.confg.BeanConfiguration;
 import app.confg.SecurityConfig;
 import app.exception.CustomException;
+import app.notification.service.NotificationService;
 import app.security.UserData;
 import app.subscription.model.Subscription;
 import app.subscription.service.SubscriptionsService;
@@ -45,14 +46,16 @@ public class UserService implements UserDetailsService {
     private final SubscriptionsService subscriptionsService;
     private final SecurityConfig securityConfig;
     private final BeanConfiguration beanConfiguration;
+    private final NotificationService notificationService;
 
     @Autowired
-    public UserService(UserRepository userRepository,BeanConfiguration beanConfiguration, WalletService walletService, SubscriptionsService subscriptionsService, SecurityConfig securityConfig ) {
+    public UserService(UserRepository userRepository, BeanConfiguration beanConfiguration, WalletService walletService, SubscriptionsService subscriptionsService, SecurityConfig securityConfig, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.walletService = walletService;
         this.subscriptionsService = subscriptionsService;
         this.securityConfig = securityConfig;
         this.beanConfiguration = beanConfiguration;
+        this.notificationService = notificationService;
     }
 
 
@@ -77,6 +80,7 @@ public class UserService implements UserDetailsService {
         walletService.createDefaultWallet(user);
         subscriptionsService.createDefaultSubscription(user);
         log.info("User [%s] registered successfully".formatted(user.getUsername()));
+        notificationService.upsertPreference(user.getId(), false, user.getEmail());
     }
 
 
@@ -124,8 +128,11 @@ public class UserService implements UserDetailsService {
         public void editUserDetails(UUID id, UserEditRequest dto) {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new CustomException("User not found with id [%s]".formatted(id)));
-
-
+                if (dto.getEmail() != null || dto.getEmail().isBlank()) {
+                    notificationService.upsertPreference(user.getId(), true, user.getEmail());
+                }else {
+                    notificationService.upsertPreference(user.getId(), false, null);
+                }
             user.setUsername(dto.getUsername());
             user.setFirstName(dto.getFirstName());
             user.setLastName(dto.getLastName());

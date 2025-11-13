@@ -345,6 +345,7 @@ body {
 }
 .page-title {
     margin-top: 20px;
+    padding-left: 140px;
     text-align: center;
     font-size: 28px;
     font-weight: bold;

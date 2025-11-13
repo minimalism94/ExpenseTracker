@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.validation.BindingResult;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,6 +47,7 @@ public class SubscriptionController {
     }
 
 
+
     @PostMapping("/add")
     public ModelAndView addPayment(@Valid @ModelAttribute("subscription") SubscriptionDto dto, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
@@ -53,7 +55,7 @@ public class SubscriptionController {
         }
 
         subscriptionService.saveSubscription(dto, principal.getName());
-        return new ModelAndView("redirect:/payments");
+        return new ModelAndView("redirect:/dashboard");
     }
 
 
@@ -68,5 +70,6 @@ public class SubscriptionController {
         subscriptionService.paySubscription(id, userData.getUserId());
         return new ModelAndView("redirect:/dashboard");
     }
+
 }
 

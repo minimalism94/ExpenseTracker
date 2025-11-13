@@ -19,7 +19,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(#00c896 1px, transparent 1px);
+    background-image: radial-gradient(#4ccd6a 1px, transparent 1px);
     background-size: 20px 20px;
     animation: moveParticles 20s linear infinite;
     opacity: 0.2;
@@ -54,7 +54,7 @@ body {
 .logo-text {
     font-size: 28px;
     font-weight: bold;
-    color: #00c896;
+    color: #4ccd6a;
     margin-bottom: 20px;
     letter-spacing: 1px;
 }
@@ -66,9 +66,9 @@ body {
 }
 
 @keyframes pulseGlow {
-    0% { text-shadow: 0 0 5px #00c896; }
-    50% { text-shadow: 0 0 15px #00c896; }
-    100% { text-shadow: 0 0 5px #00c896; }
+    0% { text-shadow: 0 0 5px #5fef81; }
+    50% { text-shadow: 0 0 15px #52e173; }
+    100% { text-shadow: 0 0 5px #4ccd6a; }
 }
 
 form {
@@ -86,13 +86,13 @@ form {
     top: 50%;
     left: 12px;
     transform: translateY(-50%);
-    color: #00c896;
+    color: #06ca33;
     font-size: 16px;
 }
 
 .input-group input {
     padding: 12px 12px 12px 36px;
-    border: 2px solid #00c896;
+    border: 2px solid #14ca40;
     border-radius: 6px;
     background-color: #3c4f63;
     color: #fff;
@@ -105,7 +105,7 @@ form {
 
 button {
     padding: 12px;
-    background-color: #00c896;
+    background-color: #4ccd6a;
     border: none;
     border-radius: 6px;
     color: #1e2a38;
@@ -116,8 +116,8 @@ button {
 }
 
 button:hover {
-    background-color: #00b386;
-    box-shadow: 0 0 10px #00c896;
+    background-color: #26d14f;
+    box-shadow: 0 0 10px #4ccd6a;
 }
 .error-message {
     color: #ff4d4f; /* ярко червен текст */

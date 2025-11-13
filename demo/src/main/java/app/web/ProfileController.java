@@ -38,6 +38,7 @@ public class ProfileController {
 
         return modelAndView;
     }
+
     @PostMapping("/profile")
     public ModelAndView updateProfile(@AuthenticationPrincipal UserData userData,
                                       @Valid @ModelAttribute("userEditRequest") UserEditRequest dto,
