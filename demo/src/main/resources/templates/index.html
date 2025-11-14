@@ -10,6 +10,16 @@
 <body>
 <div class="background">
     <div class="particles"></div>
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+    <div class="hero-text">
+        <span class="typing-text" id="typingText"></span>
+        <span class="cursor">|</span>
+    </div>
     <div class="login-container">
         <img src="/images/logo.png" alt="SmartExpense Logo" class="logo-img" />
         <div class="logo-text">SmartExpense</div>
@@ -19,11 +29,29 @@
             <div class="links">
                 <a th:href="@{/login}" class="btn">Login</a>
                 <a th:href="@{/register}" class="btn">Registration</a>
-
             </div>
         </div>
     </div>
 </div>
+<script>
+    const text = "Track your money, own your future";
+    const typingElement = document.getElementById('typingText');
+    let i = 0;
+    
+    function typeWriter() {
+        if (i < text.length) {
+            typingElement.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 100);
+        } else {
+            document.querySelector('.cursor').style.animation = 'blink 1s infinite';
+        }
+    }
+    
+    setTimeout(() => {
+        typeWriter();
+    }, 500);
+</script>
 </body>
 </html>
 
