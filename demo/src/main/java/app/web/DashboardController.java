@@ -49,7 +49,6 @@ public class DashboardController {
                 .map(TopCategories::getPercent)
                 .toList();
         
-        // Sort subscriptions by expiry date in descending order (newest first) and limit to 3
         List<Subscription> subscription = user.getSubscriptions().stream()
                 .sorted((s1, s2) -> s2.getExpiryOn().compareTo(s1.getExpiryOn()))
                 .limit(3)

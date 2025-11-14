@@ -112,13 +112,11 @@ public class SubscriptionsService {
         wallet.setBalance(wallet.getBalance().subtract(amount));
         wallet.setExpense(wallet.getExpense().add(amount));
         
-        // Mark subscription as paid (don't remove it, just set paidDate)
         subscription.setPaidDate(LocalDate.now());
         subscriptionsRepository.save(subscription);
         walletRepository.save(wallet);
     }
-   // @Scheduled(cron = "0 * * * * *", zone = "Europe/Sofia")
-    //@Scheduled(cron = "0 0 8 * * MON", zone = "Europe/Sofia")
+
     public void notifyExpiringSubscriptions() {
         LocalDate today = LocalDate.now();
         LocalDate limit = today.plusDays(7);

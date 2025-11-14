@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="bg">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="/css/adminPanel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
-<div class="dashboard">
+<div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
         <h2 class="logo">SmartExpense</h2>
@@ -17,72 +18,74 @@
             <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
+            <a th:href="@{/report}"><i class="fas fa-file-alt"></i> Report</a>
             <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')" class="active"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside>
 
     <!-- Main Content -->
-    <main class="main-content">
-        <header class="header">
-            <div class="user-info">
-                <div>
-                    <p class="greeting">Welcome back</p>
-                    <p class="username">Administrator</p>
-                </div>
-            </div>
-        </header>
+    <main class="main">
+        <h1>Admin Panel</h1>
 
-        <!-- Summary -->
-        <section class="cards">
-            <div class="card">
+        <!-- Summary Card -->
+        <section class="summary-section">
+            <div class="summary-card">
                 <h3>Total Users</h3>
                 <p class="amount" th:text="${allUser}">0</p>
             </div>
         </section>
 
-        <!-- Table -->
+        <!-- Users Table -->
         <section class="table-section">
-            <div class="table-header">
-                <h3>Users</h3>
+            <h2 class="section-title">Users</h2>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.username}">Name</td>
+                        <td th:text="${user.email}">Email</td>
+                        <td>
+                            <span th:classappend="${user.role.name() == 'ADMIN'} ? 'role-badge admin' : 'role-badge user'"
+                                  th:text="${user.role.name() == 'ADMIN'} ? 'Admin' : 'User'">User</span>
+                        </td>
+                        <td>
+                            <span th:classappend="${user.isActive()} ? 'status active' : 'status inactive'"
+                                  th:text="${user.isActive()} ? 'Active' : 'Inactive'">Active</span>
+                        </td>
+                        <td th:text="${#temporals.format(user.createdOn, 'dd.MM.yyyy')}">Date</td>
+                        <td class="actions-cell">
+                            <form th:action="@{|/admin/${user.id}/active|}" method="post" class="action-form">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn-action btn-activate"
+                                        th:text="${user.isActive()} ? 'Deactivate' : 'Activate'">Toggle</button>
+                            </form>
+
+                            <form th:action="@{|/admin/${user.id}/role|}" method="post" class="action-form">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn-action btn-role"
+                                        th:text="${user.role.name() == 'ADMIN'} ? 'Make User' : 'Make Admin'">Change Role</button>
+                            </form>
+
+                            <form th:action="@{|/admin/${user.id}/delete|}" method="post" class="action-form">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn-action btn-delete">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <table class="data-table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Joined</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${users}">
-                    <td th:text="${user.username}">Name</td>
-                    <td th:text="${user.email}">Email</td>
-                    <td>
-                        <span th:classappend="${user.isActive()} ? 'status active' : 'status inactive'"
-                              th:text="${user.isActive()} ? 'Active' : 'Inactive'">Active</span>
-                    </td>
-                    <td th:text="${#temporals.format(user.createdOn, 'dd.MM.yyyy')}">Date</td>
-                    <td>
-                        <form th:action="@{|/admin/${user.id}/active|}" method="post" style="display:inline">
-                            <button type="submit" class="link-btn"
-                                    th:text="${user.isActive()} ? 'Deactivate' : 'Activate'">Toggle</button>
-                        </form>
-
-                        <form th:action="@{|/admin/${user.id}/role|}" method="post" style="display:inline">
-                            <button type="submit" class="link-btn"
-                                    th:text="${user.role.name() == 'ADMIN'} ? 'Make User' : 'Make Admin'">Change Role</button>
-                        </form>
-
-                        <form th:action="@{|/admin/${user.id}/delete|}" method="post" style="display:inline">
-                            <button type="submit" class="delete">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
         </section>
     </main>
 </div>
