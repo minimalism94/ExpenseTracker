@@ -52,26 +52,32 @@ public class TransactionController {
     @PostMapping("/transactions/add")
     public ModelAndView createTransaction(@Valid TransactionDto dto, BindingResult bindingResult, @AuthenticationPrincipal UserData userData) {
 
-        ModelAndView modelAndView = new ModelAndView("transactions");
-        modelAndView.addObject("types", Type.values());
-        modelAndView.addObject("categories", Category.values());
-
         if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView("transactions");
+            User currentUser = userService.getById(userData.getUserId());
+            List<Transaction> allTransaction = currentUser.getWallet().getTransactions();
+            modelAndView.addObject("types", Type.values());
+            modelAndView.addObject("categories", Category.values());
             modelAndView.addObject("error", "Please correct the form errors.");
             modelAndView.addObject("transaction", dto);
+            modelAndView.addObject("allTransactions", allTransaction);
             return modelAndView;
         }
 
         try {
             transactionService.processTransaction(dto, userData.getUserId());
-            modelAndView.addObject("success", "Transaction saved successfully!");
-            modelAndView.addObject("transaction", new TransactionDto());
+            return new ModelAndView("redirect:/transactions");
         } catch (IllegalArgumentException e) {
+            ModelAndView modelAndView = new ModelAndView("transactions");
+            User currentUser = userService.getById(userData.getUserId());
+            List<Transaction> allTransaction = currentUser.getWallet().getTransactions();
+            modelAndView.addObject("types", Type.values());
+            modelAndView.addObject("categories", Category.values());
             modelAndView.addObject("error", e.getMessage());
             modelAndView.addObject("transaction", dto);
+            modelAndView.addObject("allTransactions", allTransaction);
+            return modelAndView;
         }
-
-        return modelAndView;
     }
     @PostMapping("/transactions/delete/{id}")
     public ModelAndView deleteTransaction(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {

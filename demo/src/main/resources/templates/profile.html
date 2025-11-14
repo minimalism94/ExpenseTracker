@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Edit Profile</title>
     <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 <div class="container">
@@ -11,15 +12,17 @@
     <aside class="sidebar">
         <h2 class="logo">SmartExpense</h2>
         <nav class="menu">
-            <a th:href="@{/dashboard}">Dashboard</a>
-            <a th:href="@{/transactions}">Transactions</a>
-            <a th:href="@{/payments}">Subscriptions</a>
-            <a th:href="@{/profile}" class="active">Edit Profile</a>
-            <a th:href="@{/logout}">Log out</a>
+            <a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
+            <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
+            <a th:href="@{/profile}" class="active"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
+            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside>
 
-    <!-- Main -->
+    <!-- Main Content -->
     <main class="main">
         <h1>Edit Profile</h1>
         <div class="profile-wrapper">
@@ -35,7 +38,7 @@
                 </div>
 
                 <!-- Форма -->
-                <form th:action="@{/profile}" th:object="${userEditRequest}" method="post">
+                <form th:action="@{/profile}" th:object="${userEditRequest}" th:method="POST">
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input id="username" type="text" th:field="*{username}" readonly/>

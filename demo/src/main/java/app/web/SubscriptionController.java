@@ -34,28 +34,28 @@ public class SubscriptionController {
     @GetMapping
     public ModelAndView listPayments(Principal principal) {
         List<Subscription> subscriptions = subscriptionService.getByUsername(principal.getName());
-        ModelAndView modelAndView = new ModelAndView("listPayments");
+        ModelAndView modelAndView = new ModelAndView("subscriptions");
         modelAndView.addObject("subscriptions", subscriptions);
-        return modelAndView;
-    }
-
-    @GetMapping("/add")
-    public ModelAndView showAddForm() {
-        ModelAndView modelAndView = new ModelAndView("addPayments");
         modelAndView.addObject("subscription", new SubscriptionDto());
+        modelAndView.addObject("periods", java.util.Arrays.asList(app.subscription.model.SubscriptionPeriod.values()));
+        modelAndView.addObject("types", java.util.Arrays.asList(app.subscription.model.SubscriptionType.values()));
         return modelAndView;
     }
-
-
 
     @PostMapping("/add")
     public ModelAndView addPayment(@Valid @ModelAttribute("subscription") SubscriptionDto dto, BindingResult bindingResult, Principal principal) {
+        List<Subscription> subscriptions = subscriptionService.getByUsername(principal.getName());
+        ModelAndView modelAndView = new ModelAndView("subscriptions");
+        modelAndView.addObject("subscriptions", subscriptions);
+        modelAndView.addObject("periods", java.util.Arrays.asList(app.subscription.model.SubscriptionPeriod.values()));
+        modelAndView.addObject("types", java.util.Arrays.asList(app.subscription.model.SubscriptionType.values()));
+        
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("addPayments");
+            return modelAndView;
         }
 
         subscriptionService.saveSubscription(dto, principal.getName());
-        return new ModelAndView("redirect:/dashboard");
+        return new ModelAndView("redirect:/payments");
     }
 
 

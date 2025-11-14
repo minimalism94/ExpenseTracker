@@ -78,10 +78,17 @@ public class SubscriptionsService {
         subscriptionsRepository.save(subscription);
     }
 
+    @Transactional
     public void deleteById(UUID id) {
         Subscription subscription = subscriptionsRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Subscription not found"));
 
+        User user = subscription.getUser();
+        if (user != null) {
+            user.removeSubscription(subscription);
+            userRepository.save(user);
+        }
+        
         subscriptionsRepository.delete(subscription);
     }
 
@@ -108,7 +115,7 @@ public class SubscriptionsService {
 
         user.removeSubscription(subscription);
     }
-    @Scheduled(cron = "0 * * * * *", zone = "Europe/Sofia")
+   // @Scheduled(cron = "0 * * * * *", zone = "Europe/Sofia")
     //@Scheduled(cron = "0 0 8 * * MON", zone = "Europe/Sofia")
     public void notifyExpiringSubscriptions() {
         LocalDate today = LocalDate.now();

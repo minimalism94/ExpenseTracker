@@ -1,44 +1,38 @@
-/* Нулиране и глобални настройки */
 * {
     box-sizing: border-box;
 }
 
-html, body {
+body {
     margin: 0;
     padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden; /* премахва глобалния скрол */
     font-family: 'Segoe UI', sans-serif;
     background-color: #0f0f0f;
     color: #fff;
 }
 
-/* Контейнерът държи sidebar и main едно до друго */
 .container {
     display: flex;
-    height: 100%;
+    height: 100vh;
     width: 100%;
 }
 
 /* Sidebar */
 .sidebar {
     width: 220px;
-    background-color: #1f1f1f;
+    background-color: #2d2d2d;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
 }
 
 .logo {
     font-size: 1.5rem;
     margin-bottom: 2rem;
-    color: #00ff88;
+    color: #4ccd6a;
 }
 
 .menu a {
-    color: #ccc;
+    color: #ddd;
     text-decoration: none;
     margin: 0.6rem 0;
     display: flex;
@@ -50,105 +44,296 @@ html, body {
     transition: all 0.3s ease;
 }
 
+.menu a i {
+    color: #4ccd6a;
+    width: 20px;
+    text-align: center;
+}
+
 .menu a:hover,
 .menu a.active {
-    background-color: #00ff88;
+    background-color: #4ccd6a;
     color: #000;
     font-weight: 600;
 }
 
-/* Main */
+.menu a:hover i,
+.menu a.active i {
+    color: #000;
+}
+
+/* Main Content */
 .main {
     flex: 1;
-    background-color: #1a1a1a;
-    padding: 40px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #1f1f2e 50%, #1a1a1a 100%);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 0; /* предотвратява хоризонтален скрол */
-    overflow-y: auto; /* ако съдържанието е по-дълго, скрол само вътре */
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(76, 205, 106, 0.05) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .main h1 {
-    font-size: 32px;
-    margin-bottom: 30px;
+    font-size: 26px;
+    margin-bottom: 20px;
+    margin-top: 0;
     color: #00ff88;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
 }
 
-/* Form Card */
+/* Form Wrapper */
 .profile-wrapper {
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
+    height: 100%;
+    overflow: visible;
 }
 
+/* Form Card */
 .form-card {
-    background: #222;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 500px;
+    background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
+    padding: 22px;
+    border-radius: 20px;
+    max-width: 450px;
     width: 100%;
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(0, 255, 136, 0.1),
+                0 0 40px rgba(0, 255, 136, 0.15);
+    border: 1px solid rgba(0, 255, 136, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    margin: auto;
 }
 
-/* Профилна снимка */
+/* Avatar */
 .avatar {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 auto 20px auto;
+    margin: 0 auto 18px auto;
     border: 3px solid #00ff88;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    flex-shrink: 0;
 }
+
 .avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Полета */
+/* Form Styles */
 .form-group {
-    margin-bottom: 20px;
-    text-align: left;
+    margin-bottom: 12px;
+    position: relative;
 }
 
-label {
+.form-card label {
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
-    color: #ddd;
+    color: #e0e0e0;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    transition: color 0.3s ease;
 }
 
-input, select {
+.form-group:focus-within label {
+    color: #00ff88;
+}
+
+.form-card input,
+.form-card select {
     width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    background-color: #333;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, #2a2a2a, #252525);
     color: #fff;
-    font-size: 14px;
+    font-size: 13px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.form-card input[readonly] {
+    background: linear-gradient(145deg, #2a2a2a, #252525);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.form-card select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ff88' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    word-wrap: normal !important;
+    word-break: keep-all !important;
+    text-align: left;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+select option {
+    background-color: #2a2a2a;
+    color: #fff;
+    padding: 10px 12px;
+    white-space: nowrap;
+    min-width: 100%;
+    width: auto;
+}
+
+select option:hover {
+    background-color: #00ff88;
+    color: #000;
+}
+
+select option:checked {
+    background-color: #00ff88;
+    color: #000;
+}
+
+input:hover, select:hover {
+    border-color: rgba(0, 255, 136, 0.3);
+    background: linear-gradient(145deg, #2d2d2d, #282828);
 }
 
 input:focus, select:focus {
-    outline: 2px solid #00ff88;
+    outline: none;
+    border-color: #00ff88;
+    background: linear-gradient(145deg, #2f2f2f, #2a2a2a);
+    box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1),
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(0, 255, 136, 0.2);
+    transform: translateY(-1px);
 }
 
-/* Бутон */
+input::placeholder {
+    color: #888;
+}
+
+/* Error messages */
+.error {
+    color: #ff4444;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+
+/* Save Button */
 .save-btn {
-    background-color: #00ff88;
-    color: #000;
-    padding: 12px 20px;
+    background: linear-gradient(135deg, #00ff88 0%, #4ccd6a 100%);
+    color: #000 !important;
+    padding: 11px 20px;
     border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
     cursor: pointer;
     width: 100%;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    margin-bottom: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3),
+                0 0 20px rgba(0, 255, 136, 0.1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    z-index: 10;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    flex-shrink: 0;
+}
+
+.save-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
 }
 
 .save-btn:hover {
-    background-color: #00cc6e;
+    background: linear-gradient(135deg, #00cc6e 0%, #3db85a 100%);
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4),
+                0 0 30px rgba(0, 255, 136, 0.2);
+}
+
+.save-btn:hover::before {
+    left: 100%;
+}
+
+.save-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0, 255, 136, 0.3);
+}
+
+/* Custom scrollbar for main */
+.main::-webkit-scrollbar {
+    width: 8px;
+}
+
+.main::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.main::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 136, 0.3);
+    border-radius: 10px;
+}
+
+.main::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 136, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .form-card {
+        max-width: 100%;
+    }
 }

@@ -12,41 +12,58 @@ body {
 
 .sidebar {
     width: 220px;
-    background-color: #1f1f1f;
+    background-color: #2d2d2d;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .logo {
     font-size: 1.5rem;
     margin-bottom: 2rem;
-    color: #22c55e;
+    color: #4ccd6a;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(76, 205, 106, 0.3);
 }
 
 /* Sidebar menu */
 .menu a {
-    color: #ccc;
+    color: #ddd;
     text-decoration: none;
     margin: 0.6rem 0;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-size: 1rem;
     padding: 0.75rem 1rem;
     border-radius: 10px;
     transition: all 0.3s ease;
+    position: relative;
 }
 
-.menu a:hover {
-    background-color: #4CCD6A;
-    color: #fff;
+.menu a i {
+    color: #4ccd6a;
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
 }
 
+.menu a:hover,
 .menu a.active {
-    background-color: #4CCD6A;
-    color: #fff;
-    font-weight: 600
+    background: linear-gradient(135deg, #4ccd6a 0%, #3db85a 100%);
+    color: #000;
+    font-weight: 600;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(76, 205, 106, 0.3);
+}
+
+.menu a:hover i,
+.menu a.active i {
+    color: #000;
+    transform: scale(1.1);
 }
 /* Main content */
 .main {

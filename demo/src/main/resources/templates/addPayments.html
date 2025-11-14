@@ -16,6 +16,8 @@
             <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
             <a th:href="@{/payments/add}" class="active"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
+            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside>
