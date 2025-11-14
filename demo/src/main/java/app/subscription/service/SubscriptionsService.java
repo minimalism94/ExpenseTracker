@@ -22,9 +22,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SubscriptionsService {
@@ -61,6 +63,22 @@ public class SubscriptionsService {
 
     public List<Subscription> getByUsername(String username) {
         return subscriptionsRepository.findAllByUser_UsernameOrderByExpiryOnAsc(username);
+    }
+
+    public List<Subscription> getPaidSubscriptionsForCurrentMonth(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("User not found"));
+        
+        YearMonth currentMonth = YearMonth.now();
+        
+        return user.getSubscriptions().stream()
+                .filter(s -> s.getPaidDate() != null)
+                .filter(s -> {
+                    YearMonth paidMonth = YearMonth.from(s.getPaidDate());
+                    return paidMonth.equals(currentMonth);
+                })
+                .sorted((s1, s2) -> s2.getPaidDate().compareTo(s1.getPaidDate()))
+                .collect(Collectors.toList());
     }
 
     public void saveSubscription(@Valid SubscriptionDto dto, String name) {
