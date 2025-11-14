@@ -1,35 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Finance Dashboard</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
 <body>
-<div class="dashboard">
+<div class="container">
     <!-- Sidebar -->
-        <aside class="sidebar">
-            <h2 class="logo">SmartExpense</h2>
-            <nav class="menu">
-                <a th:href="@{/dashboard}" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
-                <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
-                <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
-                <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
-                <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
-                <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
-                <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
-            </nav>
-        </aside>
+    <aside class="sidebar">
+        <h2 class="logo">SmartExpense</h2>
+        <nav class="menu">
+            <a th:href="@{/dashboard}" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
+            <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
+            <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
+            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
+        </nav>
+    </aside>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main">
+        <h1>Your Personal Finance Hub</h1>  
+        
         <!-- Header -->
-        <header class="header">
+        <div class="dashboard-header">
             <div class="user-info">
                 <div class="avatar">
                     <img th:if="${user.profilePicture != null}"
@@ -39,57 +39,42 @@
                          src="https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png"
                          alt="Default Avatar" />
                 </div>
-
                 <div>
                     <p class="greeting">Welcome</p>
-                    <p class="username"  th:text="${user.username}"> Lawal Babatunde</p>
+                    <p class="username" th:text="${user.username}">User</p>
                 </div>
-                <h2 class="page-title">Expense Tracker – your financial adviser</h2>
             </div>
-            <div class="header-actions">
-                <button class="circle-btn">⚙️</button>
-                <button class="circle-btn">🔔</button>
-            </div>
-        </header>
-
-        <!-- Summary Cards -->
-        <section class="cards">
-            <div class="card">
-                <h3>Income</h3>
-
-                <p class="amount" th:text="'BGN ' + ${wallet.getIncome()}">$20,130.30</p>
-<!--                <span class="change positive">+30%</span>-->
-                <button type="submit" class="link-btn">Add Income</button>
-
-            </div>
-            <div class="card">
-                <h3>Expenses</h3>
-                <p class="amount" th:text="'BGN ' + ${wallet.getExpense()}">$7,540.20</p>
-<!--                <span class="change negative">-10%</span>-->
-                <form th:action="@{/transactions}" method="get">
-                    <button type="submit" class="link-btn">Add Expense</button>
-                </form>
-
-
-            </div>
-            <div class="card">
-                <h3>Current Balance</h3>
-                <p class="amount" th:text="'BGN ' + ${wallet.getBalance()}">$40,100.75</p>
-                <button class="link-btn">View Detailed Report</button>
-            </div>
-        </section>
+            
+            <!-- Summary Cards -->
+            <section class="cards">
+                <div class="card">
+                    <h3>Income</h3>
+                    <p class="amount" th:text="'BGN ' + ${wallet.getIncome()}">$20,130.30</p>
+                    <button type="submit" class="link-btn">Add Income</button>
+                </div>
+                <div class="card">
+                    <h3>Expenses</h3>
+                    <p class="amount" th:text="'BGN ' + ${wallet.getExpense()}">$7,540.20</p>
+                    <form th:action="@{/transactions}" method="get">
+                        <button type="submit" class="link-btn">Add Expense</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Current Balance</h3>
+                    <p class="amount" th:text="'BGN ' + ${wallet.getBalance()}">$40,100.75</p>
+                    <button class="link-btn">View Detailed Report</button>
+                </div>
+            </section>
+        </div>
 
         <!-- Middle Section -->
         <section class="middle">
             <div class="chart card">
-                <h3>Spending Categories</h3>
-                <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
-                <ul class="legend">
-
-                </ul>
+                <h3>Top 3 Spending Categories</h3>
+                <canvas id="myChart"></canvas>
             </div>
             <div class="upcoming card">
-<!--                <h3>Upcoming Payments</h3>-->
+                <h3>Upcoming Payments</h3>
 
                 <!-- Header Row -->
                 <div class="payments-header">
@@ -104,7 +89,7 @@
                     <li th:each="sub : ${subscription}">
                         <span class="name" th:text="${sub.name}">Subscription Name</span>
                         <span class="date" th:text="${#temporals.format(sub.expiryOn, 'dd MMM')}">Date</span>
-                        <span class="type" th:text="${sub.type}">Type</span>
+                        <span class="type" th:text="${#strings.capitalize(sub.type.name().toLowerCase())}">Type</span>
                         <span class="amount" th:text="'BGN ' + ${sub.price}">Amount</span>
                         <form th:action="@{'/payments/pay/' + ${sub.id}}" method="post">
                             <button type="submit" class="btn btn-success">Pay</button>
@@ -112,8 +97,10 @@
                     </li>
                 </ul>
 
-                <a th:href="@{/payments}" class="view-all">View All</a>
-                <a th:href="@{/payments/add}" class="view-all">Add</a>
+                <div class="payment-actions">
+                    <a th:href="@{/payments}" class="view-all">View All</a>
+                    <a th:href="@{/payments/add}" class="view-all">Add</a>
+                </div>
             </div>
 
 
@@ -122,25 +109,24 @@
         <!-- Transactions -->
         <section class="transactions card">
             <h3>Last Transactions</h3>
-            <table>
+            <table class="dashboard-table">
                 <thead>
                 <tr>
                     <th>Category</th>
                     <th>Date/Time</th>
                     <th>Amount</th>
-                    <th>Income/Expense</th>
+                    <th>Type</th>
                     <th>Description</th>
-                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="transaction, iterStat : ${transactions}" th:if="${iterStat.index} < 3">
-                    <td th:text="${transaction.category}">Category</td>
-                    <td th:text="${#temporals.format(transaction.date, 'dd/MM/yyyy - hh:mma')}">Date</td>
+                    <td th:text="${#strings.capitalize(transaction.category.name().toLowerCase())}">Category</td>
+                    <td th:text="${#temporals.format(transaction.date, 'dd.MM.yyyy HH:mm')}">Date</td>
                     <td th:text="'BGN ' + ${transaction.amount}">Amount</td>
-                    <td th:text="${transaction.type}">Card/Cash</td>
-                    <td th:text="${transaction.description}">Card/Cash</td>
-                    <td class="status completed">Completed</td>
+                    <td th:text="${#strings.capitalize(transaction.type.name().toLowerCase())}">Type</td>
+                    <td th:text="${transaction.description}">Description</td>
                     <td>
                         <form th:action="@{'/transactions/delete/' + ${transaction.id}}" method="post">
                             <button type="submit" class="btn btn-danger">Delete</button>
@@ -158,9 +144,9 @@
     var xValues = [[${categoryNames}]];
     var yValues = [[${categoryPercents}]];
     var barColors = [
-        "#bd2a36",
-        "#50c069",
-        "#2d6ec5"
+        "#00ff88",
+        "#ff4757",
+        "#5f27cd"
     ];
 
     const ctx = document.getElementById("myChart").getContext("2d");
@@ -175,17 +161,48 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             title: {
-                display: true,
-                text: "Spending Categories"
+                display: false
             },
             legend: {
-                position: "bottom"
+                position: "bottom",
+                labels: {
+                    fontColor: "#fff",
+                    fontSize: 10,
+                    padding: 8,
+                    usePointStyle: true
+                }
             },
             tooltips: {
+                enabled: true,
                 callbacks: {
-                    label: function(context) {
-                        return context.label + ": " + context.value + "%";
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index] || '';
+                        var value = data.datasets[0].data[tooltipItem.index] || 0;
+                        return label + ': ' + value.toFixed(1) + '%';
+                    }
+                },
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                titleFontColor: "#00ff88",
+                titleFontSize: 14,
+                titleFontStyle: "bold",
+                bodyFontColor: "#fff",
+                bodyFontSize: 13,
+                borderColor: "#00ff88",
+                borderWidth: 2,
+                padding: 12,
+                displayColors: true,
+                bodySpacing: 8,
+                cornerRadius: 8
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "#fff",
+                        font: {
+                            size: 10
+                        }
                     }
                 }
             }

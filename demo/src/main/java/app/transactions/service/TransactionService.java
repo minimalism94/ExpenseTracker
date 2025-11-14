@@ -94,6 +94,10 @@ public class TransactionService {
         return top3;
     }
 
+    public List<TopCategories> getAllExpenseCategories(UUID walletId) {
+        return transactionRepository.topCategories(walletId);
+    }
+
     private BigDecimal calculateTotalAmount(List<TopCategories> categories) {
         return categories.stream()
                 .map(TopCategories::getTotalAmount)

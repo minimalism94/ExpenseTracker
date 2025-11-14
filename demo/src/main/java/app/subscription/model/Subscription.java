@@ -32,6 +32,8 @@ public class Subscription {
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(nullable = true)
+    private LocalDate paidDate;
 
     @ManyToOne
     private User user;

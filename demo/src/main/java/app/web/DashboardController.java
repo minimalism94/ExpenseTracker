@@ -48,8 +48,13 @@ public class DashboardController {
         List<Integer> categoryPercents = topCategories.stream()
                 .map(TopCategories::getPercent)
                 .toList();
-        //TODO Make them order by Asc by date
-        List<Subscription> subscription = user.getSubscriptions();
+        
+        // Sort subscriptions by expiry date in descending order (newest first) and limit to 3
+        List<Subscription> subscription = user.getSubscriptions().stream()
+                .sorted((s1, s2) -> s2.getExpiryOn().compareTo(s1.getExpiryOn()))
+                .limit(3)
+                .collect(Collectors.toList());
+        
         List <Transaction>  allTransaction= wallet.getTransactions();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("dashboard");
