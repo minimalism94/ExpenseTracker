@@ -40,51 +40,51 @@
         <section class="table-section">
             <h2 class="section-title">Users</h2>
             <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
                         <th>Role</th>
-                        <th>Status</th>
-                        <th>Joined</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.username}">Name</td>
-                        <td th:text="${user.email}">Email</td>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.username}">Name</td>
+                    <td th:text="${user.email}">Email</td>
                         <td>
                             <span th:classappend="${user.role.name() == 'ADMIN'} ? 'role-badge admin' : 'role-badge user'"
                                   th:text="${user.role.name() == 'ADMIN'} ? 'Admin' : 'User'">User</span>
                         </td>
-                        <td>
-                            <span th:classappend="${user.isActive()} ? 'status active' : 'status inactive'"
-                                  th:text="${user.isActive()} ? 'Active' : 'Inactive'">Active</span>
-                        </td>
-                        <td th:text="${#temporals.format(user.createdOn, 'dd.MM.yyyy')}">Date</td>
+                    <td>
+                        <span th:classappend="${user.isActive()} ? 'status active' : 'status inactive'"
+                              th:text="${user.isActive()} ? 'Active' : 'Inactive'">Active</span>
+                    </td>
+                    <td th:text="${#temporals.format(user.createdOn, 'dd.MM.yyyy')}">Date</td>
                         <td class="actions-cell">
                             <form th:action="@{|/admin/${user.id}/active|}" method="post" class="action-form">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <button type="submit" class="btn-action btn-activate"
-                                        th:text="${user.isActive()} ? 'Deactivate' : 'Activate'">Toggle</button>
-                            </form>
+                                    th:text="${user.isActive()} ? 'Deactivate' : 'Activate'">Toggle</button>
+                        </form>
 
                             <form th:action="@{|/admin/${user.id}/role|}" method="post" class="action-form">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <button type="submit" class="btn-action btn-role"
-                                        th:text="${user.role.name() == 'ADMIN'} ? 'Make User' : 'Make Admin'">Change Role</button>
-                            </form>
+                                    th:text="${user.role.name() == 'ADMIN'} ? 'Make User' : 'Make Admin'">Change Role</button>
+                        </form>
 
                             <form th:action="@{|/admin/${user.id}/delete|}" method="post" class="action-form">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <button type="submit" class="btn-action btn-delete">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             </div>
         </section>
     </main>

@@ -62,7 +62,9 @@ public class SubscriptionsService {
     }
 
     public List<Subscription> getByUsername(String username) {
-        return subscriptionsRepository.findAllByUser_UsernameOrderByExpiryOnAsc(username);
+        return subscriptionsRepository.findAllByUser_UsernameOrderByExpiryOnAsc(username).stream()
+                .filter(s -> s.getPaidDate() == null)
+                .collect(Collectors.toList());
     }
 
     public List<Subscription> getPaidSubscriptionsForCurrentMonth(UUID userId) {
@@ -103,6 +105,7 @@ public class SubscriptionsService {
 
         User user = subscription.getUser();
         if (user != null) {
+            subscription.setUser(null);
             user.removeSubscription(subscription);
             userRepository.save(user);
         }
@@ -134,7 +137,7 @@ public class SubscriptionsService {
         subscriptionsRepository.save(subscription);
         walletRepository.save(wallet);
     }
-
+    //@Scheduled(cron = "0 * * * * *")
     public void notifyExpiringSubscriptions() {
         LocalDate today = LocalDate.now();
         LocalDate limit = today.plusDays(7);

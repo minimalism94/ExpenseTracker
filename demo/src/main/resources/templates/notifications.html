@@ -26,23 +26,47 @@
     <main class="main-content">
         <section class="dashboard">
             <h3>Notification Dashboard</h3>
+            <div class="info-group">
             <strong>Notification type:</strong>
-            <p th:text="${userNotifications.getType()}"> General</p>
+                <p id="notificationType" th:text="${userNotifications.getType()}">EMAIL</p>
+            </div>
+            <div class="info-group">
             <strong>Source:</strong>
-            <p th:text="${userNotifications.getContactInfo()}">user@useremail.com</p>
-            <p><strong>Non-failed notifications:</strong> 16</p>
-            <p><strong>Failed notifications:</strong> 3</p>
+                <form th:action="@{/notifications/update-source}" method="post" id="sourceForm" class="source-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="input-wrapper">
+                        <input type="text" 
+                               id="contactInfo" 
+                               name="contactInfo" 
+                               th:value="${userNotifications.getContactInfo()}" 
+                               placeholder="Enter email or phone number"
+                               class="source-input" />
+                        <button type="submit" class="save-btn">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                    <p class="input-hint">Enter email address or phone number (e.g., +359888123456)</p>
+                </form>
+            </div>
             <div class="state-buttons">
-                <p>Notification state </p>
-                <button class="enabled" th:if="${userNotifications.isNotificationEnabled()}" >ENABLED</button>
-                <button class="disabled"th:unless="${userNotifications.isNotificationEnabled()}">DISABLED</button>
+                <p>Notification state: </p>
+                <span class="status-badge enabled" th:if="${userNotifications.isNotificationEnabled()}">
+                    <i class="fas fa-check-circle"></i> ENABLED
+                </span>
+                <span class="status-badge disabled" th:unless="${userNotifications.isNotificationEnabled()}">
+                    <i class="fas fa-times-circle"></i> DISABLED
+                </span>
             </div>
             <h4>Change State:</h4>
-            <button th:if="${userNotifications.isNotificationEnabled()}">Disable Notifications</button>
-            <button class="green"th:unless="${userNotifications.isNotificationEnabled()}">Enable Notifications</button>
-            <h4>General Actions:</h4>
-            <button>Clear History</button>
-            <button>Retry Failed</button>
+            <form th:action="@{/notifications/toggle}" method="post" class="toggle-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="toggle-btn" th:if="${userNotifications.isNotificationEnabled()}">
+                    <i class="fas fa-bell-slash"></i> Disable Notifications
+                </button>
+                <button type="submit" class="toggle-btn green" th:unless="${userNotifications.isNotificationEnabled()}">
+                    <i class="fas fa-bell"></i> Enable Notifications
+                </button>
+            </form>
             <p class="note">Any action that you take will affect the notification mechanism for your account!</p>
         </section>
 
@@ -72,5 +96,64 @@
         </section>
     </main>
 </div>
+<script>
+    function isPhoneNumber(str) {
+        const phoneRegex = /^[\+]?[0-9]{10,15}$/;
+        return phoneRegex.test(str.replace(/[\s\-\(\)]/g, ''));
+    }
+    
+    function isEmail(str) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(str);
+    }
+    
+    const contactInfoInput = document.getElementById('contactInfo');
+    const notificationTypeElement = document.getElementById('notificationType');
+    const sourceForm = document.getElementById('sourceForm');
+    
+    contactInfoInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value === '') {
+            notificationTypeElement.textContent = 'EMAIL';
+            return;
+        }
+        
+        if (isPhoneNumber(value)) {
+            notificationTypeElement.textContent = 'SMS';
+            notificationTypeElement.style.color = '#00ff88';
+        } else if (isEmail(value)) {
+            notificationTypeElement.textContent = 'EMAIL';
+            notificationTypeElement.style.color = '#00ff88';
+        } else {
+            notificationTypeElement.textContent = 'INVALID';
+            notificationTypeElement.style.color = '#ff4757';
+        }
+    });
+    
+    sourceForm.addEventListener('submit', function(e) {
+        const value = contactInfoInput.value.trim();
+        
+        if (value === '') {
+            e.preventDefault();
+            alert('Please enter a valid email address or phone number');
+            return false;
+        }
+        
+        if (!isPhoneNumber(value) && !isEmail(value)) {
+            e.preventDefault();
+            alert('Please enter a valid email address or phone number');
+            return false;
+        }
+    });
+    
+    const initialValue = contactInfoInput.value.trim();
+    if (initialValue) {
+        if (isPhoneNumber(initialValue)) {
+            notificationTypeElement.textContent = 'SMS';
+        } else if (isEmail(initialValue)) {
+            notificationTypeElement.textContent = 'EMAIL';
+        }
+    }
+</script>
 </body>
 </html>

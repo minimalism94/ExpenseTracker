@@ -92,6 +92,7 @@
                         <span class="type" th:text="${#strings.capitalize(sub.type.name().toLowerCase())}">Type</span>
                         <span class="amount" th:text="'BGN ' + ${sub.price}">Amount</span>
                         <form th:action="@{'/payments/pay/' + ${sub.id}}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <button type="submit" class="btn btn-success">Pay</button>
                         </form>
                     </li>

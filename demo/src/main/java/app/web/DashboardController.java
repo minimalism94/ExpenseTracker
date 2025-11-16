@@ -50,6 +50,7 @@ public class DashboardController {
                 .toList();
         
         List<Subscription> subscription = user.getSubscriptions().stream()
+                .filter(s -> s.getPaidDate() == null)
                 .sorted((s1, s2) -> s2.getExpiryOn().compareTo(s1.getExpiryOn()))
                 .limit(3)
                 .collect(Collectors.toList());

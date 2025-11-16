@@ -28,7 +28,7 @@ public interface NotificationClient {
     ResponseEntity<List<NotificationsResponse>> getNotifications(@RequestParam ("userId")UUID userId);
 
 
-    @PostMapping("notifications")
+    @PostMapping("/notifications")
     ResponseEntity<Void> sendNotification(@RequestBody NotificationRequest requestBody);
 }
 
