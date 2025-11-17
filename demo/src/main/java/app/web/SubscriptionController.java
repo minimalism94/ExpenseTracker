@@ -4,6 +4,8 @@ package app.web;
 import app.security.UserData;
 import app.subscription.model.Subscription;
 import app.subscription.service.SubscriptionsService;
+import app.user.model.User;
+import app.user.service.UserService;
 import app.web.dto.EditSubscriptionDto;
 import app.web.dto.SubscriptionDto;
 import jakarta.validation.Valid;
@@ -24,17 +26,21 @@ import java.util.UUID;
 public class SubscriptionController {
 
     private final SubscriptionsService subscriptionService;
+    private final UserService userService;
 
     @Autowired
-    public SubscriptionController(SubscriptionsService subscriptionService) {
+    public SubscriptionController(SubscriptionsService subscriptionService, UserService userService) {
         this.subscriptionService = subscriptionService;
+        this.userService = userService;
     }
 
 
     @GetMapping
-    public ModelAndView listPayments(Principal principal) {
-        List<Subscription> subscriptions = subscriptionService.getByUsername(principal.getName());
+    public ModelAndView listPayments(@AuthenticationPrincipal UserData userData) {
+        User user = userService.getById(userData.getUserId());
+        List<Subscription> subscriptions = subscriptionService.getByUsername(user.getUsername());
         ModelAndView modelAndView = new ModelAndView("subscriptions");
+        modelAndView.addObject("user", user);
         modelAndView.addObject("subscriptions", subscriptions);
         modelAndView.addObject("subscription", new SubscriptionDto());
         modelAndView.addObject("periods", java.util.Arrays.asList(app.subscription.model.SubscriptionPeriod.values()));

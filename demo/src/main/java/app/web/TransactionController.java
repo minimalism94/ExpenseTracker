@@ -42,6 +42,7 @@ public class TransactionController {
         User currentUser=  userService.getById(userData.getUserId());
         List<Transaction>allTransaction = currentUser.getWallet().getTransactions();
         ModelAndView modelAndView = new ModelAndView("transactions");
+        modelAndView.addObject("user", currentUser);
         modelAndView.addObject("transaction", new TransactionDto());
         modelAndView.addObject("types", Type.values());
         modelAndView.addObject("categories", Category.values());

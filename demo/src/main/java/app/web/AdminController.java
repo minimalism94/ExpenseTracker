@@ -1,7 +1,9 @@
 package app.web;
 
+import app.security.UserData;
 import app.user.model.User;
 import app.user.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,10 +25,11 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public ModelAndView showAdminPage() {
-
+    public ModelAndView showAdminPage(@AuthenticationPrincipal UserData userData) {
+        User currentUser = userService.getById(userData.getUserId());
         List<User> allUsers = userService.getAllUsers();
         ModelAndView modelAndView = new ModelAndView("adminPanel");
+        modelAndView.addObject("user", currentUser);
         modelAndView.addObject("users", allUsers);
         modelAndView.addObject("allUser", allUsers.size());
 

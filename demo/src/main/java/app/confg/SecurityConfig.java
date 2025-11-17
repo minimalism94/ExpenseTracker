@@ -21,8 +21,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(matchers -> matchers
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/register", "/login").permitAll()
+                        .requestMatchers("/upgrade/webhook").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/upgrade/webhook")
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

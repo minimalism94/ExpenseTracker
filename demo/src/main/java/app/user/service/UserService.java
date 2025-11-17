@@ -75,6 +75,7 @@ public class UserService implements UserDetailsService {
                 .updatedOn(LocalDateTime.now())
                 .country(registerRequest.getCountry())
                 .role(Role.USER)
+                .userVersion(app.user.model.UserVersion.BASIC)
                 .build();
         user = userRepository.save(user);
         walletService.createDefaultWallet(user);

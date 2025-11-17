@@ -18,6 +18,8 @@
             <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}" class="active"><i class="fas fa-bell"></i> Notifications</a>
+            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i> Report</a>
+            <a th:href="@{/upgrade}" th:if="${user.userVersion.name() == 'BASIC'}"><i class="fas fa-crown"></i> Upgrade to Pro</a>
             <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>

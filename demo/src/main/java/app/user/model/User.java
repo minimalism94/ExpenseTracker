@@ -53,6 +53,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Country country = Country.BULGARIA;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserVersion userVersion = UserVersion.BASIC;
+    
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Wallet wallet;
 
