@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Subscriptions</title>
+    <link rel="stylesheet" href="/css/subscriptions.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SmartExpense</h2>
+        <nav class="menu">
+            <a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
+            <a th:href="@{/payments}" class="active"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
+            <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
+            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i> Report</a>
+            <a th:href="@{/upgrade}" th:if="${user.userVersion.name() == 'BASIC'}"><i class="fas fa-crown"></i> Upgrade to Pro</a>
+            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <h1>Subscriptions</h1>
+        <div class="form-wrapper">
+            <!-- Form -->
+            <div class="form-card">
+                <div th:if="${error}" class="error-box">
+                    <p th:text="${error}"></p>
+                </div>
+                <h2>Add Subscription</h2>
+                <form th:action="@{/payments/add}" th:object="${subscription}" th:method="POST">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" th:field="*{name}" placeholder="Enter subscription name" required/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="period">Period</label>
+                        <select id="period" th:field="*{period}" required>
+                            <option value="">-- Select Period --</option>
+                            <option th:each="p : ${periods}" th:value="${p}"
+                                    th:text="${#strings.capitalize(p.name().toLowerCase())}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Type</label>
+                        <select id="type" th:field="*{type}" required>
+                            <option value="">-- Select Type --</option>
+                            <option th:each="t : ${types}" th:value="${t}"
+                                    th:text="${#strings.capitalize(t.name().toLowerCase())}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expiryOn">Expiry Date</label>
+                        <input type="date" id="expiryOn" th:field="*{expiryOn}" required/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" id="price" th:field="*{price}" placeholder="0.00" step="0.01" min="0.01" required/>
+                    </div>
+
+                    <button type="submit" class="save-btn">SAVE</button>
+                </form>
+            </div>
+
+            <!-- Table -->
+            <div class="subscription-list">
+                <h2>All Subscriptions</h2>
+                <table class="subscription-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Period</th>
+                        <th>Type</th>
+                        <th>Expiry Date</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="s : ${subscriptions}">
+                        <td th:text="${s.name}">Subscription Name</td>
+                        <td th:text="${#strings.capitalize(s.period.name().toLowerCase())}">Monthly</td>
+                        <td th:text="${#strings.capitalize(s.type.name().toLowerCase())}">Default</td>
+                        <td th:text="${#temporals.format(s.expiryOn, 'dd.MM.yyyy')}">01.01.2024</td>
+                        <td th:text="${s.price}">0.00</td>
+                        <td>
+                            <form th:action="@{/payments/delete/{id}(id=${s.id})}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<script>
+    // Ensure date picker works properly
+    const expiryDateInput = document.getElementById('expiryOn');
+    if (expiryDateInput) {
+        // Make sure the date input is clickable and shows picker
+        expiryDateInput.addEventListener('click', function() {
+            if (this.showPicker) {
+                this.showPicker();
+            }
+        });
+        
+        // Also trigger on focus
+        expiryDateInput.addEventListener('focus', function() {
+            if (this.showPicker) {
+                this.showPicker();
+            }
+        });
+    }
+</script>
+</body>
+</html>
+

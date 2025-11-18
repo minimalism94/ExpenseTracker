@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Report</title>
+    <link rel="stylesheet" href="/css/report.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SmartExpense</h2>
+        <nav class="menu">
+            <a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
+            <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
+            <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
+            <a th:href="@{/report}" class="active"><i class="fas fa-file-alt"></i> Report</a>
+            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <h1>Detailed Report</h1>
+
+        <!-- Top Section: Current Balance + Summary -->
+        <section class="top-section">
+            <!-- Current Balance Block (Left) -->
+            <div class="current-balance-block">
+                <h2>Current Balance</h2>
+                <p class="balance-value" th:text="'BGN ' + ${wallet.getBalance()}">667.60 лв</p>
+            </div>
+
+            <!-- Summary Block (Right) - 4 cards in one block -->
+            <div class="summary-block">
+                <div class="summary-card">
+                    <h3>Total Spent This Month</h3>
+                    <p class="value red" th:text="'BGN ' + ${currentMonthExpenses}">312.40 лв</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Income (This Month)</h3>
+                    <p class="value green" th:text="'BGN ' + ${currentMonthIncome}">980.00 лв</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Net Balance</h3>
+                    <p class="value" th:text="'BGN ' + ${wallet.getBalance()}">667.60 лв</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Biggest Expense</h3>
+                    <div th:if="${biggestExpense != null}">
+                        <p class="value red" th:text="'BGN ' + ${biggestExpense.amount}">150.00 лв</p>
+                        <p class="expense-name" th:if="${biggestExpenseName != null}" th:text="${biggestExpenseName}">Expense Description</p>
+                    </div>
+                    <p class="value" th:if="${biggestExpense == null}">No expenses</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Middle Section: Expense History + Paid Subscriptions -->
+        <section class="middle-section">
+            <!-- Expense History by Day (Current Month) -->
+            <div class="expense-history-block">
+                <h2 class="section-title">Expense History (This Month)</h2>
+                <div class="chart-container">
+                    <canvas id="expenseHistoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Paid Subscriptions -->
+            <div class="paid-subscriptions-block">
+                <h2 class="section-title">Paid Subscriptions (This Month)</h2>
+                <div class="subscriptions-list">
+                    <div th:if="${paidSubscriptions.isEmpty()}" class="no-data">No paid subscriptions this month</div>
+                    <div th:each="subscription : ${paidSubscriptions}" class="subscription-item">
+                        <div class="subscription-info">
+                            <h4 th:text="${subscription.name}">Subscription Name</h4>
+                            <p class="subscription-date" th:text="${#temporals.format(subscription.paidDate, 'dd.MM.yyyy')}">01.01.2025</p>
+                        </div>
+                        <p class="subscription-price" th:text="'BGN ' + ${subscription.price}">150.00 лв</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Section: All Transactions + Expense Percentage Chart -->
+        <section class="bottom-section">
+            <!-- All Transactions -->
+            <div class="transactions-block">
+                <h2 class="section-title">All Transactions (This Month)</h2>
+                <div class="table-wrapper">
+                    <table class="transaction-table">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="transaction : ${allTransactions}">
+                            <td th:text="${#temporals.format(transaction.date, 'dd.MM.yyyy HH:mm')}">2025-01-12</td>
+                            <td th:text="${#strings.capitalize(transaction.category.name().toLowerCase())}">Food</td>
+                            <td th:text="${transaction.description}">Coffee Shop</td>
+                            <td th:text="${#strings.capitalize(transaction.type.name().toLowerCase())}">Expense</td>
+                            <td th:class="${transaction.type.name() == 'INCOME' ? 'green' : 'red'}" 
+                                th:text="${transaction.type.name() == 'INCOME' ? 'BGN ' : '-BGN '} + ${transaction.amount}">
+                                -4.50 лв
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Expense Percentage Chart -->
+            <div class="expense-percentage-block">
+                <h2 class="section-title">Expenses by Category</h2>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Expense History Chart
+    var expenseHistory = /*[[${expenseHistory}]]*/ {};
+    var expenseHistoryLabels = [];
+    var expenseHistoryValues = [];
+    
+    for (var month in expenseHistory) {
+        if (expenseHistory.hasOwnProperty(month)) {
+            expenseHistoryLabels.push(month);
+            expenseHistoryValues.push(expenseHistory[month] != null ? parseFloat(expenseHistory[month]) : 0);
+        }
+    }
+
+    const expenseHistoryCtx = document.getElementById("expenseHistoryChart").getContext("2d");
+    new Chart(expenseHistoryCtx, {
+        type: "line",
+        data: {
+            labels: expenseHistoryLabels,
+            datasets: [{
+                label: "Expenses (BGN)",
+                backgroundColor: "rgba(0, 255, 136, 0.2)",
+                borderColor: "#00ff88",
+                borderWidth: 2,
+                pointBackgroundColor: "#00ff88",
+                pointBorderColor: "#fff",
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                data: expenseHistoryValues
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: "#fff",
+                        callback: function(value) {
+                            return "BGN " + value.toFixed(2);
+                        }
+                    },
+                    gridLines: {
+                        color: "rgba(255, 255, 255, 0.1)"
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "#fff"
+                    },
+                    gridLines: {
+                        color: "rgba(255, 255, 255, 0.1)"
+                    }
+                }]
+            },
+            tooltips: {
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                titleFontColor: "#00ff88",
+                bodyFontColor: "#fff",
+                borderColor: "#00ff88",
+                borderWidth: 2,
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return "BGN " + tooltipItem.yLabel.toFixed(2);
+                    }
+                }
+            }
+        }
+    });
+
+    // Category Percentage and Amount Chart
+    var categoryNames = [[${categoryNames}]];
+    var categoryPercents = [[${categoryPercents}]];
+    var categoryAmounts = [[${categoryAmounts}]];
+    var chartColors = [
+        "#00ff88",
+        "#ff4757",
+        "#5f27cd",
+        "#ffa502",
+        "#00d2ff",
+        "#ff6348",
+        "#ff6b9d",
+        "#c44569",
+        "#feca57",
+        "#48dbfb",
+        "#ff9ff3",
+        "#54a0ff"
+    ];
+
+    // Convert BigDecimal amounts to numbers
+    var categoryAmountsNumbers = categoryAmounts.map(function(amount) {
+        return amount != null ? parseFloat(amount) : 0;
+    });
+
+    const categoryCtx = document.getElementById("categoryChart").getContext("2d");
+    new Chart(categoryCtx, {
+        type: "bar",
+        data: {
+            labels: categoryNames,
+            datasets: [{
+                label: "Percentage",
+                yAxisID: "y-axis-percent",
+                backgroundColor: categoryNames.map(function(name, index) {
+                    return chartColors[index % chartColors.length];
+                }),
+                borderColor: categoryNames.map(function(name, index) {
+                    return chartColors[index % chartColors.length];
+                }),
+                borderWidth: 2,
+                data: categoryPercents
+            }, {
+                label: "Amount (BGN)",
+                yAxisID: "y-axis-amount",
+                backgroundColor: "rgba(0, 255, 136, 0.3)",
+                borderColor: "#00ff88",
+                borderWidth: 2,
+                data: categoryAmountsNumbers
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: false
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    id: "y-axis-percent",
+                    position: "left",
+                    ticks: {
+                        beginAtZero: true,
+                        max: 100,
+                        fontColor: "#fff",
+                        callback: function(value) {
+                            return value + "%";
+                        }
+                    },
+                    gridLines: {
+                        color: "rgba(255, 255, 255, 0.1)"
+                    }
+                }, {
+                    id: "y-axis-amount",
+                    position: "right",
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: "#fff",
+                        callback: function(value) {
+                            return "BGN " + value.toFixed(2);
+                        }
+                    },
+                    gridLines: {
+                        display: false
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "#fff"
+                    },
+                    gridLines: {
+                        color: "rgba(255, 255, 255, 0.1)"
+                    }
+                }]
+            },
+            tooltips: {
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                titleFontColor: "#00ff88",
+                bodyFontColor: "#fff",
+                borderColor: "#00ff88",
+                borderWidth: 2,
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        if (tooltipItem.datasetIndex === 0) {
+                            return label + ": " + tooltipItem.yLabel + "%";
+                        } else {
+                            return label + ": BGN " + tooltipItem.yLabel.toFixed(2);
+                        }
+                    }
+                }
+            }
+        }
+    });
+    /*]]>*/
+</script>
+
+</body>
+</html>
