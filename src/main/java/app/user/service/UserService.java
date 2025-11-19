@@ -3,6 +3,8 @@ package app.user.service;
 import app.confg.BeanConfiguration;
 import app.confg.SecurityConfig;
 import app.exception.CustomException;
+import app.exception.UserNotFoundException;
+import app.exception.UsernameAlreadyExistException;
 import app.notification.service.NotificationService;
 import app.security.UserData;
 import app.subscription.model.Subscription;
@@ -15,6 +17,7 @@ import app.wallet.service.WalletService;
 import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
 import app.web.dto.UserEditRequest;
+import app.web.dto.mapper.DtoMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +67,7 @@ public class UserService implements UserDetailsService {
     public void register( RegisterRequest registerRequest) {
         Optional<User> optionalUser = userRepository.findByUsername(registerRequest.getUsername());
         if (optionalUser.isPresent()) {
-            throw new CustomException("User with %s already exists".formatted(registerRequest.getUsername()));
+            throw new UsernameAlreadyExistException(registerRequest.getUsername());
         }
         User user = User.builder()
                 .username(registerRequest.getUsername())
@@ -87,7 +90,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Username not found"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
 
         return new UserData(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getRole(), user.isActive());
     }
@@ -96,7 +99,7 @@ public class UserService implements UserDetailsService {
 
         Optional<User> user = userRepository.findById(id);
 
-        user.orElseThrow(() -> new CustomException("User with id [%s] does not exist.".formatted(id)));
+        user.orElseThrow(() -> new UserNotFoundException(id));
 
         return user.get();
     }
@@ -105,8 +108,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
     public void setRole(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new CustomException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         if (user.getRole() == Role.ADMIN) {
             user.setRole(Role.USER);
         } else {
@@ -120,7 +127,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void setActive(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new CustomException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         user.setActive(!user.isActive());
         userRepository.save(user);
     }
@@ -128,18 +135,13 @@ public class UserService implements UserDetailsService {
 
         public void editUserDetails(UUID id, UserEditRequest dto) {
             User user = userRepository.findById(id)
-                    .orElseThrow(() -> new CustomException("User not found with id [%s]".formatted(id)));
+                    .orElseThrow(() -> new UserNotFoundException(id));
                 if (dto.getEmail() != null || dto.getEmail().isBlank()) {
                     notificationService.upsertPreference(user.getId(), true, user.getEmail());
                 }else {
                     notificationService.upsertPreference(user.getId(), false, null);
                 }
-            user.setUsername(dto.getUsername());
-            user.setFirstName(dto.getFirstName());
-            user.setLastName(dto.getLastName());
-            user.setEmail(dto.getEmail());
-            user.setProfilePicture(dto.getProfilePicture());
-            user.setCountry(dto.getCountry());
+            DtoMapper.mapUserEditRequestToUser(dto, user);
             user.setUpdatedOn(LocalDateTime.now());
 
             userRepository.save(user);

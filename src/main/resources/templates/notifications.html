@@ -70,6 +70,22 @@
                 </button>
             </form>
             <p class="note">Any action that you take will affect the notification mechanism for your account!</p>
+            
+            <div class="monthly-report-section" th:if="${user.userVersion.name() == 'PRO'}">
+                <h4>Monthly Report Email</h4>
+                <p class="info-text">Receive a detailed PDF report via email every month</p>
+                <form th:action="@{/notifications/toggle-monthly-report}" method="post" class="toggle-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <label class="checkbox-label">
+                        <input type="checkbox" 
+                               th:checked="${user.monthlyReportEmailEnabled}" 
+                               onchange="this.form.submit()" 
+                               class="checkbox-input" />
+                        <span class="checkbox-text">Enable Monthly Report Email</span>
+                    </label>
+                </form>
+                <p class="note">You will receive a detailed PDF report at the beginning of each month</p>
+            </div>
         </section>
 
         <section class="history">

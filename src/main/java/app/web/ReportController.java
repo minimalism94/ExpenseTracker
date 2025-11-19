@@ -59,10 +59,19 @@ public class ReportController {
         modelAndView.addObject("allTransactions", transactionService.getCurrentMonthTransactions(wallet.getId()));
         modelAndView.addObject("biggestExpense", transactionService.getBiggestExpenseForCurrentMonth(wallet.getId()));
         modelAndView.addObject("biggestExpenseName", transactionService.getBiggestExpenseCategoryName(wallet.getId()));
-        modelAndView.addObject("currentMonthExpenses", transactionService.getTotalExpensesForCurrentMonth(wallet.getId()));
+        
+        // Calculate total expenses including subscriptions
+        BigDecimal transactionExpenses = transactionService.getTotalExpensesForCurrentMonth(wallet.getId());
+        List<Subscription> paidSubscriptions = subscriptionsService.getPaidSubscriptionsForCurrentMonth(user.getId());
+        BigDecimal subscriptionExpenses = paidSubscriptions.stream()
+                .map(Subscription::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal currentMonthExpenses = transactionExpenses.add(subscriptionExpenses);
+        
+        modelAndView.addObject("currentMonthExpenses", currentMonthExpenses);
         modelAndView.addObject("currentMonthIncome", transactionService.getTotalIncomeForCurrentMonth(wallet.getId()));
         modelAndView.addObject("expenseHistory", transactionService.getExpenseHistoryByDay(wallet.getId()));
-        modelAndView.addObject("paidSubscriptions", subscriptionsService.getPaidSubscriptionsForCurrentMonth(user.getId()));
+        modelAndView.addObject("paidSubscriptions", paidSubscriptions);
 
         return modelAndView;
     }

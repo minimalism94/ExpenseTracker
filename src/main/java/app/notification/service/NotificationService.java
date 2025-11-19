@@ -5,6 +5,7 @@ import app.notification.client.dto.NotificationRequest;
 import app.notification.client.dto.NotificationsResponse;
 import app.notification.client.dto.PreferenceResponse;
 import app.notification.client.dto.UpsertPreferenceRequest;
+import app.exception.NotificationRetryFailedException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ public class NotificationService {
         try {
             client.upsertPreference(dto);
         }catch (FeignException e){
-
                 log.error("[S2S Call] Failed due to [%s]".formatted(e.getMessage()));
+                throw new NotificationRetryFailedException("Failed to upsert notification preference for user: " + userId, e);
         }
 
     }
@@ -54,16 +55,17 @@ public class NotificationService {
     }
 
     public void send(UUID userId, String subject, String body) {
-
         NotificationRequest dto = NotificationRequest.builder()
                 .userId(userId)
                 .type("SMS")
                 .subject(subject)
                 .body(body)
                 .build();
-        client.sendNotification(dto);
-
-
-
+        try {
+            client.sendNotification(dto);
+        } catch (FeignException e) {
+            log.error("[S2S Call] Failed to send notification for user [%s] due to [%s]".formatted(userId, e.getMessage()));
+            throw new NotificationRetryFailedException("Failed to send notification for user: " + userId, e);
+        }
     }
 }

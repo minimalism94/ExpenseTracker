@@ -58,6 +58,9 @@ public class User {
     @Column(nullable = false)
     private UserVersion userVersion = UserVersion.BASIC;
     
+    @Column(nullable = false)
+    private boolean monthlyReportEmailEnabled = false;
+    
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Wallet wallet;
 

@@ -11,6 +11,7 @@ import app.wallet.model.Wallet;
 import app.wallet.repository.WalletRepository;
 import app.web.dto.TopCategories;
 import app.web.dto.TransactionDto;
+import app.web.dto.mapper.DtoMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -68,14 +69,7 @@ public class TransactionService {
             wallet.setBalance(wallet.getBalance().add(amount));
         }
 
-        Transaction transaction = Transaction.builder()
-                .amount(amount)
-                .date(dto.getDate())
-                .type(dto.getType())
-                .category(dto.getCategory())
-                .description(dto.getDescription())
-                .wallet(wallet)
-                .build();
+        Transaction transaction = DtoMapper.mapTransactionDtoToEntity(dto, wallet);
 
         transactionRepository.save(transaction);
         walletRepository.save(wallet);

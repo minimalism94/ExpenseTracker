@@ -29,7 +29,7 @@ public class UpgradeController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final StripeService stripeService;
-    private static final BigDecimal PRO_VERSION_PRICE = new BigDecimal("1.00");
+    private static final BigDecimal PRO_VERSION_PRICE = new BigDecimal("29.99");
 
     @Value("${stripe.public.key}")
     private String stripePublicKey;

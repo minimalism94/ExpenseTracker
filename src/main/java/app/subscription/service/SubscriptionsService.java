@@ -1,6 +1,7 @@
 package app.subscription.service;
 
 import app.exception.CustomException;
+import app.exception.UserNotFoundException;
 import app.notification.service.NotificationService;
 import app.security.UserData;
 import app.subscription.model.Subscription;
@@ -14,6 +15,7 @@ import app.wallet.model.Wallet;
 import app.wallet.repository.WalletRepository;
 import app.web.dto.EditSubscriptionDto;
 import app.web.dto.SubscriptionDto;
+import app.web.dto.mapper.DtoMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +71,7 @@ public class SubscriptionsService {
 
     public List<Subscription> getPaidSubscriptionsForCurrentMonth(UUID userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(userId));
         
         YearMonth currentMonth = YearMonth.now();
         
@@ -85,15 +87,9 @@ public class SubscriptionsService {
 
     public void saveSubscription(@Valid SubscriptionDto dto, String name) {
         User user = userRepository.findByUsername(name)
-                .orElseThrow(() -> new CustomException("User not found: " + name));
+                .orElseThrow(() -> new UserNotFoundException(name));
 
-        Subscription subscription = new Subscription();
-        subscription.setName(dto.getName());
-        subscription.setPeriod(dto.getPeriod());
-        subscription.setExpiryOn(dto.getExpiryOn());
-        subscription.setType(dto.getType());
-        subscription.setPrice(dto.getPrice());
-        subscription.setUser(user);
+        Subscription subscription = DtoMapper.mapSubscriptionDtoToEntity(dto, user);
 
         subscriptionsRepository.save(subscription);
     }

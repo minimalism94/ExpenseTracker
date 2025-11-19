@@ -59,4 +59,13 @@ public class NotificationController {
         
         return new ModelAndView("redirect:/notifications");
     }
+
+    @PostMapping("/toggle-monthly-report")
+    public ModelAndView toggleMonthlyReport(@AuthenticationPrincipal UserData userData) {
+        User user = userService.getById(userData.getUserId());
+        user.setMonthlyReportEmailEnabled(!user.isMonthlyReportEmailEnabled());
+        userService.save(user);
+        
+        return new ModelAndView("redirect:/notifications");
+    }
 }

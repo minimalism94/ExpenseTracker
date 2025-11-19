@@ -16,4 +16,8 @@ public class NotificationRequest {
     private String subject;
 
     private String body;
+    
+    private String attachmentBase64;
+    private String attachmentFileName;
+    private String attachmentContentType;
 }

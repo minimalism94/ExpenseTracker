@@ -79,15 +79,14 @@
 
                 <div class="payment-section">
                     <div class="balance-info">
-                        <p>Price: <span th:text="'BGN ' + ${proPrice}">BGN 29.99</span></p>
-                        <p class="secure-payment"><i class="fas fa-lock"></i> Secure payment powered by Stripe</p>
+                        <p>Price: <span th:text="'BGN ' + ${proPrice}">BGN 29.99</span> <span class="secure-payment"><i class="fas fa-lock"></i> Secure</span></p>
                     </div>
 
                     <button id="checkout-button" class="btn-upgrade">
-                        <i class="fas fa-crown"></i> Upgrade to Pro with Stripe
+                        <i class="fas fa-crown"></i> Upgrade to Pro
                     </button>
 
-                    <p class="note">You will be redirected to Stripe's secure payment page.</p>
+                    <p class="note">Redirected to Stripe's secure payment page</p>
                 </div>
             </div>
         </div>
