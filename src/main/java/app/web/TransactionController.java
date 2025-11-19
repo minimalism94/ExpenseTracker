@@ -12,10 +12,12 @@ import app.wallet.model.Wallet;
 import app.web.dto.TransactionDto;
 import jakarta.validation.Valid;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class TransactionController {
     @Autowired
     private final TransactionService transactionService;
@@ -65,20 +68,8 @@ public class TransactionController {
             return modelAndView;
         }
 
-        try {
-            transactionService.processTransaction(dto, userData.getUserId());
-            return new ModelAndView("redirect:/transactions");
-        } catch (IllegalArgumentException e) {
-            ModelAndView modelAndView = new ModelAndView("transactions");
-            User currentUser = userService.getById(userData.getUserId());
-            List<Transaction> allTransaction = currentUser.getWallet().getTransactions();
-            modelAndView.addObject("types", Type.values());
-            modelAndView.addObject("categories", Category.values());
-            modelAndView.addObject("error", e.getMessage());
-            modelAndView.addObject("transaction", dto);
-            modelAndView.addObject("allTransactions", allTransaction);
-            return modelAndView;
-        }
+        transactionService.processTransaction(dto, userData.getUserId());
+        return new ModelAndView("redirect:/transactions");
     }
     @PostMapping("/transactions/delete/{id}")
     public ModelAndView deleteTransaction(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {
@@ -86,7 +77,22 @@ public class TransactionController {
         return new ModelAndView("redirect:/dashboard");
     }
 
-
-
-
+    @ExceptionHandler({IllegalArgumentException.class, SecurityException.class})
+    public ModelAndView handleTransactionException(Exception ex, @AuthenticationPrincipal UserData userData) {
+        log.error("Transaction error: {}", ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView("transactions");
+        try {
+            User currentUser = userService.getById(userData.getUserId());
+            List<Transaction> allTransaction = currentUser.getWallet().getTransactions();
+            modelAndView.addObject("user", currentUser);
+            modelAndView.addObject("types", Type.values());
+            modelAndView.addObject("categories", Category.values());
+            modelAndView.addObject("error", ex.getMessage());
+            modelAndView.addObject("transaction", new TransactionDto());
+            modelAndView.addObject("allTransactions", allTransaction);
+        } catch (Exception e) {
+            log.error("Error loading transaction page after exception", e);
+        }
+        return modelAndView;
+    }
 }

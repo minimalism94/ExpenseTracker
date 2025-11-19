@@ -60,9 +60,15 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group date-input-wrapper">
                         <label for="expiryOn">Expiry Date</label>
-                        <input type="date" id="expiryOn" th:field="*{expiryOn}" required/>
+                        <div class="date-picker-container">
+                            <input type="date" id="expiryOn" th:field="*{expiryOn}" required style="opacity: 0; position: absolute; width: 0; height: 0;"/>
+                            <div class="date-picker-display" id="expiry-date-display">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="date-text" id="expiry-date-text">Select Date</span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -109,23 +115,48 @@
     </main>
 </div>
 <script>
-    // Ensure date picker works properly
     const expiryDateInput = document.getElementById('expiryOn');
-    if (expiryDateInput) {
-        // Make sure the date input is clickable and shows picker
-        expiryDateInput.addEventListener('click', function() {
-            if (this.showPicker) {
-                this.showPicker();
-            }
-        });
-        
-        // Also trigger on focus
-        expiryDateInput.addEventListener('focus', function() {
-            if (this.showPicker) {
-                this.showPicker();
+    const expiryDateDisplay = document.getElementById('expiry-date-display');
+    const expiryDateText = document.getElementById('expiry-date-text');
+    
+    // Format date to DD MM YY
+    function formatDate(dateString) {
+        if (!dateString) return 'Select Date';
+        const date = new Date(dateString + 'T00:00:00');
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = String(date.getFullYear()).slice(-2);
+        return `${day} ${month} ${year}`;
+    }
+    
+    // Make date picker display clickable
+    if (expiryDateDisplay) {
+        expiryDateDisplay.style.cursor = 'pointer';
+        expiryDateDisplay.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (expiryDateInput.showPicker) {
+                expiryDateInput.showPicker();
+            } else {
+                expiryDateInput.focus();
+                expiryDateInput.click();
             }
         });
     }
+    
+    // Update display when date value changes
+    function updateExpiryDateDisplay() {
+        if (expiryDateInput.value) {
+            expiryDateText.textContent = formatDate(expiryDateInput.value);
+        } else {
+            expiryDateText.textContent = 'Select Date';
+        }
+    }
+    
+    expiryDateInput.addEventListener('change', updateExpiryDateDisplay);
+    expiryDateInput.addEventListener('input', updateExpiryDateDisplay);
+    
+    // Initialize display if there's a value on page load
+    updateExpiryDateDisplay();
 </script>
 </body>
 </html>

@@ -38,9 +38,6 @@ public class RegisterController {
         }
 
         userService.register(registerRequest);
-
         return new ModelAndView("redirect:/login");
     }
-
-
 }

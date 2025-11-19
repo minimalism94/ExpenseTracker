@@ -44,8 +44,9 @@
                     <p class="subtitle">Unlock advanced financial reports and analytics</p>
                 </div>
 
-                <div th:if="${error}" class="error-box">
-                    <p th:text="${error}"></p>
+                <div th:if="${error != null or param.error != null}" class="error-box">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p th:text="${error != null ? error : param.error[0]}"></p>
                 </div>
 
                 <div class="comparison-section">

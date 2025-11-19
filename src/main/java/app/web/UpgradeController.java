@@ -43,6 +43,7 @@ public class UpgradeController {
 
     @GetMapping
     public ModelAndView showUpgradePage(@AuthenticationPrincipal UserData userData, 
+                                       @RequestParam(value = "error", required = false) String error,
                                        org.springframework.security.web.csrf.CsrfToken csrfToken) {
         User user = userService.getById(userData.getUserId());
         Wallet wallet = user.getWallet();
@@ -53,6 +54,17 @@ public class UpgradeController {
         modelAndView.addObject("proPrice", PRO_VERSION_PRICE);
         modelAndView.addObject("isPro", user.getUserVersion() == UserVersion.PRO);
         modelAndView.addObject("stripePublicKey", stripePublicKey);
+        
+        if (error != null) {
+            String errorMessage = switch (error) {
+                case "payment_not_complete" -> "Payment was not completed. Please try again.";
+                case "processing_failed" -> "Payment processing failed. Please contact support.";
+                case "payment_cancelled" -> "Payment was cancelled. You can try again anytime.";
+                case "unauthorized" -> "Unauthorized access. Please try again.";
+                default -> "An error occurred. Please try again.";
+            };
+            modelAndView.addObject("error", errorMessage);
+        }
         
         if (csrfToken != null) {
             modelAndView.addObject("_csrf", csrfToken);

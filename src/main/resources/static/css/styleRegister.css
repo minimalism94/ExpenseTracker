@@ -376,6 +376,28 @@ button:active {
     border: 1px solid rgba(255, 77, 79, 0.3);
 }
 
+.error-alert {
+    background: linear-gradient(145deg, rgba(255, 71, 87, 0.15), rgba(231, 76, 60, 0.1));
+    color: #ff4757;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 2px solid rgba(255, 71, 87, 0.4);
+    box-shadow: 0 4px 20px rgba(255, 71, 87, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    animation: shake 0.5s ease-in-out;
+}
+
+.error-alert i {
+    font-size: 1.2rem;
+    color: #ff4757;
+}
+
 @keyframes shake {
     0% { transform: translateX(0); }
     25% { transform: translateX(-5px); }

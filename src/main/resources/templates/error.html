@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - SmartExpense</title>
+    <link rel="stylesheet" href="/css/error.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle" th:if="${statusCode == 500}"></i>
+                <i class="fas fa-ban" th:if="${statusCode == 403}"></i>
+                <i class="fas fa-user-slash" th:if="${statusCode == 404}"></i>
+                <i class="fas fa-exclamation-circle" th:if="${statusCode == 400}"></i>
+                <i class="fas fa-times-circle" th:if="${statusCode == 409}"></i>
+            </div>
+            
+            <div class="error-code" th:text="${statusCode}">500</div>
+            <h1 class="error-title" th:text="${errorTitle}">Error</h1>
+            <p class="error-message" th:text="${errorMessage}">An error occurred</p>
+            <p class="error-description" th:text="${errorDescription}">Please try again later</p>
+            
+            <div class="error-actions">
+                <a href="/dashboard" class="btn-primary">
+                    <i class="fas fa-home"></i> Go to Dashboard
+                </a>
+                <a href="javascript:history.back()" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Go Back
+                </a>
+            </div>
+        </div>
+        
+        <div class="error-footer">
+            <p>SmartExpense &copy; 2025</p>
+        </div>
+    </div>
+</body>
+</html>
+

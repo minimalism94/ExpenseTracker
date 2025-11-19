@@ -1,6 +1,6 @@
 package app.web;
 
-
+import app.exception.CustomException;
 import app.security.UserData;
 import app.subscription.model.Subscription;
 import app.subscription.service.SubscriptionsService;
@@ -9,6 +9,7 @@ import app.user.service.UserService;
 import app.web.dto.EditSubscriptionDto;
 import app.web.dto.SubscriptionDto;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/payments")
+@Slf4j
 public class SubscriptionController {
 
     private final SubscriptionsService subscriptionService;
@@ -77,5 +79,23 @@ public class SubscriptionController {
         return new ModelAndView("redirect:/dashboard");
     }
 
+    @ExceptionHandler({CustomException.class, IllegalArgumentException.class})
+    public ModelAndView handleSubscriptionException(Exception ex, @AuthenticationPrincipal UserData userData) {
+        log.error("Subscription error: {}", ex.getMessage());
+        ModelAndView modelAndView = new ModelAndView("subscriptions");
+        try {
+            User user = userService.getById(userData.getUserId());
+            List<Subscription> subscriptions = subscriptionService.getByUsername(user.getUsername());
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("subscriptions", subscriptions);
+            modelAndView.addObject("subscription", new SubscriptionDto());
+            modelAndView.addObject("periods", java.util.Arrays.asList(app.subscription.model.SubscriptionPeriod.values()));
+            modelAndView.addObject("types", java.util.Arrays.asList(app.subscription.model.SubscriptionType.values()));
+            modelAndView.addObject("error", ex.getMessage());
+        } catch (Exception e) {
+            log.error("Error loading subscription page after exception", e);
+        }
+        return modelAndView;
+    }
 }
 

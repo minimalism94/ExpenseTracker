@@ -168,16 +168,32 @@ body {
 }
 
 .error-box {
-    background: linear-gradient(145deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
-    color: #ff4444;
-    padding: 10px 15px;
-    border-radius: 8px;
+    background: linear-gradient(145deg, rgba(255, 71, 87, 0.15), rgba(231, 76, 60, 0.1));
+    color: #ff4757;
+    padding: 12px 18px;
+    border-radius: 10px;
     margin-bottom: 1rem;
     font-weight: 600;
     font-size: 0.9rem;
-    border: 1px solid rgba(231, 76, 60, 0.3);
-    box-shadow: 0 0 15px rgba(231, 76, 60, 0.2);
+    border: 2px solid rgba(255, 71, 87, 0.4);
+    box-shadow: 0 4px 20px rgba(255, 71, 87, 0.3);
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    animation: shake 0.5s ease-in-out;
+}
+
+.error-box i {
+    font-size: 1.1rem;
+    color: #ff4757;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
 .comparison-section {
