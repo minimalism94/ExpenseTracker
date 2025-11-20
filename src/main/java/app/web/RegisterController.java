@@ -26,14 +26,14 @@ public class RegisterController {
         modelAndView1.setViewName("register");
         modelAndView1.addObject("registerRequest", new RegisterRequest());
 
-        return modelAndView1; // register.html в resources/templates
+        return modelAndView1;
     }
     @PostMapping("/register")
     public ModelAndView registerNewUser(@Valid RegisterRequest registerRequest, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView("register");
-            modelAndView.addObject("user", registerRequest); // или "registerRequest", ако така е в HTML
+            modelAndView.addObject("user", registerRequest);
             return modelAndView;
         }
 

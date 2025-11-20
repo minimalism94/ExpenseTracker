@@ -1,9 +1,12 @@
 package app.web.dto.mapper;
 
+import app.budget.model.Budget;
 import app.subscription.model.Subscription;
 import app.transactions.model.Transaction;
 import app.user.model.User;
 import app.wallet.model.Wallet;
+import app.web.dto.BudgetDto;
+import app.web.dto.BudgetInfo;
 import app.web.dto.SubscriptionDto;
 import app.web.dto.TransactionDto;
 import app.web.dto.UserEditRequest;
@@ -72,6 +75,26 @@ public class DtoMapper {
                 .expiryOn(subscription.getExpiryOn())
                 .type(subscription.getType())
                 .price(subscription.getPrice())
+                .build();
+    }
+    
+    public static BudgetDto mapBudgetToDto(Budget budget) {
+        return BudgetDto.builder()
+                .id(budget.getId().toString())
+                .category(budget.getCategory())
+                .amount(budget.getAmount())
+                .month(budget.getMonth())
+                .year(budget.getYear())
+                .build();
+    }
+    
+    public static Budget mapBudgetDtoToEntity(BudgetDto dto, User user) {
+        return Budget.builder()
+                .category(dto.getCategory())
+                .amount(dto.getAmount())
+                .month(dto.getMonth())
+                .year(dto.getYear())
+                .user(user)
                 .build();
     }
 }

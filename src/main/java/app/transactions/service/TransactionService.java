@@ -125,9 +125,40 @@ public class TransactionService {
         
         return categoryTotals;
     }
+    
+    public Map<Category, BigDecimal> getCategoryTotalsForMonth(UUID walletId, YearMonth yearMonth) {
+        List<Transaction> expenseTransactions = getExpenseTransactionsForMonth(walletId, yearMonth);
+        Map<Category, BigDecimal> categoryTotals = new HashMap<>();
+        
+        for (Transaction t : expenseTransactions) {
+            categoryTotals.merge(t.getCategory(), t.getAmount(), BigDecimal::add);
+        }
+        
+        return categoryTotals;
+    }
+    
+    public List<Transaction> getExpenseTransactionsForMonth(UUID walletId, YearMonth yearMonth) {
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> new CustomException("Wallet not found"));
+        
+        LocalDateTime monthStart = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime monthEnd = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
+        
+        return wallet.getTransactions().stream()
+                .filter(t -> !t.getDate().isBefore(monthStart) && t.getDate().isBefore(monthEnd))
+                .filter(t -> t.getType() == Type.EXPENSE)
+                .sorted((t1, t2) -> t2.getDate().compareTo(t1.getDate()))
+                .collect(Collectors.toList());
+    }
 
     public BigDecimal getTotalExpensesForCurrentMonth(UUID walletId) {
         return getCurrentMonthExpenseTransactions(walletId).stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    
+    public BigDecimal getTotalExpensesForMonth(UUID walletId, YearMonth yearMonth) {
+        return getExpenseTransactionsForMonth(walletId, yearMonth).stream()
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

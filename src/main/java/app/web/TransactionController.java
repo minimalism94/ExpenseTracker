@@ -68,8 +68,8 @@ public class TransactionController {
             return modelAndView;
         }
 
-        transactionService.processTransaction(dto, userData.getUserId());
-        return new ModelAndView("redirect:/transactions");
+            transactionService.processTransaction(dto, userData.getUserId());
+            return new ModelAndView("redirect:/transactions");
     }
     @PostMapping("/transactions/delete/{id}")
     public ModelAndView deleteTransaction(@PathVariable UUID id, @AuthenticationPrincipal UserData userData) {

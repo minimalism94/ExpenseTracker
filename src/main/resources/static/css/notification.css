@@ -93,13 +93,13 @@ body {
     padding: 25px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
-    border: 1px solid rgba(0, 255, 136, 0.1);
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 0 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
-    flex: 1;
+    width: 100%;
     min-width: 0;
 }
 
@@ -114,6 +114,14 @@ body {
     background: linear-gradient(90deg, #00ff88, #4ccd6a);
     opacity: 0.6;
     border-radius: 20px 20px 0 0;
+}
+
+.toggle-form {
+    position: relative;
+}
+
+.toggle-form::before {
+    display: none;
 }
 
 .dashboard:hover,
@@ -299,14 +307,14 @@ body {
     justify-content: center;
     background: linear-gradient(135deg, #2a2a2a 0%, #333 100%);
     color: #fff;
-    border: 1px solid rgba(0, 255, 136, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .toggle-btn:hover {
     background: linear-gradient(135deg, #333 0%, #3a3a3a 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.2);
-    border-color: rgba(0, 255, 136, 0.5);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .toggle-btn.green {
@@ -320,6 +328,23 @@ body {
     background: linear-gradient(135deg, #00cc6e 0%, #3db85a 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+}
+
+.toggle-btn.red {
+    background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+    color: #000;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+}
+
+.toggle-btn.red:hover {
+    background: linear-gradient(135deg, #ff2d42 0%, #ff4d5c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+}
+
+.toggle-btn.red i {
+    color: #000;
 }
 
 .toggle-btn i {
@@ -343,13 +368,13 @@ button {
     justify-content: center;
 }
 
-button:not(.enabled):not(.disabled):not(.green) {
+button:not(.enabled):not(.disabled):not(.green):not(.red) {
     background: linear-gradient(135deg, #2a2a2a 0%, #333 100%);
     color: #fff;
     border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
-button:not(.enabled):not(.disabled):not(.green):hover {
+button:not(.enabled):not(.disabled):not(.green):not(.red):hover {
     background: linear-gradient(135deg, #333 0%, #3a3a3a 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 255, 136, 0.2);
@@ -484,20 +509,28 @@ td:last-child {
 .monthly-report-section {
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid rgba(0, 255, 136, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .monthly-report-section h4 {
     color: #00ff88;
     font-size: 16px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-weight: 600;
 }
 
 .monthly-report-section .info-text {
     color: #cdd9e5;
-    font-size: 14px;
+    font-size: 13px;
     margin-bottom: 15px;
+    line-height: 1.6;
+    padding: 12px 15px;
+    background: rgba(0, 255, 136, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid rgba(0, 255, 136, 0.3);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .checkbox-label {
@@ -505,11 +538,16 @@ td:last-child {
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    padding: 12px;
+    padding: 12px 15px;
     background: rgba(0, 255, 136, 0.05);
     border-radius: 10px;
     border: 1px solid rgba(0, 255, 136, 0.2);
     transition: all 0.3s ease;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .checkbox-label:hover {
@@ -530,6 +568,10 @@ td:last-child {
     font-size: 14px;
     font-weight: 500;
     user-select: none;
+    flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
 }
 
 /* Responsive */

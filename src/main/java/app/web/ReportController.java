@@ -60,7 +60,6 @@ public class ReportController {
         modelAndView.addObject("biggestExpense", transactionService.getBiggestExpenseForCurrentMonth(wallet.getId()));
         modelAndView.addObject("biggestExpenseName", transactionService.getBiggestExpenseCategoryName(wallet.getId()));
         
-        // Calculate total expenses including subscriptions
         BigDecimal transactionExpenses = transactionService.getTotalExpensesForCurrentMonth(wallet.getId());
         List<Subscription> paidSubscriptions = subscriptionsService.getPaidSubscriptionsForCurrentMonth(user.getId());
         BigDecimal subscriptionExpenses = paidSubscriptions.stream()

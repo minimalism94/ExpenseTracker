@@ -34,7 +34,7 @@ public class IndexController {
         modelAndView.setViewName("login");
         modelAndView.addObject("loginRequest", new LoginRequest());
 
-        return modelAndView; // login.html в templates
+        return modelAndView;
     }
 
 

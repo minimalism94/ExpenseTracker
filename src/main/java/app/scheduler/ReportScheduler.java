@@ -1,42 +1,42 @@
-package app.report.service;
+package app.scheduler;
 
 import app.notification.client.NotificationClient;
 import app.notification.client.dto.NotificationRequest;
 import app.notification.client.dto.PreferenceResponse;
 import app.notification.client.dto.UpsertPreferenceRequest;
+import app.report.service.PdfReportService;
+import app.scheduler.config.CronExpressions;
 import app.user.model.User;
 import app.user.model.UserVersion;
 import app.user.repository.UserRepository;
 import app.wallet.model.Wallet;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
-@Component
+@Service
 @Slf4j
-public class MonthlyReportScheduler {
+public class ReportScheduler {
 
     private final UserRepository userRepository;
     private final PdfReportService pdfReportService;
     private final NotificationClient notificationClient;
 
-    public MonthlyReportScheduler(UserRepository userRepository,
-                                 PdfReportService pdfReportService,
-                                 NotificationClient notificationClient) {
+    @Autowired
+    public ReportScheduler(UserRepository userRepository, PdfReportService pdfReportService, NotificationClient notificationClient) {
         this.userRepository = userRepository;
         this.pdfReportService = pdfReportService;
         this.notificationClient = notificationClient;
     }
 
-
-    //@Scheduled(cron = "0 * * * * *")
-    //@Scheduled(cron = "0 0 9 1 * ?")
+    @Scheduled(cron = CronExpressions.MONTHLY_FIRST_DAY_9AM)
     @Transactional
     public void sendMonthlyReports() {
         log.info("Starting monthly report generation and email sending...");
@@ -87,13 +87,10 @@ public class MonthlyReportScheduler {
                     }
                 }
 
-
                 byte[] pdfBytes = pdfReportService.generateMonthlyReportPdf(user, wallet, previousMonth);
                 
-
                 String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
                 
-
                 String monthName = previousMonth.format(java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy"));
                 String fileName = String.format("Monthly_Report_%s.pdf", previousMonth.format(java.time.format.DateTimeFormatter.ofPattern("yyyy_MM")));
                 String subject = String.format("Monthly Financial Report - %s", monthName);

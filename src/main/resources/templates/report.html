@@ -17,6 +17,7 @@
             <a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Dashboard</a>
             <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
             <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
+            <a th:href="@{/budget}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-wallet"></i> Budget</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
             <a th:href="@{/report}" class="active"><i class="fas fa-file-alt"></i> Report</a>
