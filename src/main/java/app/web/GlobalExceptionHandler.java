@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 
@@ -71,6 +72,14 @@ public class GlobalExceptionHandler {
         ModelAndView modelAndView = new ModelAndView("redirect:/upgrade");
         modelAndView.addObject("error", "Payment processing failed: " + ex.getMessage());
         return modelAndView;
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNoResourceFound(NoResourceFoundException ex) {
+        if (!ex.getResourcePath().equals("/favicon.ico")) {
+            log.warn("Resource not found: {}", ex.getResourcePath());
+        }
     }
 
     @ExceptionHandler(Exception.class)

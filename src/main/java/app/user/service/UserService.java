@@ -44,7 +44,6 @@ public class UserService implements UserDetailsService {
 
 
     private final UserRepository userRepository;
-
     private final WalletService walletService;
     private final SubscriptionsService subscriptionsService;
     private final SecurityConfig securityConfig;

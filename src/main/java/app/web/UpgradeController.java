@@ -1,5 +1,6 @@
 package app.web;
 
+import app.event.UserUpgradedEvent;
 import app.exception.CustomException;
 import app.payment.service.StripeService;
 import app.security.UserData;
@@ -13,6 +14,7 @@ import com.stripe.model.checkout.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +31,18 @@ public class UpgradeController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final StripeService stripeService;
+    private final ApplicationEventPublisher eventPublisher;
     private static final BigDecimal PRO_VERSION_PRICE = new BigDecimal("29.99");
 
     @Value("${stripe.public.key}")
     private String stripePublicKey;
 
     @Autowired
-    public UpgradeController(UserService userService, UserRepository userRepository, StripeService stripeService) {
+    public UpgradeController(UserService userService, UserRepository userRepository, StripeService stripeService, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.stripeService = stripeService;
+        this.eventPublisher = eventPublisher;
     }
 
     @GetMapping
@@ -108,9 +112,12 @@ public class UpgradeController {
                 
                 User user = userService.getById(userId);
                 if (user.getUserVersion() != UserVersion.PRO) {
+                    String previousVersion = user.getUserVersion().name();
                     user.setUserVersion(UserVersion.PRO);
-                    userRepository.save(user);
+                    user = userRepository.save(user);
                     log.info("Upgraded user {} to PRO version", userId);
+                    
+                    eventPublisher.publishEvent(new UserUpgradedEvent(this, user, previousVersion));
                 }
                 
                 return new ModelAndView("redirect:/report");

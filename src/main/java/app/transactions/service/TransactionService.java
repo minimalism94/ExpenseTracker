@@ -36,7 +36,6 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final WalletRepository walletRepository;
 
-
     @Autowired
     public TransactionService(TransactionRepository transactionRepository, WalletRepository walletRepository) {
         this.transactionRepository = transactionRepository;
