@@ -2,399 +2,167 @@
 
 <div align="center">
 
-![SmartExpense Logo](src/main/resources/static/images/logo.png)
+<img src="src/main/resources/static/images/logo.png" alt="SmartExpense Logo" width="150">
 
 **A comprehensive personal finance management application built with Spring Boot**
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)](https://www.mysql.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 </div>
 
 ---
 
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Technology Stack](#technology-stack)
-- [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation--setup)
-- [Microservice Architecture](#microservice-architecture)
-- [API Documentation](#api-documentation)
-- [Project Structure](#project-structure)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Contributing](#contributing)
-
 ---
 
 ## 🎯 Overview
 
-**SmartExpense** is a modern, full-featured personal finance management system designed to help users track their income, expenses, subscriptions, and budgets efficiently. The application provides both **Basic** and **PRO** subscription tiers, with advanced features available for PRO users.
+**SmartExpense** is a modern personal finance management system that helps users track income, expenses, subscriptions, and budgets. The application offers **Basic** and **PRO** subscription tiers with advanced features for PRO users.
 
-### Key Highlights
-
-- 💰 **Complete Financial Tracking**: Track income, expenses, and subscriptions in one place
-- 📊 **Advanced Analytics**: Detailed reports and category breakdowns
-- 💳 **Subscription Management**: Never miss a payment with subscription tracking
-- 📈 **Budget Planning**: Set and monitor budgets by category (PRO feature)
-- 📧 **Automated Reports**: Monthly PDF reports sent via email (PRO feature)
-- 🔔 **Smart Notifications**: Get notified about expiring subscriptions
-- 💳 **Secure Payments**: Integrated Stripe payment processing for PRO upgrades
+**Key Features:**
+- 💰 Complete financial tracking (income, expenses, subscriptions)
+- 📊 Advanced analytics and detailed reports
+- 💳 Subscription management with expiry alerts
+- 📈 Budget planning by category (PRO)
+- 📧 Automated monthly PDF reports (PRO)
+- 🔔 Smart notifications for expiring subscriptions
+- 💳 Secure Stripe payment processing
 
 ---
 
 ## ✨ Features
 
-### Core Features (Available to All Users)
+### Core Features
 
-#### 📝 Transaction Management
-- **Income Tracking**: Record and categorize all income sources
-- **Expense Tracking**: Track expenses across 15+ categories:
-  - Housing, Food, Transport, Utilities, Clothing
-  - Entertainment, Travel, Education, Loans
-  - Savings, Health, Family, Gifts, Home, Other
-- **Category Analysis**: View spending patterns by category
-- **Transaction History**: Complete history with date filtering
+- **Transaction Management**: Track income and expenses across 15+ categories (Housing, Food, Transport, Utilities, Entertainment, etc.)
+- **Subscription Management**: Manage recurring subscriptions with automatic expiry alerts (7 days before expiry)
+- **Dashboard**: Real-time financial overview with balance, income, expenses, and top spending categories
+- **User Management**: Secure registration, authentication, and profile management with role-based access (Admin/User)
 
-#### 💳 Subscription Management
-- **Subscription Tracking**: Add and manage recurring subscriptions
-- **Payment Tracking**: Mark subscriptions as paid
-- **Expiry Alerts**: Automatic notifications for subscriptions expiring within 7 days
-- **Subscription Types**: Support for monthly, quarterly, and annual subscriptions
+### PRO Features
 
-#### 👤 User Management
-- **User Registration & Authentication**: Secure user accounts with Spring Security
-- **Profile Management**: Update personal information and preferences
-- **Role-Based Access**: Admin and User roles with different permissions
-
-#### 📊 Dashboard
-- **Financial Overview**: Real-time balance, income, and expense summaries
-- **Top Categories**: Visual representation of spending by category
-- **Recent Transactions**: Quick view of latest financial activities
-- **Upcoming Subscriptions**: Display of subscriptions requiring payment
-
-### PRO Features (Premium Subscription)
-
-#### 📈 Advanced Analytics & Reports
-- **Detailed Financial Reports**: Comprehensive monthly financial analysis
-- **Category Breakdown**: Detailed spending analysis by category
-- **Expense History**: Day-by-day expense tracking
-- **PDF Export**: Professional monthly reports in PDF format
-- **Email Delivery**: Automated monthly PDF reports sent to your email
-
-#### 💰 Budget Planning
-- **Category-Based Budgets**: Set monthly budgets for each expense category
-- **Budget Tracking**: Monitor spending against budgets
-- **Budget Alerts**: Visual indicators for over-budget categories
-- **Budget Summary**: Total budget, spent, and remaining amounts
-
-#### 🔔 Enhanced Notifications
-- **Monthly Report Toggle**: Enable/disable monthly PDF email reports
-- **Customizable Preferences**: Control notification preferences
+- **Budget Planning**: Set and monitor monthly budgets by category with visual indicators
+- **Advanced Reports**: Detailed monthly financial analysis with category breakdown and expense history
+- **PDF Reports**: Professional monthly PDF reports with automated email delivery
+- **Enhanced Notifications**: Customizable notification preferences including monthly report emails
 
 ---
 
 ## 🏗️ Architecture
 
-### System Architecture
+The application follows a **microservices architecture** with the main application communicating with a separate notification microservice via Feign Client.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    SmartExpense Application                  │
-│                    (Port: 9090)                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   Web Layer  │  │ Service Layer│  │  Data Layer  │      │
-│  │ (Controllers)│  │  (Business   │  │ (Repositories│      │
-│  │              │  │   Logic)     │  │   & JPA)     │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │         Scheduled Tasks (Schedulers)                  │  │
-│  │  - Monthly Report Generation                          │  │
-│  │  - Subscription Expiry Notifications                  │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │         Spring Events                                │  │
-│  │  - User Upgrade Events                               │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                              │
-└──────────────────────┬─────────────────────────────────────┘
-                       │
-                       │ Feign Client (HTTP)
-                       │
-┌──────────────────────▼─────────────────────────────────────┐
-│          Notification Microservice                         │
-│          (Port: 9091)                                      │
-├────────────────────────────────────────────────────────────┤
-│  - Email Notifications                                     │
-│  - SMS Notifications (via GreenAPI)                        │
-│  - Notification Preferences Management                    │
-│  - PDF Attachment Support                                  │
-└────────────────────────────────────────────────────────────┘
-                       │
-                       │ External APIs
-                       │
-┌──────────────────────▼─────────────────────────────────────┐
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
-│  │    Stripe    │  │   MySQL DB   │  │   GreenAPI   │    │
-│  │  (Payments)  │  │  (Database)  │  │     (SMS)    │    │
-│  └──────────────┘  └──────────────┘  └──────────────┘    │
-└────────────────────────────────────────────────────────────┘
-```
+**Main Application (Port 9090)**
+- Web Layer (Controllers) → Service Layer (Business Logic) → Data Layer (JPA Repositories)
+- Scheduled Tasks: Monthly reports, subscription expiry notifications
+- Spring Events: User upgrade events
 
-### Design Patterns
+**Notification Microservice (Port 9091)**
+- Email notifications with PDF attachments
+- SMS notifications via GreenAPI
+- Notification preferences management
 
-- **MVC (Model-View-Controller)**: Separation of concerns
-- **Service Layer Pattern**: Business logic encapsulation
-- **Repository Pattern**: Data access abstraction
-- **DTO Pattern**: Data transfer objects for API communication
-- **Event-Driven Architecture**: Spring Events for decoupled communication
-- **Microservices**: Notification service as separate microservice
+**External Integrations**
+- Stripe (Payment processing)
+- MySQL (Database)
+- GreenAPI (SMS notifications)
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Backend
-- **Java 17**: Modern Java features and performance
-- **Spring Boot 3.4.0**: Rapid application development framework
-- **Spring Security**: Authentication and authorization
-- **Spring Data JPA**: Database abstraction layer
-- **Spring Cloud OpenFeign**: Microservice communication
-- **Hibernate**: ORM framework
-- **MySQL 8.0**: Relational database
+**Backend:** Java 17, Spring Boot 3.4.0, Spring Security, Spring Data JPA, Spring Cloud OpenFeign, Hibernate, MySQL 8.0
 
-### Frontend
-- **Thymeleaf**: Server-side templating engine
-- **HTML5/CSS3**: Modern web standards
-- **JavaScript**: Client-side interactivity
-- **Chart.js**: Data visualization
+**Frontend:** Thymeleaf, HTML5/CSS3, JavaScript, Chart.js
 
-### Payment & External Services
-- **Stripe API**: Payment processing
-- **GreenAPI**: SMS notifications
-- **JavaMailSender**: Email delivery
+**External Services:** Stripe API (payments), GreenAPI (SMS), JavaMailSender (email)
 
-### PDF Generation
-- **iText7**: PDF document generation
-- **html2pdf**: HTML to PDF conversion
+**PDF Generation:** iText7, html2pdf
 
-### Build & Tools
-- **Maven**: Dependency management and build tool
-- **Lombok**: Boilerplate code reduction
-- **SLF4J + Logback**: Logging framework
+**Tools:** Maven, Lombok, SLF4J
 
 ---
 
 ## 📦 Prerequisites
 
-Before you begin, ensure you have the following installed:
-
-- **Java Development Kit (JDK) 17** or higher
-- **Maven 3.6+** (or use Maven Wrapper included in project)
-- **MySQL 8.0+** database server
-- **Git** for version control
-- **IDE** (IntelliJ IDEA, Eclipse, or VS Code recommended)
-
-### Optional (for Microservice)
-- **SMTP Server** configuration for email notifications
-- **GreenAPI Account** for SMS notifications (optional)
+- **JDK 17+**, **Maven 3.6+** (or Maven Wrapper), **MySQL 8.0+**, **Git**
+- **Optional:** SMTP server for email, GreenAPI account for SMS
 
 ---
 
 ## 🚀 Installation & Setup
 
-### 1. Clone the Repository
+### 1. Clone and Setup
 
 ```bash
 git clone https://github.com/yourusername/ExpenseTracker.git
 cd ExpenseTracker
 ```
 
-### 2. Database Setup
+### 2. Database Configuration
 
-1. **Create MySQL Database**:
-   ```sql
-   CREATE DATABASE SmartExpens;
-   ```
+Create MySQL database and update `src/main/resources/application.properties`:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/SmartExpens?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+```
 
-2. **Update Database Configuration** in `src/main/resources/application.properties`:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/SmartExpens?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   ```
+### 3. Stripe Configuration (Optional)
 
-### 3. Configure Stripe (for Payment Features)
+Get API keys from [Stripe Dashboard](https://dashboard.stripe.com/) and update `application.properties`:
+```properties
+stripe.api.key=sk_test_your_secret_key
+stripe.public.key=pk_test_your_public_key
+stripe.webhook.secret=whsec_your_webhook_secret
+```
 
-1. **Get Stripe API Keys** from [Stripe Dashboard](https://dashboard.stripe.com/)
-
-2. **Update** `src/main/resources/application.properties`:
-   ```properties
-   stripe.api.key=sk_test_your_secret_key
-   stripe.public.key=pk_test_your_public_key
-   stripe.webhook.secret=whsec_your_webhook_secret
-   stripe.success.url=http://localhost:9090/upgrade/success?session_id={CHECKOUT_SESSION_ID}
-   stripe.cancel.url=http://localhost:9090/upgrade/cancel
-   ```
-
-### 4. Build the Project
+### 4. Build and Run
 
 ```bash
-# Using Maven Wrapper (Windows)
 mvnw.cmd clean install
-
-# Using Maven Wrapper (Linux/Mac)
-./mvnw clean install
-
-# Or using Maven directly
-mvn clean install
-```
-
-### 5. Run the Application
-
-```bash
-# Using Maven Wrapper
 mvnw.cmd spring-boot:run
-
-# Or using Maven
-mvn spring-boot:run
 ```
 
-The application will start on **http://localhost:9090**
-
-### 6. Access the Application
-
-- **Home Page**: http://localhost:9090/
-- **Login**: http://localhost:9090/login
-- **Register**: http://localhost:9090/register
-- **Dashboard**: http://localhost:9090/dashboard (after login)
+Application starts on **http://localhost:9090**
 
 ---
 
-## 🔌 Microservice Architecture
+## 🔌 Notification Microservice
 
-### Notification Microservice
+Separate microservice for handling notifications (runs on port 9091).
 
-The application uses a separate **Notification Microservice** for handling all notification-related operations.
+**Setup:**
+1. Navigate to notification service directory
+2. Configure email/SMS in `application.properties`
+3. Run: `mvn spring-boot:run`
 
-#### Setup Notification Microservice
+**Features:** Email notifications with PDF attachments, SMS via GreenAPI, notification preferences, notification history
 
-1. **Navigate to notification service**:
-   ```bash
-   cd ../GITREPO/notification-svc
-   ```
-
-2. **Configure Email Settings** in `src/main/resources/application.properties`:
-   ```properties
-   spring.mail.host=smtp.gmail.com
-   spring.mail.port=587
-   spring.mail.username=your_email@gmail.com
-   spring.mail.password=your_app_password
-   spring.mail.properties.mail.smtp.auth=true
-   spring.mail.properties.mail.smtp.starttls.enable=true
-   ```
-
-3. **Configure SMS (Optional)**:
-   ```properties
-   greenapi.instance.id=your_instance_id
-   greenapi.api.token=your_api_token
-   ```
-
-4. **Run the Microservice**:
-   ```bash
-   mvn spring-boot:run
-   ```
-
-   The microservice will start on **http://localhost:9091**
-
-#### Microservice Features
-
-- **Email Notifications**: Send emails with HTML content and PDF attachments
-- **SMS Notifications**: Send SMS via GreenAPI integration
-- **Notification Preferences**: Manage user notification preferences
-- **Notification History**: Track all sent notifications
-
-#### Communication
-
-The main application communicates with the notification microservice using **Spring Cloud OpenFeign**:
-
-```java
-@FeignClient(name = "notification-svc", url = "localhost:9091/api/v1")
-public interface NotificationClient {
-    // API methods
-}
-```
+**Communication:** Main app uses Spring Cloud OpenFeign to communicate with microservice
 
 ---
 
-## 📚 API Documentation
+## 📚 API Endpoints
 
-### Main Application Endpoints
+**Main Application:**
+- Authentication: `/`, `/login`, `/register`, `/logout`
+- Dashboard: `/dashboard`
+- Transactions: `/transactions` (GET, POST, DELETE)
+- Subscriptions: `/payments` (GET, POST, DELETE, `/pay/{id}`)
+- Budget (PRO): `/budget` (GET, POST, DELETE)
+- Reports (PRO): `/report`
+- Profile: `/profile` (GET, POST)
+- Notifications: `/notifications` (GET, POST `/toggle`, POST `/toggle-monthly-report`)
+- Upgrade: `/upgrade` (GET, POST `/create-checkout-session`, GET `/success`, GET `/cancel`, POST `/webhook`)
+- Admin: `/admin` (Admin only)
 
-#### Authentication
-- `GET /` - Home page
-- `GET /login` - Login page
-- `POST /login` - Process login
-- `GET /register` - Registration page
-- `POST /register` - Process registration
-- `GET /logout` - Logout
-
-#### Dashboard
-- `GET /dashboard` - User dashboard with financial overview
-
-#### Transactions
-- `GET /transactions` - List all transactions
-- `POST /transactions` - Create new transaction
-- `DELETE /transactions/{id}` - Delete transaction
-
-#### Subscriptions
-- `GET /payments` - List all subscriptions
-- `POST /payments` - Create new subscription
-- `POST /payments/{id}/pay` - Pay subscription
-- `DELETE /payments/{id}` - Delete subscription
-
-#### Budget (PRO Only)
-- `GET /budget` - Budget planning page
-- `POST /budget` - Create/update budget
-- `DELETE /budget/{id}` - Delete budget
-
-#### Reports (PRO Only)
-- `GET /report` - Monthly financial report
-
-#### Profile
-- `GET /profile` - User profile page
-- `POST /profile` - Update profile
-
-#### Notifications
-- `GET /notifications` - Notification preferences
-- `POST /notifications/toggle` - Toggle email notifications
-- `POST /notifications/toggle-monthly-report` - Toggle monthly report emails
-
-#### Upgrade
-- `GET /upgrade` - Upgrade to PRO page
-- `POST /upgrade/create-checkout-session` - Create Stripe checkout session
-- `GET /upgrade/success` - Payment success callback
-- `GET /upgrade/cancel` - Payment cancellation
-- `POST /upgrade/webhook` - Stripe webhook handler
-
-#### Admin
-- `GET /admin` - Admin panel (Admin role only)
-
-### Notification Microservice Endpoints
-
+**Notification Microservice:**
 - `POST /api/v1/notifications` - Send notification
-- `GET /api/v1/notifications?userId={id}` - Get user notifications
-- `POST /api/v1/preferences` - Create/update notification preferences
-- `GET /api/v1/preferences?userId={id}` - Get user preferences
+- `GET /api/v1/notifications?userId={id}` - Get notifications
+- `POST /api/v1/preferences` - Update preferences
+- `GET /api/v1/preferences?userId={id}` - Get preferences
 
 ---
 
@@ -451,103 +219,37 @@ ExpenseTracker/
 
 ## ⚙️ Configuration
 
-### Application Properties
+Key settings in `application.properties`:
+- Server port: `9090`
+- Database: MySQL connection settings
+- Stripe: API keys for payment processing
+- JPA: Hibernate auto-update enabled
 
-Key configuration options in `application.properties`:
-
-```properties
-# Server Configuration
-server.port=9090
-
-# Database Configuration
-spring.datasource.url=jdbc:mysql://localhost:3306/SmartExpens
-spring.datasource.username=root
-spring.datasource.password=your_password
-
-# JPA Configuration
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=false
-
-# Stripe Configuration
-stripe.api.key=your_stripe_secret_key
-stripe.public.key=your_stripe_public_key
-stripe.webhook.secret=your_webhook_secret
-
-# Logging
-logging.level.org.springframework=WARN
-logging.level.app=INFO
-```
-
-### Scheduled Tasks
-
-Scheduled tasks are configured in `scheduler/config/CronExpressions.java`:
-
-- **Subscription Notifications**: Daily at 9 AM
-- **Monthly Reports**: First day of month at 9 AM
+**Scheduled Tasks:**
+- Subscription notifications: Daily at 9 AM
+- Monthly reports: First day of month at 9 AM
 
 ---
 
 ## 💻 Usage
 
-### Getting Started
-
-1. **Register a New Account**:
-   - Navigate to `/register`
-   - Fill in username, email, password, and country
-   - Click "Register"
-
-2. **Login**:
-   - Use your credentials to log in
-   - You'll be redirected to the dashboard
-
-3. **Add Transactions**:
-   - Go to "Transactions" in the sidebar
-   - Click "Add Transaction"
-   - Fill in amount, category, description, and date
-   - Choose transaction type (Income/Expense)
-
-4. **Manage Subscriptions**:
-   - Go to "Subscriptions"
-   - Add new subscriptions with name, price, and expiry date
-   - Mark subscriptions as paid when you pay them
-
-5. **Upgrade to PRO** (Optional):
-   - Click "Upgrade to Pro" in the sidebar
-   - Complete payment via Stripe
-   - Unlock advanced features
-
-### PRO Features Usage
-
-1. **Budget Planning**:
-   - Navigate to "Budget" (PRO only)
-   - Set monthly budgets for each category
-   - Monitor spending against budgets
-
-2. **Detailed Reports**:
-   - Go to "Report" (PRO only)
-   - View comprehensive financial analysis
-   - Download PDF reports
-
-3. **Monthly Email Reports**:
-   - Enable in "Notifications" page
-   - Receive automated monthly PDF reports
+1. **Register/Login**: Create account or login with credentials
+2. **Add Transactions**: Track income and expenses by category
+3. **Manage Subscriptions**: Add subscriptions and mark as paid
+4. **View Dashboard**: See financial overview and top categories
+5. **Upgrade to PRO**: Unlock budget planning, detailed reports, and PDF exports
+6. **Budget Planning (PRO)**: Set monthly budgets and monitor spending
+7. **Reports (PRO)**: View detailed financial analysis and download PDFs
 
 ---
 
-## 🔒 Security Features
+## 🔒 Security
 
-- **Spring Security**: Role-based access control
-- **Password Encryption**: BCrypt password hashing
-- **CSRF Protection**: Enabled for all forms
-- **Session Management**: Secure session handling
-- **Input Validation**: Server-side validation for all inputs
-- **SQL Injection Prevention**: JPA/Hibernate parameterized queries
+Spring Security with role-based access, BCrypt password encryption, CSRF protection, secure sessions, input validation, and SQL injection prevention via JPA.
 
 ---
 
 ## 🧪 Testing
-
-Run tests using Maven:
 
 ```bash
 mvn test
@@ -555,49 +257,20 @@ mvn test
 
 ---
 
-## 📝 License
-
-This project is licensed under the MIT License.
-
----
-
-## 👥 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📧 Contact & Support
-
-For questions, issues, or contributions, please open an issue on GitHub.
-
----
-
 ## 🎯 Future Enhancements
 
-- [ ] Mobile application (iOS/Android)
-- [ ] Multi-currency support
-- [ ] Investment tracking
-- [ ] Goal setting and tracking
-- [ ] Recurring transaction templates
-- [ ] Data export to Excel/CSV
-- [ ] Advanced analytics with machine learning
-- [ ] Integration with banking APIs
-- [ ] Collaborative budgeting (family/shared budgets)
+- Mobile application (iOS/Android)
+- Multi-currency support
+- Investment tracking
+- Goal setting and tracking
+- Banking API integration
+- Collaborative budgeting
 
 ---
 
 <div align="center">
 
 **Built with ❤️ using Spring Boot**
-
-⭐ Star this repo if you find it helpful!
 
 </div>
 
