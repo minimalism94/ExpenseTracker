@@ -26,9 +26,9 @@ public class BudgetDto {
     private BigDecimal amount;
     
     @NotNull(message = "Month is required")
-    private Integer month;
+    private int month;
     
     @NotNull(message = "Year is required")
-    private Integer year;
+    private int year;
 }
 
