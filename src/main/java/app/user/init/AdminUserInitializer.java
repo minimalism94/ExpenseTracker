@@ -14,8 +14,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 
 @Component
@@ -42,7 +40,6 @@ public class AdminUserInitializer {
 
     @EventListener(ApplicationReadyEvent.class)
     @Order(1)
-    @Transactional
     public void initializeAdminUser() {
         if (userRepository.count() == 0) {
 

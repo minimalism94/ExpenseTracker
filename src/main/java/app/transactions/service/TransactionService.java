@@ -108,13 +108,13 @@ public class TransactionService {
                 .collect(Collectors.toList());
     }
 
-    public List<Transaction> getCurrentMonthExpenseTransactions(UUID walletId) {
+    private List<Transaction> getCurrentMonthExpenseTransactions(UUID walletId) {
         return getCurrentMonthTransactions(walletId).stream()
                 .filter(t -> t.getType() == Type.EXPENSE)
                 .collect(Collectors.toList());
     }
 
-    public Map<Category, BigDecimal> getCategoryTotals(UUID walletId) {
+    private Map<Category, BigDecimal> getCategoryTotals(UUID walletId) {
         List<Transaction> expenseTransactions = getCurrentMonthExpenseTransactions(walletId);
         Map<Category, BigDecimal> categoryTotals = new HashMap<>();
         
@@ -136,7 +136,7 @@ public class TransactionService {
         return categoryTotals;
     }
     
-    public List<Transaction> getExpenseTransactionsForMonth(UUID walletId, YearMonth yearMonth) {
+    private List<Transaction> getExpenseTransactionsForMonth(UUID walletId, YearMonth yearMonth) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new CustomException("Wallet not found"));
         

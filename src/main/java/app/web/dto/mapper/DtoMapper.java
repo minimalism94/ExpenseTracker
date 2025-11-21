@@ -45,17 +45,6 @@ public class DtoMapper {
                 .wallet(wallet)
                 .build();
     }
-    
-    public static TransactionDto mapTransactionToDto(Transaction transaction) {
-        return TransactionDto.builder()
-                .amount(transaction.getAmount())
-                .date(transaction.getDate())
-                .type(transaction.getType())
-                .category(transaction.getCategory())
-                .description(transaction.getDescription())
-                .build();
-    }
-    
 
     public static Subscription mapSubscriptionDtoToEntity(SubscriptionDto dto, User user) {
         Subscription subscription = new Subscription();
@@ -66,35 +55,5 @@ public class DtoMapper {
         subscription.setPrice(dto.getPrice());
         subscription.setUser(user);
         return subscription;
-    }
-    
-    public static SubscriptionDto mapSubscriptionToDto(Subscription subscription) {
-        return SubscriptionDto.builder()
-                .name(subscription.getName())
-                .period(subscription.getPeriod())
-                .expiryOn(subscription.getExpiryOn())
-                .type(subscription.getType())
-                .price(subscription.getPrice())
-                .build();
-    }
-    
-    public static BudgetDto mapBudgetToDto(Budget budget) {
-        return BudgetDto.builder()
-                .id(budget.getId().toString())
-                .category(budget.getCategory())
-                .amount(budget.getAmount())
-                .month(budget.getMonth())
-                .year(budget.getYear())
-                .build();
-    }
-    
-    public static Budget mapBudgetDtoToEntity(BudgetDto dto, User user) {
-        return Budget.builder()
-                .category(dto.getCategory())
-                .amount(dto.getAmount())
-                .month(dto.getMonth())
-                .year(dto.getYear())
-                .user(user)
-                .build();
     }
 }

@@ -40,6 +40,7 @@ public class BudgetService {
 
     @Transactional
     public Budget createOrUpdateBudget(UUID userId, BudgetDto budgetDto) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -64,7 +65,8 @@ public class BudgetService {
         return budgetRepository.save(budget);
     }
 
-    public List<Budget> getBudgetsForMonth(UUID userId, YearMonth yearMonth) {
+    private List<Budget> getBudgetsForMonth(UUID userId, YearMonth yearMonth) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -75,6 +77,7 @@ public class BudgetService {
 
     @Transactional
     public void deleteBudget(UUID budgetId, UUID userId) {
+
         Budget budget = budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new IllegalArgumentException("Budget not found"));
 
@@ -86,6 +89,7 @@ public class BudgetService {
     }
 
     public BudgetPageData getBudgetPageData(UUID userId, Integer month, Integer year) {
+
         YearMonth currentMonth = determineYearMonth(month, year);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
@@ -117,7 +121,8 @@ public class BudgetService {
                 .build();
     }
 
-    public Map<Category, BudgetInfo> getBudgetInfoForMonth(UUID userId, YearMonth yearMonth) {
+    private Map<Category, BudgetInfo> getBudgetInfoForMonth(UUID userId, YearMonth yearMonth) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -134,6 +139,7 @@ public class BudgetService {
         Map<Category, BudgetInfo> budgetInfoMap = new HashMap<>();
 
         for (Budget budget : budgets) {
+
             BigDecimal spent = categoryExpenses.getOrDefault(budget.getCategory(), BigDecimal.ZERO);
             BigDecimal remaining = budget.getAmount().subtract(spent);
             BigDecimal percentage = calculatePercentage(spent, budget.getAmount());
@@ -151,14 +157,16 @@ public class BudgetService {
         return budgetInfoMap;
     }
 
-    public BigDecimal getTotalBudgetForMonth(UUID userId, YearMonth yearMonth) {
+    private BigDecimal getTotalBudgetForMonth(UUID userId, YearMonth yearMonth) {
+
         List<Budget> budgets = getBudgetsForMonth(userId, yearMonth);
         return budgets.stream()
                 .map(Budget::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal getTotalSpentForMonth(UUID userId, YearMonth yearMonth) {
+    private BigDecimal getTotalSpentForMonth(UUID userId, YearMonth yearMonth) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -171,6 +179,7 @@ public class BudgetService {
     }
 
     private YearMonth determineYearMonth(Integer month, Integer year) {
+
         if (month != null && year != null) {
             return YearMonth.of(year, month);
         }
@@ -178,6 +187,8 @@ public class BudgetService {
     }
 
     private BigDecimal calculatePercentage(BigDecimal spent, BigDecimal budgetAmount) {
+
+
         if (budgetAmount.compareTo(BigDecimal.ZERO) > 0) {
             return spent.multiply(BigDecimal.valueOf(100))
                     .divide(budgetAmount, 2, RoundingMode.HALF_UP);
