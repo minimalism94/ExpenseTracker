@@ -347,8 +347,8 @@ body {
 /* Middle Section */
 .middle {
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: 12px;
+    grid-template-columns: 0.6fr 1.4fr;
+    gap: 8px;
     margin-bottom: 15px;
     position: relative;
     z-index: 1;
@@ -357,10 +357,9 @@ body {
 .chart.card {
     display: flex;
     flex-direction: column;
-    width: 300px;
-    height: 300px;
     aspect-ratio: 1;
     justify-self: start;
+    min-height: 0;
 }
 
 .chart.card h3 {
