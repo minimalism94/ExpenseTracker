@@ -191,9 +191,15 @@ body {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
 }
 
 .comparison-section {
@@ -380,15 +386,15 @@ body {
     .comparison-section {
         grid-template-columns: 1fr;
     }
-    
+
     .header-section h1 {
         font-size: 2rem;
     }
-    
+
     .container {
         flex-direction: column;
     }
-    
+
     .sidebar {
         width: 100%;
     }

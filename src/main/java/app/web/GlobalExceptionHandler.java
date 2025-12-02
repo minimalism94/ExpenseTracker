@@ -3,18 +3,14 @@ package app.web;
 import app.exception.CustomException;
 import app.exception.UserNotFoundException;
 import app.exception.UsernameAlreadyExistException;
-import app.web.dto.RegisterRequest;
 import com.stripe.exception.StripeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-import java.util.HashMap;
 
 @ControllerAdvice
 @Slf4j
@@ -44,19 +40,15 @@ public class GlobalExceptionHandler {
         return createErrorModel("Invalid Request", ex.getMessage(), "The request contains invalid data. Please check your input and try again.", HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({SecurityException.class,
-            AccessDeniedException.class
-    })
+    @ExceptionHandler(SecurityException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ModelAndView handleSecurityException(SecurityException ex) {
         log.error("Security exception: {}", ex.getMessage());
-        return createErrorModel("Access Denied", ex.getMessage(), "You don't have permission to perform this action.", HttpStatus.FORBIDDEN);
+        return createErrorModel("Security Error", 
+            ex.getMessage() != null ? ex.getMessage() : "A security error occurred", 
+            "Your request could not be processed due to security restrictions.", 
+            HttpStatus.FORBIDDEN);
     }
-
-
-
-
-
 
     @ExceptionHandler(CustomException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -76,10 +68,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleNoResourceFound(NoResourceFoundException ex) {
+    public ModelAndView handleNoResourceFound(NoResourceFoundException ex) {
         if (!ex.getResourcePath().equals("/favicon.ico")) {
             log.warn("Resource not found: {}", ex.getResourcePath());
+            return createErrorModel("Page Not Found", 
+                "The page you are looking for does not exist.", 
+                "The requested URL " + ex.getResourcePath() + " could not be found on this server. Please check the URL and try again.", 
+                HttpStatus.NOT_FOUND);
         }
+        return null;
     }
 
     @ExceptionHandler(Exception.class)

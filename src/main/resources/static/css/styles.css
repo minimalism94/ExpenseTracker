@@ -8,6 +8,7 @@
     --text-light: #e6e6e6;
     --radius: 12px;
 }
+
 .avatar {
     width: 50px;
     height: 50px;
@@ -249,9 +250,17 @@ body {
     margin-right: 0.5rem;
 }
 
-.food { background: var(--accent-green); }
-.rent { background: var(--accent-teal); }
-.entertainment { background: #fff; }
+.food {
+    background: var(--accent-green);
+}
+
+.rent {
+    background: var(--accent-teal);
+}
+
+.entertainment {
+    background: #fff;
+}
 
 /* Payments */
 .payments {
@@ -315,33 +324,33 @@ body {
 
 
 /* Transactions */
-    .transactions table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-    }
+.transactions table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
 
-    .transactions th,
-    .transactions td {
-        padding: 0.75rem;
-        text-align: left;
-        border-bottom: 1px solid #444;
-    }
+.transactions th,
+.transactions td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
 
-    .status.completed {
-        color: var(--accent-green);
-    }
+.status.completed {
+    color: var(--accent-green);
+}
 
-    .status.pending {
-        color: #ffb84d;
-    }
+.status.pending {
+    color: #ffb84d;
+}
 
-    .all-transactions {
-        display: inline-block;
-        margin-top: 1rem;
-        color: var(--accent-green);
-        text-decoration: none;
-    }
+.all-transactions {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--accent-green);
+    text-decoration: none;
+}
 
 
 /* Responsive */
@@ -349,10 +358,12 @@ body {
     .middle {
         grid-template-columns: 1fr;
     }
+
     .sidebar {
         display: none;
     }
 }
+
 .btn-danger {
     background-color: #dc3545;
     color: white;
@@ -372,6 +383,7 @@ body {
     background-color: #bd2130;
     transform: scale(0.98);
 }
+
 .page-title {
     margin-top: 20px;
     padding-left: 140px;
@@ -379,6 +391,6 @@ body {
     font-size: 28px;
     font-weight: bold;
     color: #00ff88;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
     letter-spacing: 1px;
 }

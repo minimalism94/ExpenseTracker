@@ -14,18 +14,13 @@ import java.util.UUID;
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
     @Query("""
-    SELECT new app.web.dto.TopCategories(t.category, SUM(t.amount), 0)
-    FROM Transaction t
-    WHERE t.wallet.id = :walletId AND t.type = app.transactions.model.Type.EXPENSE
-    GROUP BY t.category
-    ORDER BY SUM(t.amount) DESC
-""")
+                SELECT new app.web.dto.TopCategories(t.category, SUM(t.amount), 0)
+                FROM Transaction t
+                WHERE t.wallet.id = :walletId AND t.type = app.transactions.model.Type.EXPENSE
+                GROUP BY t.category
+                ORDER BY SUM(t.amount) DESC
+            """)
     List<TopCategories> topCategories(@Param("walletId") UUID walletId);
-
-
-
-    List<Transaction> findByWalletId(UUID walletId);
-
 
 }
 

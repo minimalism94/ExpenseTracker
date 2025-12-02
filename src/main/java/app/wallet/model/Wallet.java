@@ -3,8 +3,8 @@ package app.wallet.model;
 import app.transactions.model.Transaction;
 import app.user.model.User;
 import jakarta.persistence.*;
-
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;

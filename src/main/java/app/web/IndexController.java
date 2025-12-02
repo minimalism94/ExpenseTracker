@@ -1,13 +1,10 @@
 package app.web;
 
-import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -28,7 +25,7 @@ public class IndexController {
     @GetMapping("/login")
     public ModelAndView showLoginPage(@RequestParam(value = "error", required = false) String error) {
         ModelAndView modelAndView = new ModelAndView();
-        if ( error!= null) {
+        if (error != null) {
             modelAndView.addObject("errorMessage", true);
         }
         modelAndView.setViewName("login");
@@ -37,7 +34,12 @@ public class IndexController {
         return modelAndView;
     }
 
-
+    @GetMapping("/error")
+    public String showErrorPage() {
+        // This endpoint is used by AccessDeniedHandler to forward to error.html
+        // The error attributes are set in the request by AccessDeniedHandler
+        return "error";
+    }
 
 }
 

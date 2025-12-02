@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>SmartExpense - Home</title>
-    <link rel="stylesheet" href="/css/styleIndex.css" />
+    <link href="/css/styleIndex.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -21,14 +21,14 @@
         <span class="cursor">|</span>
     </div>
     <div class="login-container">
-        <img src="/images/logo.png" alt="SmartExpense Logo" class="logo-img" />
+        <img alt="SmartExpense Logo" class="logo-img" src="/images/logo.png"/>
         <div class="logo-text">SmartExpense</div>
         <div class="login-form">
             <h2 class="pulse">Welcome</h2>
             <p>Track expenses, manage budgets, and stay on top of your finances.</p>
             <div class="links">
-                <a th:href="@{/login}" class="btn">Login</a>
-                <a th:href="@{/register}" class="btn">Registration</a>
+                <a class="btn" th:href="@{/login}">Login</a>
+                <a class="btn" th:href="@{/register}">Registration</a>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
     const text = "Track your money, own your future";
     const typingElement = document.getElementById('typingText');
     let i = 0;
-    
+
     function typeWriter() {
         if (i < text.length) {
             typingElement.textContent += text.charAt(i);
@@ -47,7 +47,7 @@
             document.querySelector('.cursor').style.animation = 'blink 1s infinite';
         }
     }
-    
+
     setTimeout(() => {
         typeWriter();
     }, 500);

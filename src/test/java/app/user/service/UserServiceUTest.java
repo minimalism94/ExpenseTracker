@@ -30,12 +30,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceUTest {
 
     @Mock
     private UserRepository userRepository;
@@ -99,24 +97,28 @@ class UserServiceTest {
 
     @Test
     void should_RegisterUser_When_ValidRequestProvided() {
+        // Given
         when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.empty());
         when(beanConfiguration.passwordEncoder()).thenReturn(passwordEncoder);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
-        assertDoesNotThrow(() -> userService.register(registerRequest));
+        // When
+        userService.register(registerRequest);
 
+        // Then - verify all interactions
         verify(userRepository).findByUsername(registerRequest.getUsername());
+        verify(beanConfiguration).passwordEncoder();
+        verify(passwordEncoder).encode(registerRequest.getPassword());
         verify(userRepository).save(any(User.class));
         verify(walletService).createDefaultWallet(any(User.class));
         verify(subscriptionsService).createDefaultSubscription(any(User.class));
-        verify(notificationService).upsertPreference(any(UUID.class), eq(false), anyString());
+        verify(notificationService).upsertPreference(eq(testUser.getId()), eq(false), eq(testUser.getEmail()));
     }
 
     @Test
     void should_ThrowUsernameAlreadyExistException_When_UsernameAlreadyExists() {
         when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.of(testUser));
-
 
         assertThrows(UsernameAlreadyExistException.class, () -> userService.register(registerRequest));
 
@@ -139,9 +141,47 @@ class UserServiceTest {
     }
 
     @Test
+    void should_ReturnUserDetailsWithCorrectRole_When_UserIsAdmin() {
+        testUser.setRole(Role.ADMIN);
+        when(userRepository.findByUsername("adminuser")).thenReturn(Optional.of(testUser));
+
+        UserDetails result = userService.loadUserByUsername("adminuser");
+
+        assertNotNull(result);
+        assertInstanceOf(UserData.class, result);
+        UserData userData = (UserData) result;
+        assertEquals(Role.ADMIN, userData.getRole());
+        verify(userRepository).findByUsername("adminuser");
+    }
+
+    @Test
+    void should_ReturnUserDetailsWithCorrectEmail_When_UserExists() {
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+
+        UserDetails result = userService.loadUserByUsername("testuser");
+
+        assertNotNull(result);
+        UserData userData = (UserData) result;
+        assertEquals("test@example.com", userData.getEmail());
+        verify(userRepository).findByUsername("testuser");
+    }
+
+    @Test
+    void should_ReturnUserDetailsWithCorrectActiveStatus_When_UserExists() {
+        testUser.setActive(false);
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+
+        UserDetails result = userService.loadUserByUsername("testuser");
+
+        assertNotNull(result);
+        UserData userData = (UserData) result;
+        assertFalse(userData.isActive());
+        verify(userRepository).findByUsername("testuser");
+    }
+
+    @Test
     void should_ThrowUserNotFoundException_When_UsernameDoesNotExist() {
         when(userRepository.findByUsername("nonexistent")).thenReturn(Optional.empty());
-
 
         assertThrows(UserNotFoundException.class, () -> userService.loadUserByUsername("nonexistent"));
 
@@ -164,7 +204,6 @@ class UserServiceTest {
     void should_ThrowUserNotFoundException_When_UserIdDoesNotExist() {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
-
 
         assertThrows(UserNotFoundException.class, () -> userService.getById(nonExistentId));
 
@@ -193,6 +232,17 @@ class UserServiceTest {
     }
 
     @Test
+    void should_ReturnEmptyList_When_NoUsersExist() {
+        when(userRepository.findAll()).thenReturn(List.of());
+
+        List<User> result = userService.getAllUsers();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(userRepository).findAll();
+    }
+
+    @Test
     void should_SaveUser_When_ValidUserProvided() {
         when(userRepository.save(testUser)).thenReturn(testUser);
 
@@ -201,6 +251,23 @@ class UserServiceTest {
         assertNotNull(result);
         assertEquals(testUser, result);
         verify(userRepository).save(testUser);
+    }
+
+    @Test
+    void should_SaveUserWithUpdatedFields_When_UserIsModified() {
+        User modifiedUser = User.builder()
+                .id(testUserId)
+                .username("modifieduser")
+                .email("modified@example.com")
+                .build();
+        when(userRepository.save(modifiedUser)).thenReturn(modifiedUser);
+
+        User result = userService.save(modifiedUser);
+
+        assertNotNull(result);
+        assertEquals("modifieduser", result.getUsername());
+        assertEquals("modified@example.com", result.getEmail());
+        verify(userRepository).save(modifiedUser);
     }
 
     @Test
@@ -233,7 +300,6 @@ class UserServiceTest {
     void should_ThrowUserNotFoundException_When_UserNotFoundForSetRole() {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
-
 
         assertThrows(UserNotFoundException.class, () -> userService.setRole(nonExistentId));
 
@@ -281,7 +347,6 @@ class UserServiceTest {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-
         assertThrows(UserNotFoundException.class, () -> userService.setActive(nonExistentId));
 
         verify(userRepository).findById(nonExistentId);
@@ -312,19 +377,41 @@ class UserServiceTest {
         userService.editUserDetails(testUserId, userEditRequest);
 
         verify(notificationService).upsertPreference(testUserId, true, "newemail@example.com");
+        verify(userRepository).findById(testUserId);
+        verify(userRepository).save(testUser);
     }
 
     @Test
-    void should_ThrowNullPointerException_When_EmailIsNull() {
+    void should_UpdateAllUserFields_When_EditUserDetailsIsCalled() {
+        userEditRequest.setFirstName("NewFirstName");
+        userEditRequest.setLastName("NewLastName");
+        userEditRequest.setCountry(Country.USA);
+        userEditRequest.setProfilePicture("newpicture.jpg");
+        when(userRepository.findById(testUserId)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        userService.editUserDetails(testUserId, userEditRequest);
+
+        assertEquals("NewFirstName", testUser.getFirstName());
+        assertEquals("NewLastName", testUser.getLastName());
+        assertEquals(Country.USA, testUser.getCountry());
+        assertEquals("newpicture.jpg", testUser.getProfilePicture());
+        assertNotNull(testUser.getUpdatedOn());
+        verify(userRepository).findById(testUserId);
+        verify(userRepository).save(testUser);
+    }
+
+    @Test
+    void should_DisableNotificationPreference_When_EmailIsNull() {
         userEditRequest.setEmail(null);
         when(userRepository.findById(testUserId)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
 
+        userService.editUserDetails(testUserId, userEditRequest);
 
-        assertThrows(NullPointerException.class, () -> userService.editUserDetails(testUserId, userEditRequest));
-
+        verify(notificationService).upsertPreference(testUserId, false, null);
         verify(userRepository).findById(testUserId);
-        verify(userRepository, never()).save(any(User.class));
-        verify(notificationService, never()).upsertPreference(any(UUID.class), anyBoolean(), anyString());
+        verify(userRepository).save(testUser);
     }
 
     @Test
@@ -336,13 +423,27 @@ class UserServiceTest {
         userService.editUserDetails(testUserId, userEditRequest);
 
         verify(notificationService).upsertPreference(testUserId, false, null);
+        verify(userRepository).findById(testUserId);
+        verify(userRepository).save(testUser);
+    }
+
+    @Test
+    void should_DisableNotificationPreference_When_EmailIsEmpty() {
+        userEditRequest.setEmail(""); // Empty email
+        when(userRepository.findById(testUserId)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        userService.editUserDetails(testUserId, userEditRequest);
+
+        verify(notificationService).upsertPreference(testUserId, false, null);
+        verify(userRepository).findById(testUserId);
+        verify(userRepository).save(testUser);
     }
 
     @Test
     void should_ThrowUserNotFoundException_When_UserNotFoundForEditDetails() {
         UUID nonExistentId = UUID.randomUUID();
         when(userRepository.findById(nonExistentId)).thenReturn(Optional.empty());
-
 
         assertThrows(UserNotFoundException.class, () -> userService.editUserDetails(nonExistentId, userEditRequest));
 

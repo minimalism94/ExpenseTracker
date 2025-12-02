@@ -16,6 +16,7 @@ import app.wallet.service.WalletService;
 import app.web.dto.SubscriptionDto;
 import app.web.dto.TransactionDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -29,6 +30,7 @@ import java.util.UUID;
 
 @Component
 @Slf4j
+@ConditionalOnProperty(name = "app.admin.initializer.enabled", havingValue = "true", matchIfMissing = true)
 public class AdminUserInitializer {
 
     private final UserRepository userRepository;
@@ -84,7 +86,7 @@ public class AdminUserInitializer {
             createDefaultSubscriptions(adminUser);
             createDefaultTransactions(adminUser);
 
-            log.info("Default admin user created successfully - Username: '{}', Password: '{}', Email: '{}'", 
+            log.info("Default admin user created successfully - Username: '{}', Password: '{}', Email: '{}'",
                     username, password, email);
         } else {
             log.debug("Database already contains users. Skipping admin user initialization.");

@@ -1,31 +1,24 @@
 package app.user.service;
 
 import app.confg.BeanConfiguration;
-import app.confg.SecurityConfig;
-import app.exception.CustomException;
 import app.exception.UserNotFoundException;
 import app.exception.UsernameAlreadyExistException;
 import app.notification.service.NotificationService;
 import app.security.UserData;
-import app.subscription.model.Subscription;
 import app.subscription.service.SubscriptionsService;
-import app.user.model.Country;
 import app.user.model.Role;
 import app.user.model.User;
 import app.user.repository.UserRepository;
 import app.wallet.service.WalletService;
-import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
 import app.web.dto.UserEditRequest;
 import app.web.dto.mapper.DtoMapper;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,37 +26,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Slf4j
 @Service
 
-
 public class UserService implements UserDetailsService {
-
-
 
     private final UserRepository userRepository;
     private final WalletService walletService;
     private final SubscriptionsService subscriptionsService;
-    private final SecurityConfig securityConfig;
     private final BeanConfiguration beanConfiguration;
     private final NotificationService notificationService;
 
     @Autowired
-    public UserService(UserRepository userRepository, BeanConfiguration beanConfiguration, WalletService walletService, SubscriptionsService subscriptionsService, SecurityConfig securityConfig, NotificationService notificationService) {
+    public UserService(UserRepository userRepository, BeanConfiguration beanConfiguration, WalletService walletService, SubscriptionsService subscriptionsService, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.walletService = walletService;
         this.subscriptionsService = subscriptionsService;
-        this.securityConfig = securityConfig;
         this.beanConfiguration = beanConfiguration;
         this.notificationService = notificationService;
     }
 
-
-
     @Transactional
-    public void register( RegisterRequest registerRequest) {
+    public void register(RegisterRequest registerRequest) {
         Optional<User> optionalUser = userRepository.findByUsername(registerRequest.getUsername());
         if (optionalUser.isPresent()) {
             throw new UsernameAlreadyExistException(registerRequest.getUsername());
@@ -85,7 +69,6 @@ public class UserService implements UserDetailsService {
         log.info("User [%s] registered successfully".formatted(user.getUsername()));
         notificationService.upsertPreference(user.getId(), false, user.getEmail());
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -131,20 +114,22 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-
-        public void editUserDetails(UUID id, UserEditRequest dto) {
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new UserNotFoundException(id));
-                if (dto.getEmail() != null || dto.getEmail().isBlank()) {
-                    notificationService.upsertPreference(user.getId(), true, user.getEmail());
-                }else {
-                    notificationService.upsertPreference(user.getId(), false, null);
-                }
-            DtoMapper.mapUserEditRequestToUser(dto, user);
-            user.setUpdatedOn(LocalDateTime.now());
-
-            userRepository.save(user);
+    public void editUserDetails(UUID id, UserEditRequest dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+            notificationService.upsertPreference(user.getId(), true, dto.getEmail());
+        } else {
+            notificationService.upsertPreference(user.getId(), false, null);
         }
+        DtoMapper.mapUserEditRequestToUser(dto, user);
+        user.setUpdatedOn(LocalDateTime.now());
+
+        userRepository.save(user);
     }
+}
+
+
+
 
 

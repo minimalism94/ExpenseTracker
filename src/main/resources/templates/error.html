@@ -2,41 +2,106 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Error - SmartExpense</title>
-    <link rel="stylesheet" href="/css/error.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="/css/error.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
-    <div class="error-container">
-        <div class="error-content">
-            <div class="error-icon">
-                <i class="fas fa-exclamation-triangle" th:if="${statusCode == 500}"></i>
-                <i class="fas fa-ban" th:if="${statusCode == 403}"></i>
-                <i class="fas fa-user-slash" th:if="${statusCode == 404}"></i>
-                <i class="fas fa-exclamation-circle" th:if="${statusCode == 400}"></i>
-                <i class="fas fa-times-circle" th:if="${statusCode == 409}"></i>
+<div class="error-container">
+    <div class="error-content">
+        <div class="error-icon">
+            <!-- 500 - Internal Server Error -->
+            <i class="fas fa-server" th:if="${statusCode == 500}"></i>
+            <!-- 403 - Forbidden / Access Denied -->
+            <i class="fas fa-shield-alt" th:if="${statusCode == 403}"></i>
+            <!-- 404 - Not Found -->
+            <i class="fas fa-search" th:if="${statusCode == 404}"></i>
+            <!-- 400 - Bad Request -->
+            <i class="fas fa-exclamation-circle" th:if="${statusCode == 400}"></i>
+            <!-- 409 - Conflict -->
+            <i class="fas fa-exclamation-triangle" th:if="${statusCode == 409}"></i>
+            <!-- Default icon for other errors -->
+            <i class="fas fa-times-circle" th:if="${statusCode != 500 and statusCode != 403 and statusCode != 404 and statusCode != 400 and statusCode != 409}"></i>
+        </div>
+
+        <div class="error-code" th:text="${statusCode}">500</div>
+        <div class="error-status-name" th:text="${statusName}">Error</div>
+        <h1 class="error-title" th:text="${errorTitle}">Error</h1>
+        <p class="error-message" th:text="${errorMessage}">An error occurred</p>
+        <p class="error-description" th:text="${errorDescription}">Please try again later</p>
+
+        <!-- Specific messages based on error code -->
+        <div class="error-details" th:if="${statusCode == 403}">
+            <div class="error-detail-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Error Code: <strong>ERR-403</strong></span>
             </div>
-            
-            <div class="error-code" th:text="${statusCode}">500</div>
-            <h1 class="error-title" th:text="${errorTitle}">Error</h1>
-            <p class="error-message" th:text="${errorMessage}">An error occurred</p>
-            <p class="error-description" th:text="${errorDescription}">Please try again later</p>
-            
-            <div class="error-actions">
-                <a href="/dashboard" class="btn-primary">
-                    <i class="fas fa-home"></i> Go to Dashboard
-                </a>
-                <a href="javascript:history.back()" class="btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Go Back
-                </a>
+            <div class="error-detail-item">
+                <i class="fas fa-user-shield"></i>
+                <span>This action requires administrator privileges.</span>
             </div>
         </div>
-        
-        <div class="error-footer">
-            <p>SmartExpense &copy; 2025</p>
+
+        <div class="error-details" th:if="${statusCode == 404}">
+            <div class="error-detail-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Error Code: <strong>ERR-404</strong></span>
+            </div>
+            <div class="error-detail-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>The requested resource could not be found.</span>
+            </div>
+        </div>
+
+        <div class="error-details" th:if="${statusCode == 400}">
+            <div class="error-detail-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Error Code: <strong>ERR-400</strong></span>
+            </div>
+            <div class="error-detail-item">
+                <i class="fas fa-edit"></i>
+                <span>Please check your input and try again.</span>
+            </div>
+        </div>
+
+        <div class="error-details" th:if="${statusCode == 500}">
+            <div class="error-detail-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Error Code: <strong>ERR-500</strong></span>
+            </div>
+            <div class="error-detail-item">
+                <i class="fas fa-cog"></i>
+                <span>An internal server error occurred. Our team has been notified.</span>
+            </div>
+        </div>
+
+        <div class="error-details" th:if="${statusCode == 409}">
+            <div class="error-detail-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Error Code: <strong>ERR-409</strong></span>
+            </div>
+            <div class="error-detail-item">
+                <i class="fas fa-sync-alt"></i>
+                <span>A conflict occurred with the current state of the resource.</span>
+            </div>
+        </div>
+
+        <div class="error-actions">
+            <a class="btn-primary" href="/dashboard">
+                <i class="fas fa-home"></i> Go to Dashboard
+            </a>
+            <a class="btn-secondary" href="javascript:history.back()">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </a>
         </div>
     </div>
+
+    <div class="error-footer">
+        <p>SmartExpense &copy; 2025</p>
+        <p class="error-help-text">If this problem persists, please contact support.</p>
+    </div>
+</div>
 </body>
 </html>
 

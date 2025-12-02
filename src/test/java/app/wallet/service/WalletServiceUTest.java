@@ -22,11 +22,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class WalletServiceTest {
+class WalletServiceUTest {
 
     @Mock
     private WalletRepository walletRepository;
@@ -80,7 +79,7 @@ class WalletServiceTest {
 
         ArgumentCaptor<Wallet> walletCaptor = ArgumentCaptor.forClass(Wallet.class);
         verify(walletRepository).save(walletCaptor.capture());
-        
+
         Wallet savedWallet = walletCaptor.getValue();
         assertEquals("Default", savedWallet.getName());
         assertEquals(BigDecimal.ZERO, savedWallet.getIncome());
@@ -108,7 +107,7 @@ class WalletServiceTest {
         UUID nonExistentId = UUID.randomUUID();
         when(walletRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, 
+        RuntimeException exception = assertThrows(RuntimeException.class,
                 () -> walletService.getById(nonExistentId));
 
         assertNotNull(exception);
@@ -135,7 +134,7 @@ class WalletServiceTest {
 
         ArgumentCaptor<Wallet> walletCaptor = ArgumentCaptor.forClass(Wallet.class);
         verify(walletRepository).save(walletCaptor.capture());
-        
+
         Wallet capturedWallet = walletCaptor.getValue();
         assertEquals("Default", capturedWallet.getName());
         assertEquals(new BigDecimal("0"), capturedWallet.getIncome());

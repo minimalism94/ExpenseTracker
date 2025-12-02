@@ -19,20 +19,20 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EditSubscriptionDto {
-        private UUID id;
-        @NotBlank
-        private String name;
+    private UUID id;
+    @NotBlank
+    private String name;
 
-        @NotNull
-        private SubscriptionPeriod period;
+    @NotNull
+    private SubscriptionPeriod period;
 
-        @NotNull
-        private LocalDate expiryOn;
+    @NotNull
+    private LocalDate expiryOn;
 
-        @NotNull
-        private SubscriptionType type;
+    @NotNull
+    private SubscriptionType type;
 
-        @NotNull
-        @DecimalMin("0.01")
-        private BigDecimal price;
+    @NotNull
+    @DecimalMin("0.01")
+    private BigDecimal price;
 }

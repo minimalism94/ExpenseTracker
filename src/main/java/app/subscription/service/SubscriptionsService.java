@@ -8,10 +8,8 @@ import app.subscription.model.SubscriptionType;
 import app.subscription.repository.SubscriptionsRepository;
 import app.user.model.User;
 import app.user.repository.UserRepository;
-import app.user.service.UserService;
 import app.wallet.model.Wallet;
 import app.wallet.repository.WalletRepository;
-import app.web.dto.EditSubscriptionDto;
 import app.web.dto.SubscriptionDto;
 import app.web.dto.mapper.DtoMapper;
 import jakarta.transaction.Transactional;
@@ -23,7 +21,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,7 +46,7 @@ public class SubscriptionsService {
                 .expiryOn(LocalDate.now().plusMonths(1))
                 .type(SubscriptionType.DEFAULT)
                 .price(new BigDecimal("150"))
-                        .build();
+                .build();
 
         subscriptionsRepository.save(subscription);
 
@@ -64,9 +61,9 @@ public class SubscriptionsService {
     public List<Subscription> getPaidSubscriptionsForCurrentMonth(UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
-        
+
         YearMonth currentMonth = YearMonth.now();
-        
+
         return user.getSubscriptions().stream()
                 .filter(s -> s.getPaidDate() != null)
                 .filter(s -> {
@@ -97,7 +94,7 @@ public class SubscriptionsService {
             user.removeSubscription(subscription);
             userRepository.save(user);
         }
-        
+
         subscriptionsRepository.delete(subscription);
     }
 
@@ -120,7 +117,7 @@ public class SubscriptionsService {
 
         wallet.setBalance(wallet.getBalance().subtract(amount));
         wallet.setExpense(wallet.getExpense().add(amount));
-        
+
         subscription.setPaidDate(LocalDate.now());
         subscriptionsRepository.save(subscription);
         walletRepository.save(wallet);

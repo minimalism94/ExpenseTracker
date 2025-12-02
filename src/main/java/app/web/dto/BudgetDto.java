@@ -15,19 +15,19 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BudgetDto {
-    
+
     private String id;
-    
+
     @NotNull(message = "Category is required")
     private Category category;
-    
+
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
     private BigDecimal amount;
-    
+
     @NotNull(message = "Month is required")
     private int month;
-    
+
     @NotNull(message = "Year is required")
     private int year;
 }

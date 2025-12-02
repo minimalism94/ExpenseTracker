@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Transactions</title>
-    <link rel="stylesheet" href="/css/transactions.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link href="/css/transactions.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container"> <!-- Sidebar -->
@@ -12,14 +12,16 @@
         <h2 class="logo">SmartExpense</h2>
         <nav class="menu">
             <a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a th:href="@{/transactions}" class="active"><i class="fas fa-exchange-alt"></i> Transactions</a>
+            <a class="active" th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
             <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
             <a th:href="@{/budget}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-wallet"></i> Budget</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
-            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i> Report</a>
-            <a th:href="@{/upgrade}" th:if="${user.userVersion.name() == 'BASIC'}"><i class="fas fa-crown"></i> Upgrade to Pro</a>
-            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i>
+                Report</a>
+            <a th:href="@{/upgrade}" th:if="${user.userVersion.name() == 'BASIC'}"><i class="fas fa-crown"></i> Upgrade
+                to Pro</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside> <!-- Main Content -->
@@ -27,38 +29,39 @@
         <div class="form-wrapper">
             <!-- Form -->
             <div class="form-card">
-                <div th:if="${error}" class="error-box">
+                <div class="error-box" th:if="${error}">
                     <p th:text="${error}"></p>
                 </div>
                 <h2>Add Income or Expense</h2>
-                <form th:action="@{/transactions/add}" th:object="${transaction}" th:method="POST">
+                <form th:action="@{/transactions/add}" th:method="POST" th:object="${transaction}">
                     <div class="form-group">
                         <label for="amount">Amount</label>
-                        <input type="number" id="amount" th:field="*{amount}" placeholder="0.00" step="0.01" required/>
+                        <input id="amount" placeholder="0.00" required step="0.01" th:field="*{amount}" type="number"/>
                     </div>
 
                     <div class="form-group">
                         <label for="type">Type</label>
-                        <select id="type" th:field="*{type}" required>
+                        <select id="type" required th:field="*{type}">
                             <option value="">-- Select Type --</option>
-                            <option th:each="t : ${types}" th:value="${t}"
-                                    th:text="${#strings.capitalize(t.name().toLowerCase())}"></option>
+                            <option th:each="t : ${types}" th:text="${#strings.capitalize(t.name().toLowerCase())}"
+                                    th:value="${t}"></option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="category">Category</label>
-                        <select id="category" th:field="*{category}" required>
+                        <select id="category" required th:field="*{category}">
                             <option value="">-- Select Category --</option>
-                            <option th:each="c : ${categories}" th:value="${c}"
-                                    th:text="${#strings.capitalize(c.name().toLowerCase())}"></option>
+                            <option th:each="c : ${categories}" th:text="${#strings.capitalize(c.name().toLowerCase())}"
+                                    th:value="${c}"></option>
                         </select>
                     </div>
 
                     <div class="form-group date-input-wrapper">
                         <label for="date">Date & Time</label>
                         <div class="date-picker-container">
-                            <input type="datetime-local" id="date" th:field="*{date}" required style="opacity: 0; position: absolute; width: 0; height: 0;"/>
+                            <input id="date" required style="opacity: 0; position: absolute; width: 0; height: 0;" th:field="*{date}"
+                                   type="datetime-local"/>
                             <div class="date-picker-display" id="date-display">
                                 <i class="fas fa-calendar-alt"></i>
                                 <span class="date-text" id="date-text">Select Date & Time</span>
@@ -69,11 +72,11 @@
 
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea id="description" th:field="*{description}" placeholder="Description (optional)"
-                                  rows="3"></textarea>
+                        <textarea id="description" placeholder="Description (optional)" rows="3"
+                                  th:field="*{description}"></textarea>
                     </div>
 
-                    <button type="submit" class="save-btn">SAVE</button>
+                    <button class="save-btn" type="submit">SAVE</button>
                 </form>
             </div>
 
@@ -99,8 +102,8 @@
                         <td th:text="${#temporals.format(t.date, 'dd.MM.yyyy HH:mm')}">01.01.2024 12:00</td>
                         <td th:text="${t.description}">Lunch</td>
                         <td>
-                            <form th:action="@{/transactions/delete/{id}(id=${t.id})}" method="post">
-                                <button type="submit" class="delete-btn">Delete</button>
+                            <form method="post" th:action="@{/transactions/delete/{id}(id=${t.id})}">
+                                <button class="delete-btn" type="submit">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -113,11 +116,11 @@
 </div>
 <script>
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+
     const dateInput = document.getElementById('date');
     const dateDisplay = document.getElementById('date-display');
     const dateText = document.getElementById('date-text');
-    
+
     // Format date to DD MM YY HH:mm
     function formatDate(dateString) {
         if (!dateString) return 'Select Date & Time';
@@ -129,11 +132,11 @@
         const minutes = String(date.getMinutes()).padStart(2, '0');
         return `${day} ${month} ${year} ${hours}:${minutes}`;
     }
-    
+
     // Make date picker display clickable
     if (dateDisplay) {
         dateDisplay.style.cursor = 'pointer';
-        dateDisplay.addEventListener('click', function(e) {
+        dateDisplay.addEventListener('click', function (e) {
             e.preventDefault();
             if (dateInput.showPicker) {
                 dateInput.showPicker();
@@ -143,7 +146,7 @@
             }
         });
     }
-    
+
     // Update display when datetime-local value changes
     function updateDateDisplay() {
         if (dateInput.value) {
@@ -158,13 +161,13 @@
             dateText.textContent = 'Select Date & Time';
         }
     }
-    
+
     dateInput.addEventListener('change', updateDateDisplay);
     dateInput.addEventListener('input', updateDateDisplay);
-    
+
     // Initialize display if there's a value on page load
     updateDateDisplay();
-    
+
     // Set default to current date/time if empty
     if (!dateInput.value) {
         const now = new Date();

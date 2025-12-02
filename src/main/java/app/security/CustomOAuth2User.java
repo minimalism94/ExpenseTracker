@@ -20,9 +20,9 @@ public class CustomOAuth2User implements OAuth2User {
     private final Collection<? extends GrantedAuthority> authorities;
     private final Map<String, Object> attributes;
 
-    public CustomOAuth2User(UUID userId, String username, String email, Role role, 
-                           boolean isActive, Collection<? extends GrantedAuthority> authorities,
-                           Map<String, Object> attributes) {
+    public CustomOAuth2User(UUID userId, String username, String email, Role role,
+                            boolean isActive, Collection<? extends GrantedAuthority> authorities,
+                            Map<String, Object> attributes) {
         this.userId = userId;
         this.username = username;
         this.email = email;

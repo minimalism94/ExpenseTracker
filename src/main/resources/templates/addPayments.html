@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Add Upcoming Payment</title>
-    <link rel="stylesheet" href="/css/stylePayments.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="/css/stylePayments.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
@@ -14,10 +14,10 @@
         <nav class="menu">
             <a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Dashboard</a>
             <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
-            <a th:href="@{/payments/add}" class="active"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
+            <a class="active" th:href="@{/payments/add}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
-            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside>
@@ -29,45 +29,46 @@
         </header>
 
         <section class="form-card">
-            <form th:action="@{/payments/add}" th:object="${subscription}" th:method="POST">
+            <form th:action="@{/payments/add}" th:method="POST" th:object="${subscription}">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required />
+                    <input id="name" placeholder="Enter name" required th:field="*{name}" type="text"/>
                 </div>
 
                 <div class="form-group">
                     <label for="period">Period</label>
-                    <select id="period" th:field="*{period}" required>
+                    <select id="period" required th:field="*{period}">
                         <option value="">-- Select Period --</option>
                         <option th:each="p : ${T(app.subscription.model.SubscriptionPeriod).values()}"
-                                th:value="${p}" th:text="${#strings.capitalize(p.name())}"></option>
+                                th:text="${#strings.capitalize(p.name())}" th:value="${p}"></option>
                     </select>
-                    <div th:if="${#fields.hasErrors('period')}" th:errors="*{period}" class="error"></div>
+                    <div class="error" th:errors="*{period}" th:if="${#fields.hasErrors('period')}"></div>
                 </div>
 
 
                 <div class="form-group">
                     <label for="expiryOn">Expiry On</label>
-                    <input type="date" id="expiryOn" th:field="*{expiryOn}" required />
+                    <input id="expiryOn" required th:field="*{expiryOn}" type="date"/>
                 </div>
 
                 <div class="form-group">
                     <label for="type">Type</label>
-                    <select id="type" th:field="*{type}" required>
+                    <select id="type" required th:field="*{type}">
                         <option value="">-- Select Type --</option>
                         <option th:each="t : ${T(app.subscription.model.SubscriptionType).values()}"
-                                th:value="${t}" th:text="${#strings.capitalize(t.name())}"></option>
+                                th:text="${#strings.capitalize(t.name())}" th:value="${t}"></option>
                     </select>
-                    <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="error"></div>
+                    <div class="error" th:errors="*{type}" th:if="${#fields.hasErrors('type')}"></div>
                 </div>
 
 
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" id="price" th:field="*{price}" placeholder="Enter amount" step="0.01" required />
+                    <input id="price" placeholder="Enter amount" required step="0.01" th:field="*{price}"
+                           type="number"/>
                 </div>
 
-                <button type="submit" class="save-btn">Save</button>
+                <button class="save-btn" type="submit">Save</button>
             </form>
         </section>
     </main>

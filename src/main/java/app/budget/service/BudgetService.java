@@ -7,10 +7,10 @@ import app.transactions.model.Category;
 import app.transactions.service.TransactionService;
 import app.user.model.User;
 import app.user.repository.UserRepository;
+import app.wallet.model.Wallet;
 import app.web.dto.BudgetDto;
 import app.web.dto.BudgetInfo;
 import app.web.dto.BudgetPageData;
-import app.wallet.model.Wallet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -187,7 +187,6 @@ public class BudgetService {
     }
 
     private BigDecimal calculatePercentage(BigDecimal spent, BigDecimal budgetAmount) {
-
 
         if (budgetAmount.compareTo(BigDecimal.ZERO) > 0) {
             return spent.multiply(BigDecimal.valueOf(100))

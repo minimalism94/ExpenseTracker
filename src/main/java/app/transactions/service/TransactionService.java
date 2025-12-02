@@ -5,16 +5,12 @@ import app.transactions.model.Category;
 import app.transactions.model.Transaction;
 import app.transactions.model.Type;
 import app.transactions.repository.TransactionRepository;
-import app.user.model.User;
-import app.user.service.UserService;
 import app.wallet.model.Wallet;
 import app.wallet.repository.WalletRepository;
 import app.web.dto.TopCategories;
 import app.web.dto.TransactionDto;
 import app.web.dto.mapper.DtoMapper;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -32,7 +28,6 @@ import java.util.stream.Collectors;
 
 public class TransactionService {
 
-
     private final TransactionRepository transactionRepository;
     private final WalletRepository walletRepository;
 
@@ -49,7 +44,6 @@ public class TransactionService {
     public List<Transaction> findAll() {
         return transactionRepository.findAll(Sort.by(Sort.Direction.DESC, "date"));
     }
-
 
     public void processTransaction(TransactionDto dto, UUID userId) {
         Wallet wallet = walletRepository.findByUserId(userId)
@@ -74,10 +68,8 @@ public class TransactionService {
         walletRepository.save(wallet);
     }
 
-
     public List<TopCategories> getTopCategories(UUID walletId) {
         List<TopCategories> rawTop = transactionRepository.topCategories(walletId);
-
 
         List<TopCategories> top3 = rawTop.stream()
                 .limit(3)
@@ -97,11 +89,11 @@ public class TransactionService {
     public List<Transaction> getCurrentMonthTransactions(UUID walletId) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new CustomException("Wallet not found"));
-        
+
         YearMonth currentMonth = YearMonth.now();
         LocalDateTime monthStart = currentMonth.atDay(1).atStartOfDay();
         LocalDateTime monthEnd = currentMonth.plusMonths(1).atDay(1).atStartOfDay();
-        
+
         return wallet.getTransactions().stream()
                 .filter(t -> !t.getDate().isBefore(monthStart) && t.getDate().isBefore(monthEnd))
                 .sorted((t1, t2) -> t2.getDate().compareTo(t1.getDate()))
@@ -117,32 +109,32 @@ public class TransactionService {
     private Map<Category, BigDecimal> getCategoryTotals(UUID walletId) {
         List<Transaction> expenseTransactions = getCurrentMonthExpenseTransactions(walletId);
         Map<Category, BigDecimal> categoryTotals = new HashMap<>();
-        
+
         for (Transaction t : expenseTransactions) {
             categoryTotals.merge(t.getCategory(), t.getAmount(), BigDecimal::add);
         }
-        
+
         return categoryTotals;
     }
-    
+
     public Map<Category, BigDecimal> getCategoryTotalsForMonth(UUID walletId, YearMonth yearMonth) {
         List<Transaction> expenseTransactions = getExpenseTransactionsForMonth(walletId, yearMonth);
         Map<Category, BigDecimal> categoryTotals = new HashMap<>();
-        
+
         for (Transaction t : expenseTransactions) {
             categoryTotals.merge(t.getCategory(), t.getAmount(), BigDecimal::add);
         }
-        
+
         return categoryTotals;
     }
-    
+
     private List<Transaction> getExpenseTransactionsForMonth(UUID walletId, YearMonth yearMonth) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new CustomException("Wallet not found"));
-        
+
         LocalDateTime monthStart = yearMonth.atDay(1).atStartOfDay();
         LocalDateTime monthEnd = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
-        
+
         return wallet.getTransactions().stream()
                 .filter(t -> !t.getDate().isBefore(monthStart) && t.getDate().isBefore(monthEnd))
                 .filter(t -> t.getType() == Type.EXPENSE)
@@ -155,7 +147,7 @@ public class TransactionService {
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-    
+
     public BigDecimal getTotalExpensesForMonth(UUID walletId, YearMonth yearMonth) {
         return getExpenseTransactionsForMonth(walletId, yearMonth).stream()
                 .map(Transaction::getAmount)
@@ -177,12 +169,12 @@ public class TransactionService {
 
     public String getBiggestExpenseCategoryName(UUID walletId) {
         Transaction biggestExpense = getBiggestExpenseForCurrentMonth(walletId);
-        
+
         if (biggestExpense != null && biggestExpense.getCategory() != null) {
             String categoryName = biggestExpense.getCategory().name();
             return categoryName.substring(0, 1) + categoryName.substring(1).toLowerCase();
         }
-        
+
         return null;
     }
 
@@ -190,52 +182,52 @@ public class TransactionService {
         YearMonth currentMonth = YearMonth.now();
         LocalDateTime monthStart = currentMonth.atDay(1).atStartOfDay();
         LocalDateTime monthEnd = currentMonth.plusMonths(1).atDay(1).atStartOfDay();
-        
+
         List<Transaction> expenseTransactions = getCurrentMonthExpenseTransactions(walletId);
         Map<String, BigDecimal> expenseHistory = new LinkedHashMap<>();
-        
+
         LocalDate startDate = monthStart.toLocalDate();
         LocalDate endDate = monthEnd.toLocalDate().minusDays(1);
-        
+
         LocalDate currentDate = startDate;
         while (!currentDate.isAfter(endDate)) {
             LocalDateTime dayStart = currentDate.atStartOfDay();
             LocalDateTime dayEnd = currentDate.plusDays(1).atStartOfDay();
-            
+
             BigDecimal dayExpenses = expenseTransactions.stream()
                     .filter(t -> !t.getDate().isBefore(dayStart) && t.getDate().isBefore(dayEnd))
                     .map(Transaction::getAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM", Locale.ENGLISH);
             expenseHistory.put(currentDate.format(formatter), dayExpenses);
             currentDate = currentDate.plusDays(1);
         }
-        
+
         return expenseHistory;
     }
 
     public List<String> getCategoryNamesForCurrentMonth(UUID walletId) {
         Map<Category, BigDecimal> categoryTotals = getCategoryTotals(walletId);
         BigDecimal totalExpenses = getTotalExpensesForCurrentMonth(walletId);
-        
+
         List<String> categoryNames = new ArrayList<>();
-        
+
         if (totalExpenses.compareTo(BigDecimal.ZERO) > 0) {
             categoryTotals.entrySet().stream()
                     .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                     .forEach(entry -> categoryNames.add(entry.getKey().getName()));
         }
-        
+
         return categoryNames;
     }
 
     public List<Integer> getCategoryPercentsForCurrentMonth(UUID walletId) {
         Map<Category, BigDecimal> categoryTotals = getCategoryTotals(walletId);
         BigDecimal totalExpenses = getTotalExpensesForCurrentMonth(walletId);
-        
+
         List<Integer> categoryPercents = new ArrayList<>();
-        
+
         if (totalExpenses.compareTo(BigDecimal.ZERO) > 0) {
             categoryTotals.entrySet().stream()
                     .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
@@ -247,18 +239,18 @@ public class TransactionService {
                         categoryPercents.add(percent);
                     });
         }
-        
+
         return categoryPercents;
     }
 
     public List<BigDecimal> getCategoryAmountsForCurrentMonth(UUID walletId) {
         Map<Category, BigDecimal> categoryTotals = getCategoryTotals(walletId);
         List<BigDecimal> categoryAmounts = new ArrayList<>();
-        
+
         categoryTotals.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .forEach(entry -> categoryAmounts.add(entry.getValue()));
-        
+
         return categoryAmounts;
     }
 
@@ -294,10 +286,6 @@ public class TransactionService {
         wallet.getTransactions().remove(transaction);
         walletRepository.save(wallet);
     }
-
-
-
-
 
 }
 

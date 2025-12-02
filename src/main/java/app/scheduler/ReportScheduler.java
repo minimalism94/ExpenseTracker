@@ -13,7 +13,6 @@ import app.wallet.model.Wallet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +39,7 @@ public class ReportScheduler {
     @Transactional
     public void sendMonthlyReports() {
         log.info("Starting monthly report generation and email sending...");
-        
+
         YearMonth previousMonth = YearMonth.now().minusMonths(1);
         List<User> proUsers = userRepository.findAll().stream()
                 .filter(user -> user.getUserVersion() == UserVersion.PRO)
@@ -64,22 +63,22 @@ public class ReportScheduler {
                         log.warn("User {} has notifications disabled or no preference, creating/updating preference", user.getId());
 
                         UpsertPreferenceRequest prefRequest =
-                            UpsertPreferenceRequest.builder()
-                                .userId(user.getId())
-                                .notificationEnabled(true)
-                                .contactInfo(user.getEmail())
-                                .build();
+                                UpsertPreferenceRequest.builder()
+                                        .userId(user.getId())
+                                        .notificationEnabled(true)
+                                        .contactInfo(user.getEmail())
+                                        .build();
                         notificationClient.upsertPreference(prefRequest);
                     }
                 } catch (Exception e) {
                     log.warn("Failed to check/update notification preference for user {}, trying to create one", user.getId());
                     try {
                         UpsertPreferenceRequest prefRequest =
-                            UpsertPreferenceRequest.builder()
-                                .userId(user.getId())
-                                .notificationEnabled(true)
-                                .contactInfo(user.getEmail())
-                                .build();
+                                UpsertPreferenceRequest.builder()
+                                        .userId(user.getId())
+                                        .notificationEnabled(true)
+                                        .contactInfo(user.getEmail())
+                                        .build();
                         notificationClient.upsertPreference(prefRequest);
                     } catch (Exception ex) {
                         log.error("Failed to create notification preference for user {}, skipping report", user.getId(), ex);
@@ -88,25 +87,25 @@ public class ReportScheduler {
                 }
 
                 byte[] pdfBytes = pdfReportService.generateMonthlyReportPdf(user, wallet, previousMonth);
-                
+
                 String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
-                
+
                 String monthName = previousMonth.format(java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy"));
                 String fileName = String.format("Monthly_Report_%s.pdf", previousMonth.format(java.time.format.DateTimeFormatter.ofPattern("yyyy_MM")));
                 String subject = String.format("Monthly Financial Report - %s", monthName);
                 String body = String.format(
-                    "Dear %s,\n\n" +
-                    "Please find your monthly financial report for %s attached to this email.\n\n" +
-                    "This report includes:\n" +
-                    "- Current balance and summary\n" +
-                    "- Expense history\n" +
-                    "- Paid subscriptions\n" +
-                    "- All transactions\n" +
-                    "- Expenses by category\n\n" +
-                    "The PDF report is attached to this email.\n\n" +
-                    "Best regards,\nSmartExpense Team",
-                    user.getUsername(),
-                    monthName
+                        "Dear %s,\n\n" +
+                                "Please find your monthly financial report for %s attached to this email.\n\n" +
+                                "This report includes:\n" +
+                                "- Current balance and summary\n" +
+                                "- Expense history\n" +
+                                "- Paid subscriptions\n" +
+                                "- All transactions\n" +
+                                "- Expenses by category\n\n" +
+                                "The PDF report is attached to this email.\n\n" +
+                                "Best regards,\nSmartExpense Team",
+                        user.getUsername(),
+                        monthName
                 );
 
                 NotificationRequest notificationRequest = NotificationRequest.builder()
@@ -120,7 +119,7 @@ public class ReportScheduler {
                         .build();
 
                 notificationClient.sendNotification(notificationRequest);
-                
+
                 log.info("Successfully sent monthly report to user {}", user.getId());
             } catch (Exception e) {
                 log.error("Failed to send monthly report to user {}", user.getId(), e);

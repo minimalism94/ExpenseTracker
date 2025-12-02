@@ -1,7 +1,6 @@
 package app.user.model;
 
 import app.subscription.model.Subscription;
-import app.transactions.model.Transaction;
 import app.wallet.model.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,15 +31,14 @@ public class User {
 
     private String profilePicture;
 
-
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = true)
     private String password;
-    
+
     private String provider;
-    
+
     private String providerId;
     private boolean isActive;
 
@@ -57,23 +55,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Country country = Country.BULGARIA;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserVersion userVersion = UserVersion.BASIC;
-    
+
     @Column(nullable = false)
     private boolean monthlyReportEmailEnabled = false;
-    
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Wallet wallet;
 
-
-
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Subscription> subscriptions;
-
 
     public void addSubscription(Subscription subscription) {
         subscriptions.add(subscription);

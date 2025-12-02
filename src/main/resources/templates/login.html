@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>SmartExpense - Login</title>
-    <link rel="stylesheet" href="/css/styleLogin.css" />
+    <link href="/css/styleLogin.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 
     <style>
         /* Червен текст за грешка */
@@ -39,7 +39,7 @@
 
         .register a:hover {
             color: #00bfff; /* по-светло синьо при hover */
-            text-shadow: 0 0 5px rgba(0,191,255,0.7);
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.7);
         }
     </style>
 </head>
@@ -53,25 +53,25 @@
         <div class="shape shape-4"></div>
     </div>
     <div class="login-container">
-        <img src="/images/logo.png" alt="SmartExpense Logo" class="logo-img" />
+        <img alt="SmartExpense Logo" class="logo-img" src="/images/logo.png"/>
         <div class="logo-text">SmartExpense</div>
         <h2 class="pulse">Login</h2>
 
 
         <!-- Login форма за Spring Security -->
-        <form th:action="@{/login}" method="POST" th:object="${loginRequest}">
-            <div th:if="${errorMessage}" class="error-message">
+        <form method="POST" th:action="@{/login}" th:object="${loginRequest}">
+            <div class="error-message" th:if="${errorMessage}">
                 Invalid username or password.
             </div>
             <div class="input-group">
                 <i class="fas fa-user"></i>
-                <input type="text" name="username" placeholder="Username" th:field="*{username}" required />
-                <p class="alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                <input name="username" placeholder="Username" required th:field="*{username}" type="text"/>
+                <p class="alert-warning" th:errors="*{username}" th:if="${#fields.hasErrors('username')}"></p>
             </div>
             <div class="input-group">
                 <i class="fas fa-lock"></i>
-                <input type="password" name="password" placeholder="Password" th:field="*{password}" required />
-                <p class="alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                <input name="password" placeholder="Password" required th:field="*{password}" type="password"/>
+                <p class="alert-warning" th:errors="*{password}" th:if="${#fields.hasErrors('password')}"></p>
             </div>
 
             <button type="submit">Login</button>
@@ -81,7 +81,7 @@
             <span>or</span>
         </div>
 
-        <a th:href="@{/oauth2/authorization/google}" class="google-login-btn">
+        <a class="google-login-btn" th:href="@{/oauth2/authorization/google}">
             <i class="fab fa-google"></i>
             Continue with Google
         </a>

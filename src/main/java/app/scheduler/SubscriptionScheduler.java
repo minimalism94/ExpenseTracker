@@ -1,11 +1,11 @@
 package app.scheduler;
 
+import app.notification.service.NotificationService;
 import app.scheduler.config.CronExpressions;
 import app.subscription.model.Subscription;
 import app.subscription.repository.SubscriptionsRepository;
 import app.user.model.User;
 import app.user.repository.UserRepository;
-import app.notification.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,7 +37,7 @@ public class SubscriptionScheduler {
     @Transactional
     public void notifyExpiringSubscriptions() {
         log.info("Starting expiring subscriptions notification...");
-        
+
         try {
             LocalDate today = LocalDate.now();
             LocalDate limit = today.plusDays(7);
@@ -67,7 +67,7 @@ public class SubscriptionScheduler {
 
                 notificationService.send(user.getId(), subject, bodyBuilder.toString());
             }
-            
+
             log.info("Completed expiring subscriptions notification");
         } catch (Exception e) {
             log.error("Error in notifyExpiringSubscriptions", e);

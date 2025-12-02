@@ -11,8 +11,8 @@ public class UpgradeEventListener {
 
     @EventListener
     public void handleUserUpgraded(UserUpgradedEvent event) {
-        log.info("User {} upgraded from {} to PRO", 
-                event.getUser().getUsername(), 
+        log.info("User {} upgraded from {} to PRO",
+                event.getUser().getUsername(),
                 event.getPreviousVersion());
     }
 }

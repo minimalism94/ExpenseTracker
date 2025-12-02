@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Detailed Report</title>
-    <link rel="stylesheet" href="/css/report.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="/css/report.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
 <body>
@@ -20,8 +20,8 @@
             <a th:href="@{/budget}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-wallet"></i> Budget</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
-            <a th:href="@{/report}" class="active"><i class="fas fa-file-alt"></i> Report</a>
-            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a class="active" th:href="@{/report}"><i class="fas fa-file-alt"></i> Report</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside>
@@ -56,7 +56,8 @@
                     <h3>Biggest Expense</h3>
                     <div th:if="${biggestExpense != null}">
                         <p class="value red" th:text="'BGN ' + ${biggestExpense.amount}">150.00 лв</p>
-                        <p class="expense-name" th:if="${biggestExpenseName != null}" th:text="${biggestExpenseName}">Expense Description</p>
+                        <p class="expense-name" th:if="${biggestExpenseName != null}" th:text="${biggestExpenseName}">
+                            Expense Description</p>
                     </div>
                     <p class="value" th:if="${biggestExpense == null}">No expenses</p>
                 </div>
@@ -77,11 +78,12 @@
             <div class="paid-subscriptions-block">
                 <h2 class="section-title">Paid Subscriptions (This Month)</h2>
                 <div class="subscriptions-list">
-                    <div th:if="${paidSubscriptions.isEmpty()}" class="no-data">No paid subscriptions this month</div>
-                    <div th:each="subscription : ${paidSubscriptions}" class="subscription-item">
+                    <div class="no-data" th:if="${paidSubscriptions.isEmpty()}">No paid subscriptions this month</div>
+                    <div class="subscription-item" th:each="subscription : ${paidSubscriptions}">
                         <div class="subscription-info">
                             <h4 th:text="${subscription.name}">Subscription Name</h4>
-                            <p class="subscription-date" th:text="${#temporals.format(subscription.paidDate, 'dd.MM.yyyy')}">01.01.2025</p>
+                            <p class="subscription-date"
+                               th:text="${#temporals.format(subscription.paidDate, 'dd.MM.yyyy')}">01.01.2025</p>
                         </div>
                         <p class="subscription-price" th:text="'BGN ' + ${subscription.price}">150.00 лв</p>
                     </div>
@@ -111,7 +113,7 @@
                             <td th:text="${#strings.capitalize(transaction.category.name().toLowerCase())}">Food</td>
                             <td th:text="${transaction.description}">Coffee Shop</td>
                             <td th:text="${#strings.capitalize(transaction.type.name().toLowerCase())}">Expense</td>
-                            <td th:class="${transaction.type.name() == 'INCOME' ? 'green' : 'red'}" 
+                            <td th:class="${transaction.type.name() == 'INCOME' ? 'green' : 'red'}"
                                 th:text="${transaction.type.name() == 'INCOME' ? 'BGN ' : '-BGN '} + ${transaction.amount}">
                                 -4.50 лв
                             </td>
@@ -138,7 +140,7 @@
     var expenseHistory = /*[[${expenseHistory}]]*/ {};
     var expenseHistoryLabels = [];
     var expenseHistoryValues = [];
-    
+
     for (var month in expenseHistory) {
         if (expenseHistory.hasOwnProperty(month)) {
             expenseHistoryLabels.push(month);
@@ -174,7 +176,7 @@
                     ticks: {
                         beginAtZero: true,
                         fontColor: "#fff",
-                        callback: function(value) {
+                        callback: function (value) {
                             return "BGN " + value.toFixed(2);
                         }
                     },
@@ -198,7 +200,7 @@
                 borderColor: "#00ff88",
                 borderWidth: 2,
                 callbacks: {
-                    label: function(tooltipItem) {
+                    label: function (tooltipItem) {
                         return "BGN " + tooltipItem.yLabel.toFixed(2);
                     }
                 }
@@ -226,7 +228,7 @@
     ];
 
     // Convert BigDecimal amounts to numbers
-    var categoryAmountsNumbers = categoryAmounts.map(function(amount) {
+    var categoryAmountsNumbers = categoryAmounts.map(function (amount) {
         return amount != null ? parseFloat(amount) : 0;
     });
 
@@ -238,10 +240,10 @@
             datasets: [{
                 label: "Percentage",
                 yAxisID: "y-axis-percent",
-                backgroundColor: categoryNames.map(function(name, index) {
+                backgroundColor: categoryNames.map(function (name, index) {
                     return chartColors[index % chartColors.length];
                 }),
-                borderColor: categoryNames.map(function(name, index) {
+                borderColor: categoryNames.map(function (name, index) {
                     return chartColors[index % chartColors.length];
                 }),
                 borderWidth: 2,
@@ -272,7 +274,7 @@
                         beginAtZero: true,
                         max: 100,
                         fontColor: "#fff",
-                        callback: function(value) {
+                        callback: function (value) {
                             return value + "%";
                         }
                     },
@@ -285,7 +287,7 @@
                     ticks: {
                         beginAtZero: true,
                         fontColor: "#fff",
-                        callback: function(value) {
+                        callback: function (value) {
                             return "BGN " + value.toFixed(2);
                         }
                     },
@@ -309,7 +311,7 @@
                 borderColor: "#00ff88",
                 borderWidth: 2,
                 callbacks: {
-                    label: function(tooltipItem, data) {
+                    label: function (tooltipItem, data) {
                         var label = data.datasets[tooltipItem.datasetIndex].label || '';
                         if (tooltipItem.datasetIndex === 0) {
                             return label + ": " + tooltipItem.yLabel + "%";

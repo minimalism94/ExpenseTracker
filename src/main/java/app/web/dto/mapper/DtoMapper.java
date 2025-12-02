@@ -1,18 +1,14 @@
 package app.web.dto.mapper;
 
-import app.budget.model.Budget;
 import app.subscription.model.Subscription;
 import app.transactions.model.Transaction;
 import app.user.model.User;
 import app.wallet.model.Wallet;
-import app.web.dto.BudgetDto;
-import app.web.dto.BudgetInfo;
 import app.web.dto.SubscriptionDto;
 import app.web.dto.TransactionDto;
 import app.web.dto.UserEditRequest;
 
 public class DtoMapper {
-    
 
     public static UserEditRequest mapUserToUserEditRequest(User user) {
         UserEditRequest dto = new UserEditRequest();
@@ -24,7 +20,7 @@ public class DtoMapper {
         dto.setCountry(user.getCountry());
         return dto;
     }
-    
+
     public static void mapUserEditRequestToUser(UserEditRequest dto, User user) {
         user.setUsername(dto.getUsername());
         user.setFirstName(dto.getFirstName());
@@ -33,7 +29,6 @@ public class DtoMapper {
         user.setProfilePicture(dto.getProfilePicture());
         user.setCountry(dto.getCountry());
     }
-
 
     public static Transaction mapTransactionDtoToEntity(TransactionDto dto, Wallet wallet) {
         return Transaction.builder()

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Upgrade to Pro</title>
-    <link rel="stylesheet" href="/css/upgrade.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="/css/upgrade.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
@@ -21,9 +21,11 @@
             <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
             <a th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
-            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i> Report</a>
-            <a th:href="@{/upgrade}" class="active" th:if="${user.userVersion.name() == 'BASIC'}"><i class="fas fa-crown"></i> Upgrade to Pro</a>
-            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i>
+                Report</a>
+            <a class="active" th:href="@{/upgrade}" th:if="${user.userVersion.name() == 'BASIC'}"><i
+                    class="fas fa-crown"></i> Upgrade to Pro</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside>
@@ -31,20 +33,20 @@
     <!-- Main Content -->
     <main class="main">
         <div class="upgrade-wrapper">
-            <div th:if="${isPro}" class="pro-badge">
+            <div class="pro-badge" th:if="${isPro}">
                 <i class="fas fa-crown"></i>
                 <h1>You are already a Pro member!</h1>
                 <p>Enjoy all the premium features.</p>
-                <a th:href="@{/report}" class="btn-pro">Go to Report</a>
+                <a class="btn-pro" th:href="@{/report}">Go to Report</a>
             </div>
 
-            <div th:if="${!isPro}" class="upgrade-content">
+            <div class="upgrade-content" th:if="${!isPro}">
                 <div class="header-section">
                     <h1><i class="fas fa-crown"></i> Upgrade to Pro</h1>
                     <p class="subtitle">Unlock advanced financial reports and analytics</p>
                 </div>
 
-                <div th:if="${error != null or param.error != null}" class="error-box">
+                <div class="error-box" th:if="${error != null or param.error != null}">
                     <i class="fas fa-exclamation-circle"></i>
                     <p th:text="${error != null ? error : param.error[0]}"></p>
                 </div>
@@ -81,10 +83,11 @@
 
                 <div class="payment-section">
                     <div class="balance-info">
-                        <p>Price: <span th:text="'BGN ' + ${proPrice}">BGN 29.99</span> <span class="secure-payment"><i class="fas fa-lock"></i> Secure</span></p>
+                        <p>Price: <span th:text="'BGN ' + ${proPrice}">BGN 29.99</span> <span class="secure-payment"><i
+                                class="fas fa-lock"></i> Secure</span></p>
                     </div>
 
-                    <button id="checkout-button" class="btn-upgrade">
+                    <button class="btn-upgrade" id="checkout-button">
                         <i class="fas fa-crown"></i> Upgrade to Pro
                     </button>
 
@@ -98,58 +101,58 @@
     /*<![CDATA[*/
     const stripe = Stripe(/*[[${stripePublicKey}]]*/ '');
     const checkoutButton = document.getElementById('checkout-button');
-    
-    checkoutButton.addEventListener('click', function() {
+
+    checkoutButton.addEventListener('click', function () {
         checkoutButton.disabled = true;
         checkoutButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        
+
         const csrfToken = /*[[${_csrf.token}]]*/ '';
         const csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
-        
+
         const headers = {
             'Content-Type': 'application/json'
         };
-        
+
         if (csrfToken) {
             headers[csrfHeader] = csrfToken;
         }
-        
+
         fetch('/upgrade/create-checkout-session', {
             method: 'POST',
             headers: headers,
             credentials: 'same-origin'
         })
-        .then(function(response) {
-            if (!response.ok) {
-                if (response.status === 403) {
-                    throw new Error('Forbidden: CSRF token may be missing or invalid');
+            .then(function (response) {
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        throw new Error('Forbidden: CSRF token may be missing or invalid');
+                    }
+                    throw new Error('HTTP error! status: ' + response.status);
                 }
-                throw new Error('HTTP error! status: ' + response.status);
-            }
-            return response.json();
-        })
-        .then(function(session) {
-            if (session.error) {
-                alert('Error: ' + session.error);
+                return response.json();
+            })
+            .then(function (session) {
+                if (session.error) {
+                    alert('Error: ' + session.error);
+                    checkoutButton.disabled = false;
+                    checkoutButton.innerHTML = '<i class="fas fa-crown"></i> Upgrade to Pro with Stripe';
+                    return;
+                }
+                return stripe.redirectToCheckout({sessionId: session.sessionId});
+            })
+            .then(function (result) {
+                if (result && result.error) {
+                    alert(result.error.message);
+                    checkoutButton.disabled = false;
+                    checkoutButton.innerHTML = '<i class="fas fa-crown"></i> Upgrade to Pro with Stripe';
+                }
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
                 checkoutButton.disabled = false;
                 checkoutButton.innerHTML = '<i class="fas fa-crown"></i> Upgrade to Pro with Stripe';
-                return;
-            }
-            return stripe.redirectToCheckout({ sessionId: session.sessionId });
-        })
-        .then(function(result) {
-            if (result && result.error) {
-                alert(result.error.message);
-                checkoutButton.disabled = false;
-                checkoutButton.innerHTML = '<i class="fas fa-crown"></i> Upgrade to Pro with Stripe';
-            }
-        })
-        .catch(function(error) {
-            console.error('Error:', error);
-            alert('Error: ' + error.message);
-            checkoutButton.disabled = false;
-            checkoutButton.innerHTML = '<i class="fas fa-crown"></i> Upgrade to Pro with Stripe';
-        });
+            });
     });
     /*]]>*/
 </script>

@@ -85,7 +85,7 @@ body {
     right: 0;
     bottom: 0;
     background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(76, 205, 106, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 80% 80%, rgba(76, 205, 106, 0.05) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
 }
@@ -165,8 +165,8 @@ body {
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 40px rgba(0, 255, 136, 0.15);
     display: flex;
     align-items: center;
     gap: 15px;
@@ -189,8 +189,8 @@ body {
 .summary-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(0, 255, 136, 0.3),
-                0 0 60px rgba(0, 255, 136, 0.25);
+    0 0 0 1px rgba(0, 255, 136, 0.3),
+    0 0 60px rgba(0, 255, 136, 0.25);
     border-color: rgba(0, 255, 136, 0.4);
 }
 
@@ -248,8 +248,8 @@ body {
     padding: 25px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 40px rgba(0, 255, 136, 0.15);
     position: relative;
     overflow: hidden;
 }
@@ -395,8 +395,8 @@ body {
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 40px rgba(0, 255, 136, 0.15);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -416,8 +416,8 @@ body {
 .budget-card.over-budget {
     border-color: rgba(255, 71, 87, 0.4);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(255, 71, 87, 0.2),
-                0 0 40px rgba(255, 71, 87, 0.15);
+    0 0 0 1px rgba(255, 71, 87, 0.2),
+    0 0 40px rgba(255, 71, 87, 0.15);
 }
 
 .budget-card.over-budget::before {
@@ -427,8 +427,8 @@ body {
 .budget-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(0, 255, 136, 0.3),
-                0 0 60px rgba(0, 255, 136, 0.25);
+    0 0 0 1px rgba(0, 255, 136, 0.3),
+    0 0 60px rgba(0, 255, 136, 0.25);
     border-color: rgba(0, 255, 136, 0.4);
 }
 
@@ -642,11 +642,11 @@ body {
     .summary-section {
         grid-template-columns: 1fr;
     }
-    
+
     .budgets-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -656,16 +656,16 @@ body {
     .container {
         flex-direction: column;
     }
-    
+
     .sidebar {
         width: 100%;
         height: auto;
     }
-    
+
     .main {
         padding: 15px;
     }
-    
+
     .budget-header {
         flex-direction: column;
         align-items: flex-start;

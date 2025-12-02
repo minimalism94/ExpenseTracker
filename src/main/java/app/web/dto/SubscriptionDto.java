@@ -12,29 +12,29 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubscriptionDto {
 
-        @NotBlank
-        private String name;
+    @NotBlank
+    private String name;
 
-        @NotNull
-        private SubscriptionPeriod period;
+    @NotNull
+    private SubscriptionPeriod period;
 
-        @NotNull
-        private LocalDate expiryOn;
+    @NotNull
+    private LocalDate expiryOn;
 
-        @NotNull
-        private SubscriptionType type;
+    @NotNull
+    private SubscriptionType type;
 
-        @NotNull
-        @DecimalMin("0.01")
-        private BigDecimal price;
+    @NotNull
+    @DecimalMin("0.01")
+    private BigDecimal price;
 
-
-    }
+}
 
 

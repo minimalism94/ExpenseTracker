@@ -7,9 +7,9 @@ import app.transactions.model.Category;
 import app.transactions.service.TransactionService;
 import app.user.model.User;
 import app.user.repository.UserRepository;
+import app.wallet.model.Wallet;
 import app.web.dto.BudgetDto;
 import app.web.dto.BudgetPageData;
-import app.wallet.model.Wallet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,14 +21,11 @@ import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.*;
 
-import static java.util.Collections.emptyList;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BudgetServiceTest {
+class BudgetServiceUTest {
 
     @Mock
     private BudgetRepository budgetRepository;
@@ -130,8 +127,7 @@ class BudgetServiceTest {
     void should_ThrowUserNotFoundException_When_UserDoesNotExist() {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-
-        assertThrows(UserNotFoundException.class, 
+        assertThrows(UserNotFoundException.class,
                 () -> budgetService.createOrUpdateBudget(userId, budgetDto));
 
         verify(userRepository).findById(userId);
@@ -155,8 +151,7 @@ class BudgetServiceTest {
         UUID budgetId = UUID.randomUUID();
         when(budgetRepository.findById(budgetId)).thenReturn(Optional.empty());
 
-
-        assertThrows(IllegalArgumentException.class, 
+        assertThrows(IllegalArgumentException.class,
                 () -> budgetService.deleteBudget(budgetId, userId));
 
         verify(budgetRepository).findById(budgetId);
@@ -169,8 +164,7 @@ class BudgetServiceTest {
         UUID differentUserId = UUID.randomUUID();
         when(budgetRepository.findById(budgetId)).thenReturn(Optional.of(testBudget));
 
-
-        assertThrows(SecurityException.class, 
+        assertThrows(SecurityException.class,
                 () -> budgetService.deleteBudget(budgetId, differentUserId));
 
         verify(budgetRepository).findById(budgetId);
@@ -264,8 +258,7 @@ class BudgetServiceTest {
     void should_ThrowUserNotFoundException_When_UserNotFoundForBudgetPageData() {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-
-        assertThrows(UserNotFoundException.class, 
+        assertThrows(UserNotFoundException.class,
                 () -> budgetService.getBudgetPageData(userId, null, null));
 
         verify(userRepository).findById(userId);
@@ -367,7 +360,6 @@ class BudgetServiceTest {
         YearMonth currentMonth = YearMonth.now();
         List<Budget> budgets = List.of(testBudget);
         Map<Category, BigDecimal> categoryExpenses = new HashMap<>();
-
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
         when(budgetRepository.findByUserAndYearAndMonth(

@@ -24,7 +24,7 @@ body::before {
     right: 0;
     bottom: 0;
     background: radial-gradient(circle at 20% 50%, rgba(255, 71, 87, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 71, 87, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 80% 80%, rgba(255, 71, 87, 0.05) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
 }
@@ -44,8 +44,8 @@ body::before {
     padding: 50px 40px;
     text-align: center;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(255, 71, 87, 0.1),
-                0 0 60px rgba(255, 71, 87, 0.2);
+    0 0 0 1px rgba(255, 71, 87, 0.1),
+    0 0 60px rgba(255, 71, 87, 0.2);
     position: relative;
     overflow: hidden;
 }
@@ -171,6 +171,49 @@ body::before {
     font-size: 14px;
 }
 
+.error-status-name {
+    font-size: 18px;
+    color: #888;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+}
+
+.error-details {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 71, 87, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 25px 0;
+    text-align: left;
+}
+
+.error-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+.error-detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.error-detail-item i {
+    color: #ff4757;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.error-detail-item strong {
+    color: #ff4757;
+    font-weight: 600;
+}
+
 .error-footer {
     text-align: center;
     margin-top: 30px;
@@ -178,28 +221,34 @@ body::before {
     font-size: 12px;
 }
 
+.error-help-text {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #555;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .error-content {
         padding: 40px 30px;
     }
-    
+
     .error-code {
         font-size: 80px;
     }
-    
+
     .error-title {
         font-size: 24px;
     }
-    
+
     .error-message {
         font-size: 16px;
     }
-    
+
     .error-actions {
         flex-direction: column;
     }
-    
+
     .btn-primary,
     .btn-secondary {
         width: 100%;

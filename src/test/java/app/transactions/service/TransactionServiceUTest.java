@@ -24,11 +24,10 @@ import java.time.YearMonth;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class TransactionServiceTest {
+class TransactionServiceUTest {
 
     @Mock
     private TransactionRepository transactionRepository;
@@ -128,8 +127,7 @@ class TransactionServiceTest {
         transactionDto.setAmount(new BigDecimal("1000.00"));
         when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(testWallet));
 
-
-        assertThrows(IllegalArgumentException.class, 
+        assertThrows(IllegalArgumentException.class,
                 () -> transactionService.processTransaction(transactionDto, userId));
 
         verify(walletRepository).findByUserId(userId);
@@ -157,8 +155,7 @@ class TransactionServiceTest {
     void should_ThrowCustomException_When_WalletNotFound() {
         when(walletRepository.findByUserId(userId)).thenReturn(Optional.empty());
 
-
-        assertThrows(CustomException.class, 
+        assertThrows(CustomException.class,
                 () -> transactionService.processTransaction(transactionDto, userId));
 
         verify(walletRepository).findByUserId(userId);
@@ -170,7 +167,7 @@ class TransactionServiceTest {
         TopCategories top1 = new TopCategories(Category.FOOD, new BigDecimal("200.00"), 0);
         TopCategories top2 = new TopCategories(Category.TRANSPORT, new BigDecimal("150.00"), 0);
         TopCategories top3 = new TopCategories(Category.UTILITIES, new BigDecimal("100.00"), 0);
-        List<TopCategories> rawTop = Arrays.asList(top1, top2, top3, 
+        List<TopCategories> rawTop = Arrays.asList(top1, top2, top3,
                 new TopCategories(Category.ENTERTAINMENT, new BigDecimal("50.00"), 0));
 
         when(transactionRepository.topCategories(walletId)).thenReturn(rawTop);
@@ -249,8 +246,7 @@ class TransactionServiceTest {
     void should_ThrowCustomException_When_WalletNotFoundForCurrentMonthTransactions() {
         when(walletRepository.findById(walletId)).thenReturn(Optional.empty());
 
-
-        assertThrows(CustomException.class, 
+        assertThrows(CustomException.class,
                 () -> transactionService.getCurrentMonthTransactions(walletId));
 
         verify(walletRepository).findById(walletId);
@@ -260,7 +256,7 @@ class TransactionServiceTest {
     void should_ReturnCategoryTotalsForMonth_When_MultipleTransactionsExist() {
         YearMonth yearMonth = YearMonth.now();
         LocalDateTime now = LocalDateTime.now();
-        
+
         Transaction transaction1 = Transaction.builder()
                 .amount(new BigDecimal("100.00"))
                 .date(now)
@@ -355,7 +351,7 @@ class TransactionServiceTest {
     void should_ReturnTotalExpensesForSpecificMonth_When_ExpensesExist() {
         YearMonth yearMonth = YearMonth.now();
         LocalDateTime now = LocalDateTime.now();
-        
+
         Transaction expense = Transaction.builder()
                 .amount(new BigDecimal("100.00"))
                 .date(now)
@@ -664,7 +660,7 @@ class TransactionServiceTest {
     void should_DeleteTransaction_When_UserIsAuthorized() {
         UUID transactionId = testTransaction.getId();
         testWallet.getTransactions().add(testTransaction);
-        
+
         when(transactionRepository.findById(transactionId)).thenReturn(Optional.of(testTransaction));
         when(walletRepository.save(any(Wallet.class))).thenReturn(testWallet);
 
@@ -680,8 +676,7 @@ class TransactionServiceTest {
         UUID transactionId = UUID.randomUUID();
         when(transactionRepository.findById(transactionId)).thenReturn(Optional.empty());
 
-
-        assertThrows(IllegalArgumentException.class, 
+        assertThrows(IllegalArgumentException.class,
                 () -> transactionService.deleteTransaction(transactionId, userId));
 
         verify(transactionRepository).findById(transactionId);
@@ -692,11 +687,10 @@ class TransactionServiceTest {
     void should_ThrowSecurityException_When_WalletIsNull() {
         UUID transactionId = testTransaction.getId();
         testTransaction.setWallet(null);
-        
+
         when(transactionRepository.findById(transactionId)).thenReturn(Optional.of(testTransaction));
 
-
-        assertThrows(SecurityException.class, 
+        assertThrows(SecurityException.class,
                 () -> transactionService.deleteTransaction(transactionId, userId));
 
         verify(transactionRepository).findById(transactionId);
@@ -708,11 +702,10 @@ class TransactionServiceTest {
         UUID transactionId = testTransaction.getId();
         testWallet.setUser(null);
         testTransaction.setWallet(testWallet);
-        
+
         when(transactionRepository.findById(transactionId)).thenReturn(Optional.of(testTransaction));
 
-
-        assertThrows(SecurityException.class, 
+        assertThrows(SecurityException.class,
                 () -> transactionService.deleteTransaction(transactionId, userId));
 
         verify(transactionRepository).findById(transactionId);
@@ -724,11 +717,10 @@ class TransactionServiceTest {
         UUID transactionId = testTransaction.getId();
         UUID differentUserId = UUID.randomUUID();
         testTransaction.setWallet(testWallet);
-        
+
         when(transactionRepository.findById(transactionId)).thenReturn(Optional.of(testTransaction));
 
-
-        assertThrows(SecurityException.class, 
+        assertThrows(SecurityException.class,
                 () -> transactionService.deleteTransaction(transactionId, differentUserId));
 
         verify(transactionRepository).findById(transactionId);

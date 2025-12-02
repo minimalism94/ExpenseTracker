@@ -31,7 +31,7 @@ public class NotificationController {
         User user = userService.getById(userData.getUserId());
         ModelAndView modelAndView = new ModelAndView("notifications");
         modelAndView.addObject("user", user);
-        modelAndView.addObject("userNotifications",  notificationService.getPreferenceByUserId(userData.getUserId()));
+        modelAndView.addObject("userNotifications", notificationService.getPreferenceByUserId(userData.getUserId()));
         modelAndView.addObject("lastNotifications", notificationService.getUserLastNotifications(userData.getUserId()));
         return modelAndView;
     }
@@ -40,12 +40,12 @@ public class NotificationController {
     public ModelAndView updateSource(
             @AuthenticationPrincipal UserData userData,
             @RequestParam String contactInfo) {
-        
+
         var currentPreference = notificationService.getPreferenceByUserId(userData.getUserId());
         boolean notificationEnabled = currentPreference != null && currentPreference.isNotificationEnabled();
-        
+
         notificationService.upsertPreference(userData.getUserId(), notificationEnabled, contactInfo);
-        
+
         return new ModelAndView("redirect:/notifications");
     }
 
@@ -54,9 +54,9 @@ public class NotificationController {
         var currentPreference = notificationService.getPreferenceByUserId(userData.getUserId());
         boolean newState = currentPreference == null || !currentPreference.isNotificationEnabled();
         String contactInfo = currentPreference != null ? currentPreference.getContactInfo() : null;
-        
+
         notificationService.upsertPreference(userData.getUserId(), newState, contactInfo);
-        
+
         return new ModelAndView("redirect:/notifications");
     }
 
@@ -65,7 +65,7 @@ public class NotificationController {
         User user = userService.getById(userData.getUserId());
         user.setMonthlyReportEmailEnabled(!user.isMonthlyReportEmailEnabled());
         userService.save(user);
-        
+
         return new ModelAndView("redirect:/notifications");
     }
 }

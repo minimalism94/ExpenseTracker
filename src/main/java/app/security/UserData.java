@@ -22,11 +22,11 @@ public class UserData implements UserDetails {
     private Role role;
     private boolean isActive;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
+
     @Override
     public String getPassword() {
         return this.password;

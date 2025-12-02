@@ -85,7 +85,7 @@ body {
     right: 0;
     bottom: 0;
     background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(76, 205, 106, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 80% 80%, rgba(76, 205, 106, 0.05) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
 }
@@ -123,8 +123,8 @@ body {
     text-align: center;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 40px rgba(0, 255, 136, 0.15);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -156,8 +156,8 @@ body {
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 40px rgba(0, 255, 136, 0.15);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
@@ -211,8 +211,8 @@ body {
 .summary-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(0, 255, 136, 0.3),
-                0 0 60px rgba(0, 255, 136, 0.25);
+    0 0 0 1px rgba(0, 255, 136, 0.3),
+    0 0 60px rgba(0, 255, 136, 0.25);
     border-color: rgba(0, 255, 136, 0.4);
 }
 
@@ -267,8 +267,8 @@ body {
     padding: 25px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 40px rgba(0, 255, 136, 0.15);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -364,8 +364,8 @@ body {
     padding: 25px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(0, 255, 136, 0.15);
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    0 0 40px rgba(0, 255, 136, 0.15);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -392,8 +392,8 @@ body {
 
 .chart-card:hover {
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(0, 255, 136, 0.3),
-                0 0 60px rgba(0, 255, 136, 0.25);
+    0 0 0 1px rgba(0, 255, 136, 0.3),
+    0 0 60px rgba(0, 255, 136, 0.25);
     border-color: rgba(0, 255, 136, 0.4);
 }
 
@@ -481,7 +481,7 @@ body {
     background: linear-gradient(145deg, #252525, #2a2a2a);
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3),
-                0 1px 2px rgba(0, 0, 0, 0.2);
+    0 1px 2px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.3s ease;
     margin: 0;
@@ -491,7 +491,7 @@ body {
     background: linear-gradient(145deg, #2d2d2d, #323232);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 255, 136, 0.15),
-                0 0 20px rgba(0, 255, 136, 0.05);
+    0 0 20px rgba(0, 255, 136, 0.05);
     border-color: rgba(0, 255, 136, 0.2);
 }
 
@@ -560,19 +560,19 @@ body {
     .top-section {
         grid-template-columns: 1fr;
     }
-    
+
     .summary-block {
         grid-template-columns: 1fr;
     }
-    
+
     .middle-section {
         grid-template-columns: 1fr;
     }
-    
+
     .bottom-section {
         grid-template-columns: 1fr;
     }
-    
+
     .sidebar {
         display: none;
     }

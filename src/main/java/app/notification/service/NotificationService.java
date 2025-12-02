@@ -1,18 +1,17 @@
 package app.notification.service;
 
+import app.exception.NotificationRetryFailedException;
 import app.notification.client.NotificationClient;
 import app.notification.client.dto.NotificationRequest;
 import app.notification.client.dto.NotificationsResponse;
 import app.notification.client.dto.PreferenceResponse;
 import app.notification.client.dto.UpsertPreferenceRequest;
-import app.exception.NotificationRetryFailedException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -22,29 +21,30 @@ import java.util.UUID;
 public class NotificationService {
 
     private final NotificationClient client;
-        @Autowired
+
+    @Autowired
     public NotificationService(NotificationClient client) {
         this.client = client;
     }
 
-    public void upsertPreference(UUID userId, boolean notificationEnabled, String contactInfo){
+    public void upsertPreference(UUID userId, boolean notificationEnabled, String contactInfo) {
 
-        UpsertPreferenceRequest dto =  UpsertPreferenceRequest.builder()
+        UpsertPreferenceRequest dto = UpsertPreferenceRequest.builder()
                 .userId(userId)
                 .notificationEnabled(notificationEnabled)
                 .contactInfo(contactInfo)
                 .build();
         try {
             client.upsertPreference(dto);
-        }catch (FeignException e){
-                log.error("[S2S Call] Failed due to [%s]".formatted(e.getMessage()));
-                throw new NotificationRetryFailedException("Failed to upsert notification preference for user: " + userId, e);
+        } catch (FeignException e) {
+            log.error("[S2S Call] Failed due to [%s]".formatted(e.getMessage()));
+            throw new NotificationRetryFailedException("Failed to upsert notification preference for user: " + userId, e);
         }
 
     }
 
-    public PreferenceResponse getPreferenceByUserId (UUID userId){
-           return client.getPreferences(userId).getBody();
+    public PreferenceResponse getPreferenceByUserId(UUID userId) {
+        return client.getPreferences(userId).getBody();
     }
 
     public List<NotificationsResponse> getUserLastNotifications(UUID userId) {

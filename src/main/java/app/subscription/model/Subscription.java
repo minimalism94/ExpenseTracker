@@ -1,6 +1,5 @@
 package app.subscription.model;
 
-
 import app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +22,7 @@ public class Subscription {
     private String name;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private  SubscriptionPeriod period;
+    private SubscriptionPeriod period;
     @Column(nullable = false)
     private LocalDate expiryOn;
     @Column(nullable = false)

@@ -3,7 +3,6 @@ package app.report.service;
 import app.subscription.model.Subscription;
 import app.subscription.service.SubscriptionsService;
 import app.transactions.model.Transaction;
-import app.transactions.model.Type;
 import app.transactions.service.TransactionService;
 import app.user.model.User;
 import app.wallet.model.Wallet;
@@ -20,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class PdfReportService {
@@ -29,9 +27,9 @@ public class PdfReportService {
     private final SubscriptionsService subscriptionsService;
     private final TemplateEngine templateEngine;
 
-    public PdfReportService(TransactionService transactionService, 
-                           SubscriptionsService subscriptionsService,
-                           TemplateEngine templateEngine) {
+    public PdfReportService(TransactionService transactionService,
+                            SubscriptionsService subscriptionsService,
+                            TemplateEngine templateEngine) {
         this.transactionService = transactionService;
         this.subscriptionsService = subscriptionsService;
         this.templateEngine = templateEngine;
@@ -45,18 +43,16 @@ public class PdfReportService {
             List<BigDecimal> categoryAmounts = transactionService.getCategoryAmountsForCurrentMonth(wallet.getId());
             BigDecimal transactionExpenses = transactionService.getTotalExpensesForCurrentMonth(wallet.getId());
             List<Subscription> paidSubscriptions = subscriptionsService.getPaidSubscriptionsForCurrentMonth(user.getId());
-            
 
             BigDecimal subscriptionExpenses = paidSubscriptions.stream()
                     .map(Subscription::getPrice)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal currentMonthExpenses = transactionExpenses.add(subscriptionExpenses);
-            
+
             BigDecimal currentMonthIncome = transactionService.getTotalIncomeForCurrentMonth(wallet.getId());
             Transaction biggestExpense = transactionService.getBiggestExpenseForCurrentMonth(wallet.getId());
             String biggestExpenseName = transactionService.getBiggestExpenseCategoryName(wallet.getId());
             Map<String, BigDecimal> expenseHistory = transactionService.getExpenseHistoryByDay(wallet.getId());
-
 
             Context context = new Context(Locale.getDefault());
             context.setVariable("user", user);
@@ -74,9 +70,7 @@ public class PdfReportService {
             context.setVariable("month", month.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
             context.setVariable("currentDate", java.time.LocalDate.now());
 
-
             String html = templateEngine.process("report-pdf", context);
-
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ConverterProperties converterProperties = new ConverterProperties();

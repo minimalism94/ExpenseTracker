@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="bg" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Edit Profile</title>
-    <link rel="stylesheet" href="/css/profile.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="/css/profile.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
@@ -16,11 +16,13 @@
             <a th:href="@{/transactions}"><i class="fas fa-exchange-alt"></i> Transactions</a>
             <a th:href="@{/payments}"><i class="fas fa-calendar-plus"></i> Subscriptions</a>
             <a th:href="@{/budget}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-wallet"></i> Budget</a>
-            <a th:href="@{/profile}" class="active"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a class="active" th:href="@{/profile}"><i class="fas fa-user-edit"></i> Edit Profile</a>
             <a th:href="@{/notifications}"><i class="fas fa-bell"></i> Notifications</a>
-            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i> Report</a>
-            <a th:href="@{/upgrade}" th:if="${user.userVersion.name() == 'BASIC'}"><i class="fas fa-crown"></i> Upgrade to Pro</a>
-            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"><i class="fas fa-cog"></i> Admin Panel</a>
+            <a th:href="@{/report}" th:if="${user.userVersion.name() == 'PRO'}"><i class="fas fa-file-alt"></i>
+                Report</a>
+            <a th:href="@{/upgrade}" th:if="${user.userVersion.name() == 'BASIC'}"><i class="fas fa-crown"></i> Upgrade
+                to Pro</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><i class="fas fa-cog"></i> Admin Panel</a>
             <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Log out</a>
         </nav>
     </aside>
@@ -32,54 +34,55 @@
             <div class="form-card">
                 <!-- Профилна снимка -->
                 <div class="avatar">
-                    <img th:if="${userEditRequest.profilePicture != null}"
-                         th:src="${userEditRequest.profilePicture}"
-                         alt="User Avatar"/>
-                    <img th:if="${userEditRequest.profilePicture == null}"
+                    <img alt="User Avatar"
+                         th:if="${userEditRequest.profilePicture != null}"
+                         th:src="${userEditRequest.profilePicture}"/>
+                    <img alt="Default Avatar"
                          src="https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png"
-                         alt="Default Avatar"/>
+                         th:if="${userEditRequest.profilePicture == null}"/>
                 </div>
 
                 <!-- Форма -->
-                <form th:action="@{/profile}" th:object="${userEditRequest}" th:method="POST">
+                <form th:action="@{/profile}" th:method="POST" th:object="${userEditRequest}">
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input id="username" type="text" th:field="*{username}" readonly/>
+                        <input id="username" readonly th:field="*{username}" type="text"/>
                     </div>
 
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input id="firstName" type="text" th:field="*{firstName}"/>
-                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error"></div>
+                        <input id="firstName" th:field="*{firstName}" type="text"/>
+                        <div class="error" th:errors="*{firstName}" th:if="${#fields.hasErrors('firstName')}"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input id="lastName" type="text" th:field="*{lastName}"/>
-                        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error"></div>
+                        <input id="lastName" th:field="*{lastName}" type="text"/>
+                        <div class="error" th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input id="email" type="email" th:field="*{email}"/>
-                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+                        <input id="email" th:field="*{email}" type="email"/>
+                        <div class="error" th:errors="*{email}" th:if="${#fields.hasErrors('email')}"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="profilePicture">Profile Picture URL</label>
-                        <input id="profilePicture" type="text" th:field="*{profilePicture}"/>
-                        <div th:if="${#fields.hasErrors('profilePicture')}" th:errors="*{profilePicture}" class="error"></div>
+                        <input id="profilePicture" th:field="*{profilePicture}" type="text"/>
+                        <div class="error" th:errors="*{profilePicture}"
+                             th:if="${#fields.hasErrors('profilePicture')}"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="country">Country</label>
                         <select id="country" th:field="*{country}">
-                            <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
+                            <option th:each="c : ${countries}" th:text="${c}" th:value="${c}"></option>
                         </select>
-                        <div th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="error"></div>
+                        <div class="error" th:errors="*{country}" th:if="${#fields.hasErrors('country')}"></div>
                     </div>
 
-                    <button type="submit" class="save-btn">Save Changes</button>
+                    <button class="save-btn" type="submit">Save Changes</button>
                 </form>
             </div>
         </div>
