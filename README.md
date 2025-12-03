@@ -266,6 +266,12 @@ java -jar target/demo-0.0.1-SNAPSHOT.jar
 ### 5. Upgrade to PRO (Optional)
 - Navigate to **Upgrade** section
 - Complete payment via Stripe (test mode)
+- Testing interactively
+When testing interactively, use a card number, such as 4242 4242 4242 4242. Enter the card number in the Dashboard or in any payment form.
+
+Use a valid future date, such as 12/34.
+Use any three-digit CVC (four digits for American Express cards).
+Use any value you like for other form fields.
 - Unlock budget planning, advanced reports, and PDF exports
 
 ### 6. Budget Planning (PRO Only)
