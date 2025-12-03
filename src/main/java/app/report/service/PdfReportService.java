@@ -6,8 +6,7 @@ import app.transactions.model.Transaction;
 import app.transactions.service.TransactionService;
 import app.user.model.User;
 import app.wallet.model.Wallet;
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.html2pdf.HtmlConverter;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -72,13 +71,23 @@ public class PdfReportService {
 
             String html = templateEngine.process("report-pdf", context);
 
+            html = html.replaceAll("<meta([^>]*[^/])>", "<meta$1 />");
+            html = html.replaceAll("<link([^>]*[^/])>", "<link$1 />");
+
+            // OpenHTMLToPDF - безплатна алтернатива на iText7 html2pdf
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ConverterProperties converterProperties = new ConverterProperties();
-            HtmlConverter.convertToPdf(html, outputStream, converterProperties);
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.withHtmlContent(html, null);
+            builder.toStream(outputStream);
+            builder.run();
 
             return outputStream.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate PDF report", e);
+            String errorMessage = "Failed to generate PDF report: " + e.getMessage();
+            if (e.getCause() != null) {
+                errorMessage += " - Cause: " + e.getCause().getMessage();
+            }
+            throw new RuntimeException(errorMessage, e);
         }
     }
 }

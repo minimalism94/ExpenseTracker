@@ -29,6 +29,10 @@
     <properties>
         <java.version>17</java.version>
     </properties>
+    
+    <!-- Repositories - дефинира къде Maven да търси зависимости -->
+    <!-- OpenHTMLToPDF е в Maven Central, няма нужда от допълнителни repositories -->
+    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -96,15 +100,26 @@
             <artifactId>stripe-java</artifactId>
             <version>24.16.0</version>
         </dependency>
+        <!-- OpenHTMLToPDF - безплатна алтернатива на iText7 html2pdf -->
+        <!-- 100% безплатна библиотека за конвертиране на HTML в PDF -->
+        <!-- Работи перфектно и е в Maven Central -->
+        <!-- ВАЖНО: От 2023 г. проектът е преместен под нов groupId: io.github.openhtmltopdf -->
+        <!-- Използваме версия 1.1.33, която е последната стабилна версия -->
         <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itext7-core</artifactId>
-            <version>7.2.5</version>
+            <groupId>io.github.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-pdfbox</artifactId>
+            <version>1.1.33</version>
         </dependency>
+        <!-- OpenHTMLToPDF Core - основната библиотека -->
         <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>html2pdf</artifactId>
-            <version>4.0.5</version>
+            <groupId>io.github.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-core</artifactId>
+            <version>1.1.33</version>
+        </dependency>
+        <!-- SLF4J за logging (задължително за OpenHTMLToPDF) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -130,6 +145,26 @@
 
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin - конфигурира компилатора да обработва Lombok анотации -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- Java версия - съответства на java.version property -->
+                    <source>17</source>
+                    <target>17</target>
+                    <!-- Annotation processor paths - позволява на Lombok да генерира код по време на компилация -->
+                    <!-- Използваме версия 1.18.32, която е по-стабилна и съвместима с Java 17 -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.32</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <!-- Spring Boot Maven Plugin - създава executable JAR файл -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

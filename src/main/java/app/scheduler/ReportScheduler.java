@@ -87,8 +87,24 @@ public class ReportScheduler {
                 }
 
                 byte[] pdfBytes = pdfReportService.generateMonthlyReportPdf(user, wallet, previousMonth);
+                
+                // Логираме размера на PDF-а за дебъгване
+                log.debug("Generated PDF for user {}: {} bytes ({} KB)", 
+                        user.getId(), pdfBytes.length, pdfBytes.length / 1024);
 
                 String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
+                
+                // Логираме размера на Base64 string-а
+                log.debug("Base64 encoded PDF size: {} characters ({} KB)", 
+                        pdfBase64.length(), pdfBase64.length() / 1024);
+                
+                // ВАЖНО: Проверяваме дали Base64 string-ът не е твърде голям
+                // Ако е над 1MB, това може да причини проблеми в notification service-а
+                if (pdfBase64.length() > 1_000_000) {
+                    log.warn("PDF Base64 string is very large ({} KB) for user {}. " +
+                            "This might cause issues if notification service stores it in 'body' column.",
+                            pdfBase64.length() / 1024, user.getId());
+                }
 
                 String monthName = previousMonth.format(java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy"));
                 String fileName = String.format("Monthly_Report_%s.pdf", previousMonth.format(java.time.format.DateTimeFormatter.ofPattern("yyyy_MM")));
@@ -112,12 +128,15 @@ public class ReportScheduler {
                         .userId(user.getId())
                         .type("EMAIL")
                         .subject(subject)
-                        .body(body)
-                        .attachmentBase64(pdfBase64)
+                        .body(body)  // body съдържа само текста, не PDF-а
+                        .attachmentBase64(pdfBase64)  // PDF-ът е в attachment полето
                         .attachmentFileName(fileName)
                         .attachmentContentType("application/pdf")
                         .build();
 
+                log.debug("Sending notification request for user {} with PDF attachment ({} KB)", 
+                        user.getId(), pdfBytes.length / 1024);
+                
                 notificationClient.sendNotification(notificationRequest);
 
                 log.info("Successfully sent monthly report to user {}", user.getId());

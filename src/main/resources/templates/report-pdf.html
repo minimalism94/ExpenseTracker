@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <!-- ВАЖНО: Всички meta тагове трябва да бъдат self-closing за валиден XML -->
+    <meta charset="UTF-8" />
     <title>Monthly Financial Report</title>
     <style>
         @page {
@@ -17,7 +18,8 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #1f1f2e 50%, #1a1a1a 100%);
+            /* OpenHTMLToPDF не поддържа градиенти в background, използваме твърд цвят */
+            background-color: #1a1a1a;
             color: #fff;
             padding: 30px;
             line-height: 1.6;
@@ -35,7 +37,7 @@
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
             letter-spacing: 1px;
         }
 
@@ -63,13 +65,15 @@
             display: table-cell;
             width: 30%;
             vertical-align: top;
-            background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
-            border: 2px solid rgba(0, 255, 136, 0.3);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #252525;
+            /* Заменяме rgba() с твърд цвят - по-светло зелено за границата */
+            border: 2px solid #4dcc88;
             padding: 25px;
             text-align: center;
             border-radius: 15px;
             margin-right: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            /* Премахнато box-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .current-balance-block h2 {
@@ -85,7 +89,7 @@
             font-size: 42px;
             font-weight: 700;
             color: #00ff88;
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .summary-block {
@@ -104,12 +108,14 @@
         .summary-card {
             display: table-cell;
             width: 50%;
-            background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
-            border: 2px solid rgba(0, 255, 136, 0.2);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #252525;
+            /* Заменяме rgba() с твърд цвят - по-тъмно зелено за границата */
+            border: 2px solid #33cc77;
             padding: 20px;
             text-align: center;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            /* Премахнато box-shadow - не се поддържа от OpenHTMLToPDF */
             vertical-align: top;
         }
 
@@ -127,17 +133,17 @@
             margin-top: 8px;
             color: #fff;
             font-weight: 700;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .summary-card .value.green {
             color: #00ff88 !important;
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .summary-card .value.red {
             color: #ff4757 !important;
-            text-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .expense-name {
@@ -153,21 +159,24 @@
             margin: 30px 0 15px 0;
             color: #00ff88;
             text-align: center;
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
             font-weight: 600;
             letter-spacing: 0.5px;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+            /* Заменяме rgba() с твърд цвят - по-светло зелено */
+            border-bottom: 2px solid #4dcc88;
         }
 
         /* Transactions Table */
         .transactions-block {
-            background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
-            border: 2px solid rgba(0, 255, 136, 0.2);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #252525;
+            /* Заменяме rgba() с твърд цвят */
+            border: 2px solid #33cc77;
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            /* Премахнато box-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .transaction-table {
@@ -177,7 +186,8 @@
         }
 
         .transaction-table thead {
-            background: linear-gradient(145deg, #2f2f2f, #2a2a2a);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #2a2a2a;
         }
 
         .transaction-table th {
@@ -188,46 +198,53 @@
             text-transform: uppercase;
             font-size: 11px;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
+            /* Заменяме rgba() с твърд цвят */
+            border-bottom: 2px solid #4dcc88;
         }
 
         .transaction-table tbody tr {
-            background: linear-gradient(145deg, #1f1f1f 0%, #252525 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #1f1f1f;
+            /* Заменяме rgba() с много тъмно сиво */
+            border-bottom: 1px solid #333333;
         }
 
         .transaction-table tbody tr:nth-child(even) {
-            background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #252525;
         }
 
         .transaction-table td {
             padding: 12px 10px;
             color: #eee;
             font-size: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            /* Заменяме rgba() с много тъмно сиво */
+            border-bottom: 1px solid #333333;
         }
 
         .transaction-table td.green {
             color: #00ff88;
             font-weight: 600;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .transaction-table td.red {
             color: #ff4757;
             font-weight: 600;
-            text-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         /* Subscriptions Block */
         .subscriptions-block {
-            background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
-            border: 2px solid rgba(0, 255, 136, 0.2);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #252525;
+            /* Заменяме rgba() с твърд цвят */
+            border: 2px solid #33cc77;
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            /* Премахнато box-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .subscription-item {
@@ -235,8 +252,10 @@
             width: 100%;
             padding: 15px;
             margin-bottom: 12px;
-            background: linear-gradient(145deg, #1f1f1f 0%, #252525 100%);
-            border: 1px solid rgba(0, 255, 136, 0.15);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #1f1f1f;
+            /* Заменяме rgba() с твърд цвят - по-тъмно зелено */
+            border: 1px solid #2d9966;
             border-radius: 10px;
         }
 
@@ -276,12 +295,14 @@
 
         /* Category Table */
         .category-block {
-            background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
-            border: 2px solid rgba(0, 255, 136, 0.2);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #252525;
+            /* Заменяме rgba() с твърд цвят */
+            border: 2px solid #33cc77;
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            /* Премахнато box-shadow - не се поддържа от OpenHTMLToPDF */
         }
 
         .category-table {
@@ -291,7 +312,8 @@
         }
 
         .category-table thead {
-            background: linear-gradient(145deg, #2f2f2f, #2a2a2a);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #2a2a2a;
         }
 
         .category-table th {
@@ -302,24 +324,29 @@
             text-transform: uppercase;
             font-size: 11px;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+            /* Премахнато text-shadow - не се поддържа от OpenHTMLToPDF */
+            /* Заменяме rgba() с твърд цвят */
+            border-bottom: 2px solid #4dcc88;
         }
 
         .category-table tbody tr {
-            background: linear-gradient(145deg, #1f1f1f 0%, #252525 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #1f1f1f;
+            /* Заменяме rgba() с много тъмно сиво */
+            border-bottom: 1px solid #333333;
         }
 
         .category-table tbody tr:nth-child(even) {
-            background: linear-gradient(145deg, #252525 0%, #2a2a2a 100%);
+            /* OpenHTMLToPDF не поддържа градиенти, използваме твърд цвят */
+            background-color: #252525;
         }
 
         .category-table td {
             padding: 12px 10px;
             color: #eee;
             font-size: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            /* Заменяме rgba() с много тъмно сиво */
+            border-bottom: 1px solid #333333;
         }
 
         .category-table td:last-child {
@@ -331,7 +358,8 @@
         .footer {
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 2px solid rgba(0, 255, 136, 0.2);
+            /* Заменяме rgba() с твърд цвят */
+            border-top: 2px solid #33cc77;
             text-align: center;
             color: #888;
             font-size: 11px;
