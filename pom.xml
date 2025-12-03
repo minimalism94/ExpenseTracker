@@ -58,6 +58,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+        <!-- PostgreSQL Database Driver -->
+        <!-- Използваме PostgreSQL вместо MySQL за cloud deployment (Render.com) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- MySQL Database Driver (за локална разработка) -->
+        <!-- Може да се използва и MySQL, ако е необходимо -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
